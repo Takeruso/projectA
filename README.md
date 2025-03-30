@@ -1,7 +1,7 @@
 # Care Management System – Vue + Express + SQLite
 
 This is a simplified care management system for aged care facilities.  
-The frontend is built with Vue (Vite), and the backend uses Express and SQLite.  
+The frontend is built with Vue (Vite), and the backend uses Express and SQLite.
 
 ---
 
@@ -45,7 +45,7 @@ npm run dev
 
 This will start both:
 
-- Vite (Frontend): http://localhost:5173  
+- Vite (Frontend): http://localhost:5173
 - Express (Backend API): http://localhost:3000
 
 ---
@@ -60,30 +60,30 @@ This will start both:
 
 ## 🔧 Technologies Used
 
-| Layer       | Tech Stack                                      |
-|-------------|--------------------------------------------------|
-| Frontend    | Vue 3, Vite, Vue Router, Axios, Bootstrap 5, Font Awesome |
-| Backend     | Node.js, Express, SQLite3, CORS                  |
-| Dev Tools   | concurrently, nodemon (for auto-restart), Prettier |
+| Layer     | Tech Stack                                                |
+| --------- | --------------------------------------------------------- |
+| Frontend  | Vue 3, Vite, Vue Router, Axios, Bootstrap 5, Font Awesome |
+| Backend   | Node.js, Express, SQLite3, CORS                           |
+| Dev Tools | concurrently, nodemon (for auto-restart), Prettier        |
 
 ---
 
 ## 📊 Quality Goals (ISO/IEC 25010 aligned)
 
-| Attribute              | Implementation Example                                 |
-|------------------------|--------------------------------------------------------|
-| Usability              | Based on Figma + Bootstrap styling                     |
-| Accessibility          | Lighthouse score target: **80+**                       |
-| Functionality Suitability | 100% coverage of functional requirements              |
-| Security               | Login protection on frontend & API input validation    |
-| Maintainability        | Prettier formatting + reusable Vue components          |
+| Attribute                 | Implementation Example                              |
+| ------------------------- | --------------------------------------------------- |
+| Usability                 | Based on Figma + Bootstrap styling                  |
+| Accessibility             | Lighthouse score target: **80+**                    |
+| Functionality Suitability | 100% coverage of functional requirements            |
+| Security                  | Login protection on frontend & API input validation |
+| Maintainability           | Prettier formatting + reusable Vue components       |
 
 ---
 
 ## 📄 API Endpoints (examples)
 
-- `GET /api/users` – Fetch all users  
-- `POST /api/users` – Add new user  
+- `GET /api/users` – Fetch all users
+- `POST /api/users` – Add new user
 - (More endpoints to be added for patients, appointments, billing, etc.)
 
 ---
@@ -132,3 +132,4 @@ From frontend:
 
 ```bash
 npm run dev           # Start Vite server
+```
