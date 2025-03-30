@@ -1,3 +1,9 @@
 {
-  "recommendations": ["Vue.volar"]
+  "recommendations": [
+    "Vue.volar",                            // Vue 3 support
+    "esbenp.prettier-vscode",              // Code formatter (Prettier)
+    "dbaeumer.vscode-eslint",              // Linter
+    "alexcvzz.vscode-sqlite",              // SQLite GUI viewer
+    "christian-kohler.path-intellisense"   // Path auto-completion
+  ]
 }
