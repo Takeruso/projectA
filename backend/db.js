@@ -1,7 +1,7 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const sqlite3 = require('sqlite3').verbose()
+const path = require('path')
 
-const db = new sqlite3.Database(path.join(__dirname, 'database.sqlite'));
+const db = new sqlite3.Database(path.join(__dirname, 'database.sqlite'))
 
 db.serialize(() => {
   db.run(`
@@ -10,7 +10,7 @@ db.serialize(() => {
       username TEXT NOT NULL,
       password TEXT NOT NULL
     )
-  `);
-});
+  `)
+})
 
-module.exports = db;
+module.exports = db
