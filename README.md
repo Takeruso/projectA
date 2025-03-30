@@ -133,3 +133,14 @@ From frontend:
 ```bash
 npm run dev           # Start Vite server
 ```
+
+## 🛡 Git Safety – Husky Pre-Commit Hook
+
+This project uses [Husky](https://typicode.github.io/husky/) to prevent committing `node_modules`.
+
+After cloning the repository, run:
+
+```bash
+npm install
+npm run prepare
+
