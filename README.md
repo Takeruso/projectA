@@ -2,7 +2,6 @@
 
 This is a simplified care management system for aged care facilities.  
 The frontend is built with Vue (Vite), and the backend uses Express and SQLite.  
-Designed for educational purposes (e.g., group development in university projects).
 
 ---
 
