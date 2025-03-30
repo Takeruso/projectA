@@ -102,6 +102,13 @@ This will start both:
 - Entry: `frontend/src/views/Login.vue`, `Dashboard.vue`
 - Styling guide: Refer to shared Figma design
 - Code format: Prettier, auto-format on save via VSCode
+- To format all project files manually:
+
+```bash
+npx prettier . --write
+```
+
+Use this before submission or push to keep the codebase consistent.
 
 ---
 
