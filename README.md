@@ -1,7 +1,7 @@
-# Care Management System – Vue + Express + SQLite
+# 🏥 Care Management System – Vue + Express + SQLite
 
-This is a simplified care management system for aged care facilities.  
-The frontend is built with Vue (Vite), and the backend uses Express and SQLite.
+A simplified care management system designed for aged care facilities.  
+Frontend built with Vue 3 (Vite), backend with Express.js and SQLite.
 
 ---
 
@@ -9,19 +9,20 @@ The frontend is built with Vue (Vite), and the backend uses Express and SQLite.
 
 ```
 projectA/
-├── frontend/        # Vue 3 (Vite)
-├── backend/         # Express + SQLite
-├── package.json     # Dev scripts (with concurrently)
+├── frontend/        # Vue 3 (Vite, Vue Router, Bootstrap, Font Awesome)
+├── backend/         # Express.js + SQLite3
+├── package.json     # Root-level scripts and tools (concurrently, husky, etc.)
+└── .gitignore       # node_modules, dist, database.sqlite excluded
 ```
 
 ---
 
-## ✨ Step 1: Install dependencies (only once)
+## ✨ Step 1: Install Dependencies (only once)
 
-Install dependencies separately for root, frontend, and backend:
+Install dependencies for root, frontend, and backend:
 
 ```bash
-# Root (for concurrently, Prettier, etc.)
+# Root (for concurrently, Prettier, Husky)
 npm install
 
 # Frontend
@@ -32,134 +33,140 @@ npm install
 cd ../backend
 npm install
 ```
----
-
-## 🧼 Git Cleanup Guide (if commit is blocked)
-
-If you accidentally added `node_modules/` and get an error from Husky like:
-
-> 🚫 node_modules should not be committed!
-
-Then run the following commands to fix it:
-
-```bash
-# Remove node_modules from Git tracking
-git rm -r --cached node_modules
-git rm -r --cached frontend/node_modules
-git rm -r --cached backend/node_modules
-
-# Then commit again
-git commit -m "Remove node_modules from Git"
-git push
 
 ---
 
-## 🚀 Step 2: Start the development servers
+## 🚀 Step 2: Start the Development Servers
 
-From the project root, run the following command:
+From the root directory:
 
 ```bash
 npm run dev
 ```
 
-This will start both:
+This will concurrently run:
 
-- Vite (Frontend): http://localhost:5173
-- Express (Backend API): http://localhost:3000
+- **Frontend (Vite):** http://localhost:5173  
+- **Backend (Express API):** http://localhost:3000
+
+---
+
+## 🏦 Scripts Summary
+
+From **root**:
+
+```bash
+npm run dev            # Run frontend + backend concurrently
+npm run dev:frontend   # Run frontend only
+npm run dev:backend    # Run backend only
+```
+
+From **frontend/**:
+
+```bash
+npm run dev            # Start Vite dev server
+```
+
+From **backend/**:
+
+```bash
+npm run dev            # Start Express server (via nodemon or node)
+```
+
+---
+
+## 🧼 Git Cleanup Guide (if commit is blocked)
+
+If you accidentally try to commit `node_modules/` and get a Husky error like:
+
+> 🚫 node_modules should not be committed!
+
+Run the following commands to remove them from Git tracking:
+
+```bash
+git rm -r --cached node_modules
+git rm -r --cached frontend/node_modules
+git rm -r --cached backend/node_modules
+git commit -m "Remove node_modules from Git"
+git push
+```
+
+---
+
+## 🛡 Git Safety – Husky Pre-Commit Hook
+
+This project uses [Husky](https://typicode.github.io/husky/) to block committing `node_modules`.
+
+After cloning this repo, make sure to run:
+
+```bash
+npm install
+npm run prepare
+```
+
+This will activate Husky locally on your machine.
+
+---
+
+## 📄 API Endpoints (Examples)
+
+- `GET /api/users` – Fetch all users
+- `POST /api/users` – Add new user  
+*(More endpoints for patients, appointments, billing, etc. will be added in Sprint 2)*
 
 ---
 
 ## 🗄️ SQLite Database
 
-- Database file: `backend/database.sqlite` (auto-generated on server start)
-- DB schema/init: `backend/db.js`
-- No `.env` file or external DB setup required
+- Database file: `backend/database.sqlite` *(auto-generated on server start)*
+- Schema/init logic: `backend/db.js`
+- No `.env` file or external DB required
+
+To browse the DB, use VSCode + [SQLite Viewer](https://marketplace.visualstudio.com/items?itemName=alexcvzz.vscode-sqlite)
 
 ---
 
 ## 🔧 Technologies Used
 
-| Layer     | Tech Stack                                                |
-| --------- | --------------------------------------------------------- |
+| Layer     | Stack                                                   |
+|-----------|---------------------------------------------------------|
 | Frontend  | Vue 3, Vite, Vue Router, Axios, Bootstrap 5, Font Awesome |
-| Backend   | Node.js, Express, SQLite3, CORS                           |
-| Dev Tools | concurrently, nodemon (for auto-restart), Prettier        |
+| Backend   | Node.js, Express.js, SQLite3, CORS                      |
+| Dev Tools | concurrently, nodemon, Prettier, ESLint, Husky         |
 
 ---
 
-## 📊 Quality Goals (ISO/IEC 25010 aligned)
+## 📊 Quality Goals (ISO/IEC 25010-aligned)
 
 | Attribute                 | Implementation Example                              |
-| ------------------------- | --------------------------------------------------- |
-| Usability                 | Based on Figma + Bootstrap styling                  |
-| Accessibility             | Lighthouse score target: **80+**                    |
-| Functionality Suitability | 100% coverage of functional requirements            |
-| Security                  | Login protection on frontend & API input validation |
-| Maintainability           | Prettier formatting + reusable Vue components       |
+|--------------------------|-----------------------------------------------------|
+| Usability                | Figma-based layout, consistent Bootstrap components |
+| Accessibility            | Lighthouse score target: **80+**                    |
+| Functionality Suitability| All UI components mapped to functional requirements |
+| Security                 | Protected routes, login validation                  |
+| Maintainability          | Modular Vue components + Prettier formatting        |
 
 ---
 
-## 📄 API Endpoints (examples)
+## 👤 Developer Info & Notes
 
-- `GET /api/users` – Fetch all users
-- `POST /api/users` – Add new user
-- (More endpoints to be added for patients, appointments, billing, etc.)
+- Vue Routing: `frontend/src/router/index.js`
+- Vue Pages: `frontend/src/views/Login.vue`, `Dashboard.vue`, etc.
+- Style Guide: Based on shared Figma file
+- Formatting: Auto-format via Prettier + ESLint
 
----
-
-## ❗ Notes
-
-- `node_modules/`, `dist/`, and `database.sqlite` are excluded via `.gitignore`
-- No production deployment included (local development only)
-- Manual testing only in Sprint 1 & 2 (no unit/e2e tests)
-
----
-
-## 👤 Developer Info
-
-- Routing: `frontend/src/router/index.js`
-- Entry: `frontend/src/views/Login.vue`, `Dashboard.vue`
-- Styling guide: Refer to shared Figma design
-- Code format: Prettier, auto-format on save via VSCode
-- To format all project files manually:
+To manually format all code:
 
 ```bash
 npx prettier . --write
 ```
 
-Use this before submission or push to keep the codebase consistent.
+Run this before submission or final push to keep code consistent.
 
 ---
 
-## 🛋️ Scripts Summary
+## ❗ Notes
 
-From root:
-
-```bash
-npm run dev           # Run frontend + backend together
-npm run dev:frontend  # Run frontend only
-npm run dev:backend   # Run backend only
-```
-
-From backend:
-
-```bash
-npm run dev           # Start API (via nodemon or node)
-```
-
-From frontend:
-
-```bash
-npm run dev           # Start Vite server
-```
-
-## 🛡 Git Safety – Husky Pre-Commit Hook
-
-This project uses [Husky](https://typicode.github.io/husky/) to prevent committing `node_modules`.
-
-After cloning the repository, run:
-
-```bash
-npm install
-npm run prepare
-
+- `node_modules/`, `dist/`, `.sqlite`, and `.env` are excluded via `.gitignore`
+- This project is **local-only** (no production deployment included)
+- Testing is manual only (Sprint 1–2)
