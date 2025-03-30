@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
+    "husky": "^9.1.7",
     "prettier": "^3.5.3"
   }
 }
