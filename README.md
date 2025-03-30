@@ -32,6 +32,25 @@ npm install
 cd ../backend
 npm install
 ```
+---
+
+## 🧼 Git Cleanup Guide (if commit is blocked)
+
+If you accidentally added `node_modules/` and get an error from Husky like:
+
+> 🚫 node_modules should not be committed!
+
+Then run the following commands to fix it:
+
+```bash
+# Remove node_modules from Git tracking
+git rm -r --cached node_modules
+git rm -r --cached frontend/node_modules
+git rm -r --cached backend/node_modules
+
+# Then commit again
+git commit -m "Remove node_modules from Git"
+git push
 
 ---
 
