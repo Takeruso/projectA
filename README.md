@@ -51,7 +51,27 @@ This will concurrently run:
 
 ---
 
-## 🏦 Scripts Summary
+## 🧩 Recommended VSCode Extensions
+
+To ensure a consistent and smooth development environment, please install the following extensions:
+
+```json
+{
+  "recommendations": [
+    "Vue.volar",                            // Vue 3 support
+    "esbenp.prettier-vscode",              // Code formatter (Prettier)
+    "dbaeumer.vscode-eslint",              // Linter
+    "alexcvzz.vscode-sqlite",              // SQLite GUI viewer
+    "christian-kohler.path-intellisense"   // Path auto-completion
+  ]
+}
+```
+
+Place this in `.vscode/extensions.json` under the project root or `frontend/`.
+
+---
+
+## 🛋️ Scripts Summary
 
 From **root**:
 
