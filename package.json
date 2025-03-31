@@ -5,18 +5,18 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
     "dev:frontend": "npm run dev --prefix frontend",
-    "dev:backend": "npm run dev --prefix backend"
+    "dev:backend": "npm run dev --prefix backend",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "husky": "^9.1.7",
+    "husky": "^8.0.0",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3"
   },
   "lint-staged": {
     "*.{js,vue,json,css,md}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   }
 }
