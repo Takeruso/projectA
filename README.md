@@ -51,7 +51,7 @@ This will concurrently run:
 
 ---
 
-## 🧩 Recommended VSCode Extensions
+## 🧹 Recommended VSCode Extensions
 
 To ensure a consistent and smooth development environment, please install the following extensions:
 
@@ -126,6 +126,17 @@ npm run prepare
 
 This will activate Husky locally on your machine.
 
+**In addition**, our `pre-commit` hook will auto-remove any `node_modules/` if staged via `git add .`:
+
+```bash
+if git diff --cached --name-only | grep -q '^node_modules/'; then
+  echo "🚫 node_modules is staged. Removing from commit..."
+  git reset HEAD node_modules/
+fi
+```
+
+This protects the repo even from accidental `git add .` usage.
+
 ---
 
 ## 📄 API Endpoints (Examples)
@@ -148,11 +159,11 @@ To browse the DB, use VSCode + [SQLite Viewer](https://marketplace.visualstudio.
 
 ## 🔧 Technologies Used
 
-| Layer     | Stack                                                   |
-|-----------|---------------------------------------------------------|
+| Layer     | Stack                                                     |
+|-----------|------------------------------------------------------------|
 | Frontend  | Vue 3, Vite, Vue Router, Axios, Bootstrap 5, Font Awesome |
-| Backend   | Node.js, Express.js, SQLite3, CORS                      |
-| Dev Tools | concurrently, nodemon, Prettier, ESLint, Husky         |
+| Backend   | Node.js, Express.js, SQLite3, CORS                        |
+| Dev Tools | concurrently, nodemon, Prettier, ESLint, Husky            |
 
 ---
 
