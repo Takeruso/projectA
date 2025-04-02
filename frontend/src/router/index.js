@@ -12,10 +12,10 @@ const routes = [
   { path: '/', component: Login },
   { path: '/dashboard', component: Dashboard },
   { path: '/sample', component: SamplePage },
-  { path: '/admin', component: AdminDashboard },
-  { path: '/admin/facility', component: FacilityManagement },
-  { path: '/admin/service', component: ServiceManagement },
-  { path: '/admin/alerts', component: Alerts }
+  { path: '/admin', component: AdminDashboard }
+  // { path: '/admin/facility', component: FacilityManagement },
+  // { path: '/admin/service', component: ServiceManagement },
+  // { path: '/admin/alerts', component: Alerts }
 ]
 
 export default createRouter({
