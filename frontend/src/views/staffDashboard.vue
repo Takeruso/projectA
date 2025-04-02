@@ -1,5 +1,5 @@
 <template>
-  <div class="resident-page">
+  <div class="staff-page">
     <header>
       <div class="container header-container">
         <div class="logo">
@@ -10,47 +10,53 @@
             📋
             <span class="alert-count">3</span>
           </button>
-          <div class="user-name">Martha Johnson</div>
-          <div class="user-avatar">MJ</div>
+          <div class="user-name">Serena Tr</div>
+          <div class="user-avatar">ST</div>
         </div>
       </div>
     </header>
 
     <main class="container">
-      <div class="welcome-banner">
-        <h1>Welcome back, Martha!</h1>
-        <p>
-          Today is Tuesday, April 1, 2025. You have 2 appointments scheduled
-          this week.
-        </p>
+      <div class="row align-items-center">
+        <div class="welcome-banner col-md-8 mx-2">
+          <h1>Welcome back, Serena!</h1>
+          <p>
+            Today is {{ currentDate }}. You have
+            {{ totalAppoinment }} appointments scheduled this week.
+          </p>
+        </div>
+        <div class="card col-md-3">
+          <h2>Total Patients</h2>
+          <p>Female: 10 Male: 17</p>
+        </div>
       </div>
-
       <div class="dashboard-grid">
         <div class="card card-appointments">
-          <div class="card-icon">📅</div>
+          <div class="card-icon"><i class="fa-solid fa-phone"></i></div>
           <h2>Appointments</h2>
           <p>
-            Book or view your upcoming appointments with doctors, specialists,
-            and staff.
+            Upcoming appointments with doctors, specialists, and therapy
+            sessions.
           </p>
-          <a href="#" class="cta">Book Appointment</a>
+          <a href="#" class="cta">Check Appointment</a>
         </div>
 
         <div class="card card-bills">
-          <div class="card-icon">📜</div>
-          <h2>Billing & Payments</h2>
+          <div class="card-icon"><i class="fa-solid fa-address-book"></i></div>
+          <h2>Resident Info</h2>
           <p>
-            View your current bills, payment history, and make new payments
-            securely.
+            View resident personal information, including contact details and
+            emergency contacts.
           </p>
-          <a href="#" class="cta">View Bills</a>
+          <a href="#" class="cta">View Resident Details</a>
         </div>
 
         <div class="card card-medical">
-          <div class="card-icon">🏥</div>
-          <h2>Medical Reports</h2>
+          <div class="card-icon"><i class="fa-solid fa-house-medical"></i></div>
+          <h2>Facility Checkup</h2>
           <p>
-            Access your medical history, test results, and health assessments.
+            View facility status, including cleanliness, safety, and maintenance
+            issues.
           </p>
           <a href="#" class="cta">View Reports</a>
         </div>
@@ -59,8 +65,7 @@
           <div class="card-icon">💊</div>
           <h2>Medication</h2>
           <p>
-            Track your medications, view schedule, and request refills when
-            needed.
+            Track medications inventory, view schedule, and refills when needed.
           </p>
           <a href="#" class="cta">Manage Medications</a>
         </div>
@@ -152,6 +157,7 @@
 
 <script setup>
 import { onMounted } from 'vue'
+import { computed } from 'vue'
 
 onMounted(() => {
   const cards = document.querySelectorAll('.card')
@@ -173,10 +179,24 @@ onMounted(() => {
     })
   }
 })
+//add currentDate to the welcome message
+
+const currentDate = computed(() => {
+  const options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }
+  return new Date().toLocaleDateString('en-US', options)
+})
+const totalAppoinment = computed(() => {
+  return 3
+})
 </script>
 
 <style scoped>
-.resident-page {
+.staff-page {
   --primary: #ff2474;
   --primary-light: #ff5d98;
   --secondary: #f4b942;
