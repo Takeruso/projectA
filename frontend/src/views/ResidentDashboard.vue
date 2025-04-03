@@ -185,11 +185,11 @@ onMounted(() => {
   --danger: #d64045;
   --success: #4caf50;
   --gray: #e5e9f0;
-  background-color: var(--light);
+  /* background-color: var(--light);
   color: var(--dark);
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
+  line-height: 1.6; */
 }
 
 :deep(.resident-page *) {
