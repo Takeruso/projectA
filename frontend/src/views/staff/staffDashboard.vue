@@ -141,7 +141,7 @@
       </div>
     </main>
 
-    <footer>
+    <!-- <footer>
       <div class="container footer-container">
         <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
         <div class="footer-links">
@@ -151,7 +151,7 @@
           <a href="#">Feedback</a>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
@@ -196,7 +196,7 @@ const totalAppoinment = computed(() => {
 </script>
 
 <style scoped>
-.staff-page {
+/* .staff-page {
   --primary: #ff2474;
   --primary-light: #ff5d98;
   --secondary: #f4b942;
@@ -210,7 +210,7 @@ const totalAppoinment = computed(() => {
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-}
+} */
 
 :deep(.resident-page *) {
   all: unset;

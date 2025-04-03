@@ -136,7 +136,7 @@
       </div>
     </main>
 
-    <footer>
+    <!-- <footer>
       <div class="container footer-container">
         <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
         <div class="footer-links">
@@ -146,7 +146,7 @@
           <a href="#">Feedback</a>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
@@ -176,7 +176,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.resident-page {
+/* .resident-page {
   --primary: #ff2474;
   --primary-light: #ff5d98;
   --secondary: #f4b942;
@@ -185,12 +185,12 @@ onMounted(() => {
   --danger: #d64045;
   --success: #4caf50;
   --gray: #e5e9f0;
-  /* background-color: var(--light);
+  background-color: var(--light);
   color: var(--dark);
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6; */
-}
+  line-height: 1.6;
+} */
 
 :deep(.resident-page *) {
   all: unset;
@@ -198,11 +198,11 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
-:deep(.resident-page body) {
+/* :deep(.resident-page body) {
   background-color: var(--light);
   color: var(--dark);
   line-height: 1.6;
-}
+} */
 
 /* :deep(.resident-page header) {
   background-color: white;
@@ -233,12 +233,12 @@ onMounted(() => {
   z-index: 100;
 }
 
-.resident-page footer {
+/* .resident-page footer {
   background-color: white;
   padding: 1.5rem 0;
   margin-top: 3rem;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-}
+} */
 
 .container {
   width: 80vw;
@@ -426,7 +426,7 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-.footer-container {
+/* .footer-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -440,7 +440,7 @@ onMounted(() => {
 
 .footer-links a:hover {
   text-decoration: underline;
-}
+} */
 
 .alert-count {
   background-color: var(--danger);
