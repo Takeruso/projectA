@@ -1,135 +1,153 @@
 <template>
-  <main class="container">
-    <div class="welcome-banner">
-      <h1>Welcome back, Martha!</h1>
-      <p>
-        Today is Tuesday, April 1, 2025. You have 2 appointments scheduled this
-        week.
-      </p>
-    </div>
+  <div class="resident-page">
+    <header>
+      <div class="container header-container">
+        <div class="logo">
+          <span>Swin Care</span>
+        </div>
+        <div class="user-info">
+          <button class="notifications-btn">
+            📋
+            <span class="alert-count">3</span>
+          </button>
+          <div class="user-name">Martha Johnson</div>
+          <div class="user-avatar">MJ</div>
+        </div>
+      </div>
+    </header>
 
-    <div class="dashboard-grid">
-      <div class="card card-appointments">
-        <div class="card-icon">📅</div>
-        <h2>Appointments</h2>
+    <main class="container">
+      <div class="welcome-banner">
+        <h1>Welcome back, Martha!</h1>
         <p>
-          Book or view your upcoming appointments with doctors, specialists, and
-          staff.
+          Today is Tuesday, April 1, 2025. You have 2 appointments scheduled
+          this week.
         </p>
-        <a href="#" class="cta">Book Appointment</a>
       </div>
 
-      <div class="card card-bills">
-        <div class="card-icon">📜</div>
-        <h2>Billing & Payments</h2>
-        <p>
-          View your current bills, payment history, and make new payments
-          securely.
-        </p>
-        <a href="#" class="cta">View Bills</a>
+      <div class="dashboard-grid">
+        <div class="card card-appointments">
+          <div class="card-icon">📅</div>
+          <h2>Appointments</h2>
+          <p>
+            Book or view your upcoming appointments with doctors, specialists,
+            and staff.
+          </p>
+          <a href="#" class="cta">Book Appointment</a>
+        </div>
+
+        <div class="card card-bills">
+          <div class="card-icon">📜</div>
+          <h2>Billing & Payments</h2>
+          <p>
+            View your current bills, payment history, and make new payments
+            securely.
+          </p>
+          <a href="#" class="cta">View Bills</a>
+        </div>
+
+        <div class="card card-medical">
+          <div class="card-icon">🏥</div>
+          <h2>Medical Reports</h2>
+          <p>
+            Access your medical history, test results, and health assessments.
+          </p>
+          <a href="#" class="cta">View Reports</a>
+        </div>
+
+        <div class="card card-medication">
+          <div class="card-icon">💊</div>
+          <h2>Medication</h2>
+          <p>
+            Track your medications, view schedule, and request refills when
+            needed.
+          </p>
+          <a href="#" class="cta">Manage Medications</a>
+        </div>
       </div>
 
-      <div class="card card-medical">
-        <div class="card-icon">🏥</div>
-        <h2>Medical Reports</h2>
-        <p>
-          Access your medical history, test results, and health assessments.
-        </p>
-        <a href="#" class="cta">View Reports</a>
+      <div class="upcoming-section">
+        <h2>Upcoming Schedule</h2>
+        <ul class="upcoming-list">
+          <li class="upcoming-item">
+            <div class="upcoming-date">Apr 3<br />9:30 AM</div>
+            <div class="upcoming-details">
+              <h3>Dr. Williams - Regular Checkup</h3>
+              <p>Location: Medical Wing, Room 102</p>
+            </div>
+          </li>
+          <li class="upcoming-item">
+            <div class="upcoming-date">Apr 5<br />2:00 PM</div>
+            <div class="upcoming-details">
+              <h3>Physical Therapy Session</h3>
+              <p>Location: Therapy Center, Room 210</p>
+            </div>
+          </li>
+          <li class="upcoming-item">
+            <div class="upcoming-date">Apr 7<br />11:00 AM</div>
+            <div class="upcoming-details">
+              <h3>Community Garden Club</h3>
+              <p>Location: Garden Area, East Wing</p>
+            </div>
+          </li>
+        </ul>
       </div>
 
-      <div class="card card-medication">
-        <div class="card-icon">💊</div>
-        <h2>Medication</h2>
-        <p>
-          Track your medications, view schedule, and request refills when
-          needed.
-        </p>
-        <a href="#" class="cta">Manage Medications</a>
+      <div class="quick-access">
+        <h2>Quick Access</h2>
+        <div class="quick-links">
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon" style="background-color: #e57373">
+              🍽️
+            </div>
+            <span>Meal Menu</span>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon" style="background-color: #81c784">
+              🚶
+            </div>
+            <span>Activities</span>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon" style="background-color: #64b5f6">
+              📞
+            </div>
+            <span>Contact Staff</span>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon" style="background-color: #ff8a65">
+              💬
+            </div>
+            <span>Family Chat</span>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon" style="background-color: #9575cd">
+              ❓
+            </div>
+            <span>Help & FAQ</span>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon" style="background-color: #4db6ac">
+              ⚙️
+            </div>
+            <span>Settings</span>
+          </a>
+        </div>
       </div>
-    </div>
+    </main>
 
-    <div class="upcoming-section">
-      <h2>Upcoming Schedule</h2>
-      <ul class="upcoming-list">
-        <li class="upcoming-item">
-          <div class="upcoming-date">Apr 3<br />9:30 AM</div>
-          <div class="upcoming-details">
-            <h3>Dr. Williams - Regular Checkup</h3>
-            <p>Location: Medical Wing, Room 102</p>
-          </div>
-        </li>
-        <li class="upcoming-item">
-          <div class="upcoming-date">Apr 5<br />2:00 PM</div>
-          <div class="upcoming-details">
-            <h3>Physical Therapy Session</h3>
-            <p>Location: Therapy Center, Room 210</p>
-          </div>
-        </li>
-        <li class="upcoming-item">
-          <div class="upcoming-date">Apr 7<br />11:00 AM</div>
-          <div class="upcoming-details">
-            <h3>Community Garden Club</h3>
-            <p>Location: Garden Area, East Wing</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="quick-access">
-      <h2>Quick Access</h2>
-      <div class="quick-links">
-        <a href="#" class="quick-link">
-          <div class="quick-link-icon" style="background-color: #e57373">
-            🍽️
-          </div>
-          <span>Meal Menu</span>
-        </a>
-        <a href="#" class="quick-link">
-          <div class="quick-link-icon" style="background-color: #81c784">
-            🚶
-          </div>
-          <span>Activities</span>
-        </a>
-        <a href="#" class="quick-link">
-          <div class="quick-link-icon" style="background-color: #64b5f6">
-            📞
-          </div>
-          <span>Contact Staff</span>
-        </a>
-        <a href="#" class="quick-link">
-          <div class="quick-link-icon" style="background-color: #ff8a65">
-            💬
-          </div>
-          <span>Family Chat</span>
-        </a>
-        <a href="#" class="quick-link">
-          <div class="quick-link-icon" style="background-color: #9575cd">
-            ❓
-          </div>
-          <span>Help & FAQ</span>
-        </a>
-        <a href="#" class="quick-link">
-          <div class="quick-link-icon" style="background-color: #4db6ac">
-            ⚙️
-          </div>
-          <span>Settings</span>
-        </a>
+    <footer>
+      <div class="container footer-container">
+        <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Feedback</a>
+        </div>
       </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="container footer-container">
-      <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Contact Us</a>
-        <a href="#">Feedback</a>
-      </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
 </template>
 
 <script setup>
@@ -494,4 +512,3 @@ onMounted(() => {
   margin-bottom: 0.3rem;
 }
 </style>
->>>>>>> feature/patient-dashboard
