@@ -38,7 +38,11 @@
       <div class="col-md-4 mb-4">
         <div class="card shadow-sm h-100">
           <div class="card-body">
+            <<<<<<< HEAD
             <h5 class="card-title">Staff Management</h5>
+            =======
+            <h5 class="card-title">Alerts & Notifications</h5>
+            >>>>>>> main
             <p class="card-text text-break">
               設備エラーやサービス不足などのアラート通知
             </p>
