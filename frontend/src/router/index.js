@@ -4,12 +4,16 @@ import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 import SamplePage from '../views/sample.vue'
 import StaffDashboard from '../views/StaffDashboard.vue'
+import ResidentDashboard from '../views/ResidentDashboard.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
 
 const routes = [
   { path: '/', component: Login },
   { path: '/dashboard', component: Dashboard },
   { path: '/sample', component: SamplePage },
-  { path: '/staff/staffDashboard', component: StaffDashboard }
+  { path: '/staff/staffDashboard', component: StaffDashboard },
+  { path: '/residentDashboard', component: ResidentDashboard },
+  { path: '/admin', component: AdminDashboard }
 ]
 
 export default createRouter({
