@@ -18,15 +18,15 @@
 
     <main class="container">
       <div class="row align-items-center">
-        <div class="welcome-banner col-md-8 mx-2">
+        <div class="welcome-banner col-8 mx-2">
           <h1>Welcome back, Serena!</h1>
           <p>
-            Today is {{ currentDate }}. You have
+            Today is {{ todayDate }}. You have
             {{ totalAppoinment }} appointments scheduled this week.
           </p>
         </div>
-        <div class="card col-md-3">
-          <h2>Total Patients</h2>
+        <div class="welcome-banner col-3">
+          <p><b>Total Patients</b></p>
           <p>Female: 10 Male: 17</p>
         </div>
       </div>
@@ -71,31 +71,78 @@
         </div>
       </div>
 
-      <div class="upcoming-section">
-        <h2>Upcoming Schedule</h2>
-        <ul class="upcoming-list">
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 3<br />9:30 AM</div>
-            <div class="upcoming-details">
-              <h3>Dr. Williams - Regular Checkup</h3>
-              <p>Location: Medical Wing, Room 102</p>
+      <div class="schedule-header">
+        <h2>Next Schedules</h2>
+        <span class="small-date"> April 2025 </span>
+        <div class="calendar">
+          <div class="calendar-header">
+            <div class="day">Sun</div>
+            <div class="day">Mon</div>
+            <div class="day">Tue</div>
+            <div class="day">Wed</div>
+            <div class="day">Thu</div>
+            <div class="day">Fri</div>
+            <div class="day">Sat</div>
+          </div>
+          <div class="calendar-body">
+            <div
+              class="calendar-day"
+              v-for="(date, index) in weekDates"
+              :key="index"
+            >
+              <div class="date">{{ date.getDate() }}</div>
+              <div class="appointments">
+                <div v-if="index === 3">
+                  <!-- Wednesday -->
+                  <div class="appointment clickable" @click="highlightTask">
+                    <div class="appointment-title">
+                      Morning Medication Rounds
+                    </div>
+                    <div class="appointment-location">All Resident Rooms</div>
+                    <div class="appointment-time">8:00am - 9:00am</div>
+                  </div>
+                  <div class="appointment clickable" @click="highlightTask">
+                    <div class="appointment-title">Wound Care Checkup</div>
+                    <div class="appointment-location">
+                      Medical Wing, Room 12
+                    </div>
+                    <div class="appointment-time">2:00pm - 2:30pm</div>
+                  </div>
+                  <div class="appointment clickable" @click="highlightTask">
+                    <div class="appointment-title">
+                      Morning Medication Rounds
+                    </div>
+                    <div class="appointment-location">All Resident Rooms</div>
+                    <div class="appointment-time">8:00am - 9:00am</div>
+                  </div>
+                </div>
+
+                <div v-if="index === 4">
+                  <!-- Thursday -->
+                  <div class="appointment clickable" @click="highlightTask">
+                    <div class="appointment-title">
+                      Routine Health Assessments
+                    </div>
+                    <div class="appointment-location">Common Area</div>
+                    <div class="appointment-time">9:30am - 11:00am</div>
+                  </div>
+                  <div class="appointment clickable" @click="highlightTask">
+                    <div class="appointment-title">
+                      Family Visit Coordination
+                    </div>
+                    <div class="appointment-location">Front Desk</div>
+                    <div class="appointment-time">2:00pm - 3:00pm</div>
+                  </div>
+                  <div class="appointment clickable" @click="highlightTask">
+                    <div class="appointment-title">Evening Checkups</div>
+                    <div class="appointment-location">All Resident Rooms</div>
+                    <div class="appointment-time">5:00pm - 6:30pm</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 5<br />2:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Physical Therapy Session</h3>
-              <p>Location: Therapy Center, Room 210</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 7<br />11:00 AM</div>
-            <div class="upcoming-details">
-              <h3>Community Garden Club</h3>
-              <p>Location: Garden Area, East Wing</p>
-            </div>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
 
       <div class="quick-access">
@@ -156,9 +203,35 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { computed } from 'vue'
+// import {ref} from 'vue'
+const currentDate = ref(new Date()) // Holds the current date
 
+// Function to get the month and year for display
+const currentMonthYear = computed(() => {
+  return currentDate.value.toLocaleString('default', {
+    month: 'long',
+    year: 'numeric'
+  })
+})
+
+// Function to get the week dates dynamically
+const getWeekDates = () => {
+  const weekDates = []
+  const startOfWeek = new Date(currentDate.value)
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()) // Set to Sunday
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startOfWeek)
+    date.setDate(startOfWeek.getDate() + i)
+    weekDates.push(date)
+  }
+  return weekDates
+}
+
+// Reactive property for the week dates
+const weekDates = computed(() => getWeekDates())
 onMounted(() => {
   const cards = document.querySelectorAll('.card')
   cards.forEach((card) => {
@@ -178,10 +251,23 @@ onMounted(() => {
       )
     })
   }
+  // Highlight upcoming schedules with animation and shadow
+  const upcomingItems = document.querySelectorAll('.upcoming-item')
+
+  upcomingItems.forEach((item) => {
+    // Add click event to each schedule
+    item.addEventListener('click', () => {
+      // Remove highlight from all items
+      upcomingItems.forEach((i) => i.classList.remove('highlight'))
+
+      // Add highlight to the clicked item
+      item.classList.add('highlight')
+    })
+  })
 })
 //add currentDate to the welcome message
 
-const currentDate = computed(() => {
+const todayDate = computed(() => {
   const options = {
     weekday: 'long',
     year: 'numeric',
@@ -196,6 +282,9 @@ const totalAppoinment = computed(() => {
 </script>
 
 <style scoped>
+.schedule-header {
+  margin-top: 3rem; /* Adds space above the Next Schedules section */
+}
 .staff-page {
   --primary: #ff2474;
   --primary-light: #ff5d98;
@@ -384,24 +473,71 @@ const totalAppoinment = computed(() => {
   flex-grow: 1;
 }
 
-.card .cta {
+.cta {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: var(--primary-light);
+  background-color: var(--primary);
   color: white;
+  padding: 0.5rem 1.5rem;
   border-radius: 5px;
+  margin-top: 1rem;
   text-decoration: none;
   font-weight: bold;
-  font-size: 0.9rem;
-  transition: background-color 0.3s ease;
+}
+
+.cta:hover {
+  background-color: var(--primary-light);
+}
+
+.calendar-section {
+  margin-top: 2rem;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   text-align: center;
-  margin-top: auto;
+  font-weight: bold;
+  color: var(--dark);
+  margin-bottom: 1rem;
 }
 
-.card .cta:hover {
-  background-color: var(--primary);
+.calendar-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
 }
 
+.calendar-day {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.date {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.appointments {
+  margin-top: 1rem;
+}
+
+.appointment {
+  background-color: var(--primary-light);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+}
+
+.appointment-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.appointment-time {
+  font-size: 0.9rem;
+}
 .quick-access {
   margin-top: 2rem;
 }
@@ -530,5 +666,33 @@ const totalAppoinment = computed(() => {
 .upcoming-details h3 {
   font-size: 1rem;
   margin-bottom: 0.3rem;
+}
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .calendar-header,
+  .calendar-body {
+    grid-template-columns: 1fr 1fr 1fr;
+    .quick-links {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .calendar-header,
+    .calendar-body {
+      grid-template-columns: 1fr;
+    }
+
+    .quick-links {
+      grid-template-columns: 1fr;
+    }
+  }
 }
 </style>
