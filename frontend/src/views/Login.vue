@@ -83,7 +83,7 @@ const handleLogin = () => {
 h1 {
   text-align: center;
   margin-bottom: 30px;
-  color: #333;
+  color: var(--dark);
 }
 
 .form-group {
@@ -94,7 +94,7 @@ label {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
-  color: #555;
+  color: var(--dark);
 }
 
 input {
@@ -108,7 +108,7 @@ input {
 button {
   width: 100%;
   padding: 12px;
-  background-color: #4285f4;
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 4px;
@@ -118,6 +118,6 @@ button {
 }
 
 button:hover {
-  background-color: #3367d6;
+  background-color: var(--primary-dark);
 }
 </style>
