@@ -2,9 +2,9 @@
   <div class="staff-page">
     <header>
       <div class="container header-container">
-        <div class="logo">
+        <router-link to="/staff" class="logo">
           <span>Swin Care</span>
-        </div>
+        </router-link>
         <div class="user-info">
           <button class="notifications-btn">
             📋
@@ -38,7 +38,9 @@
             Upcoming appointments with doctors, specialists, and therapy
             sessions.
           </p>
-          <a href="#" class="cta">Check Appointment</a>
+          <router-link to="/staff/appointment" class="cta"
+            >Check Appointment</router-link
+          >
         </div>
 
         <div class="card card-bills">
@@ -48,7 +50,9 @@
             View resident personal information, including contact details and
             emergency contacts.
           </p>
-          <a href="#" class="cta">View Resident Details</a>
+          <router-link to="/staff/residentInfo" class="cta"
+            >View Resident Details</router-link
+          >
         </div>
 
         <div class="card card-medical">
@@ -369,6 +373,7 @@ const totalAppoinment = computed(() => {
   display: flex;
   align-items: center;
   gap: 10px;
+  text-decoration: none;
 }
 
 .user-info {

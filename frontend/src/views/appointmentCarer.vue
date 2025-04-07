@@ -2,9 +2,9 @@
   <div class="staff-page">
     <header>
       <div class="container header-container">
-        <div class="logo">
-          <span>Swin Care</span>
-        </div>
+        <router-link to="/staff" class="logo"
+          ><span>Swin Care</span></router-link
+        >
         <div class="user-info">
           <button class="notifications-btn">
             📋
@@ -132,6 +132,17 @@
         </div>
       </div>
     </main>
+    <footer>
+      <div class="container footer-container">
+        <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Feedback</a>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -264,6 +275,7 @@ export default {
   font-weight: bold;
   font-size: 1.5rem;
   color: var(--primary);
+  text-decoration: none;
 }
 
 .user-info {
@@ -443,6 +455,21 @@ textarea:focus {
   }
 }
 
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-links a {
+  color: var(--primary);
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
 /* Search Input Styles */
 .search-input {
   background-color: #ff2474; /* Pink background */

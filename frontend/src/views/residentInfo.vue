@@ -2,10 +2,12 @@
   <div class="staff-page">
     <header>
       <div class="container header-container">
-        <div class="logo"><span>Swin Care</span></div>
+        <router-link to="/staff" class="logo"
+          ><span>Swin Care</span></router-link
+        >
         <div class="user-info">
           <button class="notifications-btn">
-            📋<span class="alert-count">2</span>
+            📋<span class="alert-count">3</span>
           </button>
           <div class="user-name">Serena Tr</div>
           <div class="user-avatar">ST</div>
@@ -324,6 +326,7 @@ export default {
   font-weight: bold;
   font-size: 1.5rem;
   color: var(--primary);
+  text-decoration: none;
 }
 .overlay {
   position: fixed;
