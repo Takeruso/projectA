@@ -56,7 +56,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="resident in filteredResidents"
+              v-for="resident in paginatedResidents"
               :key="resident.id"
               class="border-t"
             >
@@ -65,7 +65,7 @@
               </td>
               <td class="px-4 py-1">{{ resident.name }}</td>
               <td class="px-4 py-1">{{ resident.age }}</td>
-              <td class="py-1">{{ resident.roomId }}</td>
+              <td class="px-4 py-1">{{ resident.roomId }}</td>
               <td class="px-4 py-1">{{ resident.carePlan }}</td>
               <td class="px-4 py-1">{{ resident.medications.join(', ') }}</td>
               <td class="py-1">
@@ -80,18 +80,46 @@
             </tr>
           </tbody>
         </table>
-        <!-- <div v-if="showDetails" class="resident-card bg-white p-6 rounded shadow mt-6">
-                    <h2 class="text-xl font-bold mb-2">Resident Details</h2>
-                    <p><strong>ID:</strong> {{ selectedResident.id }}</p>
-                    <p><strong>Name:</strong> {{ selectedResident.name }}</p>
-                    <p><strong>Gender:</strong> {{ selectedResident.gender }}</p>
-                    <p><strong>Age:</strong> {{ selectedResident.age }}</p>
-                    <p><strong>Room:</strong> {{ selectedResident.roomId }}</p>
-                    <p><strong>Care Plan:</strong> {{ selectedResident.carePlan }}</p>
-                    <p><strong>Medications:</strong> {{ selectedResident.medications.join(', ') }}</p>
-                    
-                    <button @click="closeDetails" class="refresh-btn mt-4">Close</button>
-            </div> -->
+        <!-- pagination navigation -->
+        <nav class="d-flex justify-content-center mt-4">
+          <ul class="pagination">
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <button
+                class="page-link"
+                @click="currentPage--"
+                :disabled="currentPage === 1"
+              >
+                Previous
+              </button>
+            </li>
+
+            <li
+              class="page-item"
+              v-for="page in totalPages"
+              :key="page"
+              :class="{ active: page === currentPage }"
+            >
+              <button class="page-link" @click="currentPage = page">
+                {{ page }}
+              </button>
+            </li>
+
+            <li
+              class="page-item"
+              :class="{ disabled: currentPage === totalPages }"
+            >
+              <button
+                class="page-link"
+                @click="currentPage++"
+                :disabled="currentPage === totalPages"
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- resident details card -->
         <div v-if="showDetails" class="overlay" @click="closeDetails">
           <div class="resident-card-container" @click.stop>
             <div class="resident-card bg-white p-6 rounded shadow">
@@ -143,8 +171,13 @@ export default {
   data() {
     return {
       search: '',
+      // vars for resident details card
       showDetails: false,
       selectedResident: null,
+      // pagination
+      currentPage: 1,
+      residentsPerPage: 5,
+      totalResidents: 0,
       residents: [
         {
           id: '00634',
@@ -273,11 +306,20 @@ export default {
         month: 'long',
         day: 'numeric'
       })
+    },
+    // pagination logic
+    paginatedResidents() {
+      const start = (this.currentPage - 1) * this.residentsPerPage
+      const end = start + this.residentsPerPage
+      return this.filteredResidents.slice(start, end)
+    },
+    totalPages() {
+      return Math.ceil(this.filteredResidents.length / this.residentsPerPage)
     }
   },
   methods: {
     refreshData() {
-      alert('Resident list refreshed!')
+      window.location.reload()
     },
     viewDetails(resident) {
       this.selectedResident = resident
@@ -287,6 +329,14 @@ export default {
       this.selectedResident = null
       this.showDetails = false
     }
+  },
+  watch: {
+    search() {
+      this.currentPage = 1
+    }
+  },
+  mounted() {
+    this.totalResidents = this.residents.length
   }
 }
 </script>
@@ -520,6 +570,24 @@ export default {
   position: absolute;
   top: -5px;
   right: -5px;
+}
+.page-link {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  margin: 0 0.25rem;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary) !important; /* Darker pink for active page */
+  color: white !important; /* Ensure text is white */
+  box-shadow: 0 0 20px var(--primary);
+  border: none;
+}
+.page-link:hover {
+  background-color: #d81b60; /* Darker pink on hover */
+  color: white; /* White text on hover */
 }
 
 .notifications-btn {
