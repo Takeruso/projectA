@@ -7,6 +7,7 @@ import StaffDashboard from '../views/StaffDashboard.vue'
 import ResidentDashboard from '../views/ResidentDashboard.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 import StaffAppointment from '../views/appointmentCarer.vue'
+import StaffResidentInfo from '../views/residentInfo.vue'
 
 const routes = [
   { path: '/', component: Login },
@@ -15,7 +16,8 @@ const routes = [
   { path: '/staff', component: StaffDashboard },
   { path: '/residentDashboard', component: ResidentDashboard },
   { path: '/admin', component: AdminDashboard },
-  { path: '/staff/appointment', component: StaffAppointment }
+  { path: '/staff/appointment', component: StaffAppointment },
+  { path: '/staff/residentInfo', component: StaffResidentInfo }
 ]
 
 export default createRouter({
