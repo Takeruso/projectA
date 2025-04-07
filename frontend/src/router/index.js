@@ -3,9 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 import SamplePage from '../views/sample.vue'
-import StaffDashboard from '../views/StaffDashboard.vue'
-import ResidentDashboard from '../views/ResidentDashboard.vue'
-import AdminDashboard from '../views/AdminDashboard.vue'
+import StaffDashboard from '../views/staff/staffDashboard.vue'
+import ResidentDashboard from '../views/resident/ResidentDashboard.vue'
+import AdminDashboard from '../views/admin/AdminDashboard.vue'
 
 const routes = [
   { path: '/', component: Login },
