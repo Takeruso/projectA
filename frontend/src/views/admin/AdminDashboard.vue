@@ -26,127 +26,77 @@
       </div>
 
       <div class="dashboard-grid">
+        <!-- Staff Management -->
         <div class="card card-appointments">
-          <div class="card-icon">📅</div>
-          <h2>Appointments</h2>
+          <div class="card-icon"><i class="fas fa-user-nurse"></i></div>
+          <h2>Staff Management</h2>
           <p>
-            Book or view your upcoming appointments with doctors, specialists,
-            and staff.
+            View and manage staff profiles, qualifications, schedules, and
+            assignments.
           </p>
-          <a href="#" class="cta">Book Appointment</a>
+          <a href="#" class="cta">Manage Staff</a>
         </div>
 
-        <div class="card card-bills">
-          <div class="card-icon">📜</div>
-          <h2>Billing & Payments</h2>
+        <!-- Facility Management -->
+        <div class="card card-appointments">
+          <div class="card-icon"><i class="fas fa-hospital-alt"></i></div>
+          <h2>Facility Management</h2>
           <p>
-            View your current bills, payment history, and make new payments
-            securely.
+            Check facility status, room availability, and manage utilities and
+            reservations.
           </p>
-          <a href="#" class="cta">View Bills</a>
+          <a href="#" class="cta">View Facilities</a>
         </div>
 
-        <div class="card card-medical">
-          <div class="card-icon">🏥</div>
-          <h2>Medical Reports</h2>
+        <!-- Scheduling -->
+        <div class="card card-appointments">
+          <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+          <h2>Scheduling</h2>
           <p>
-            Access your medical history, test results, and health assessments.
+            Assign and manage shifts, view upcoming schedules, and coordinate
+            staff availability.
           </p>
-          <a href="#" class="cta">View Reports</a>
+          <a href="#" class="cta">Manage Schedule</a>
         </div>
 
-        <div class="card card-medication">
-          <div class="card-icon">💊</div>
-          <h2>Medication</h2>
+        <!-- Inventory Management -->
+        <div class="card card-appointments">
+          <div class="card-icon"><i class="fas fa-boxes"></i></div>
+          <h2>Inventory Management</h2>
           <p>
-            Track your medications, view schedule, and request refills when
-            needed.
+            Track inventory levels, manage supplies, and ensure essential goods
+            are available.
           </p>
-          <a href="#" class="cta">Manage Medications</a>
+          <a href="#" class="cta">View Inventory</a>
         </div>
       </div>
-
       <div class="upcoming-section">
-        <h2>Upcoming Schedule</h2>
+        <h2>Upcoming Staff Shifts</h2>
         <ul class="upcoming-list">
           <li class="upcoming-item">
-            <div class="upcoming-date">Apr 3<br />9:30 AM</div>
+            <div class="upcoming-date">Apr 3<br />7:00 AM - 3:00 PM</div>
             <div class="upcoming-details">
-              <h3>Dr. Williams - Regular Checkup</h3>
-              <p>Location: Medical Wing, Room 102</p>
+              <h3>Sarah Johnson - Registered Nurse</h3>
+              <p>Assigned to: Medical Wing, Room 102</p>
             </div>
           </li>
           <li class="upcoming-item">
-            <div class="upcoming-date">Apr 5<br />2:00 PM</div>
+            <div class="upcoming-date">Apr 5<br />8:00 AM - 4:00 PM</div>
             <div class="upcoming-details">
-              <h3>Physical Therapy Session</h3>
-              <p>Location: Therapy Center, Room 210</p>
+              <h3>Tom Nguyen - Care Assistant</h3>
+              <p>Assigned to: Residential Unit B</p>
             </div>
           </li>
           <li class="upcoming-item">
-            <div class="upcoming-date">Apr 7<br />11:00 AM</div>
+            <div class="upcoming-date">Apr 7<br />10:00 AM - 6:00 PM</div>
             <div class="upcoming-details">
-              <h3>Community Garden Club</h3>
-              <p>Location: Garden Area, East Wing</p>
+              <h3>Alice Wong - Physiotherapist</h3>
+              <p>Assigned to: Therapy Center, Room 210</p>
             </div>
           </li>
         </ul>
       </div>
-
-      <div class="quick-access">
-        <h2>Quick Access</h2>
-        <div class="quick-links">
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #e57373">
-              🍽️
-            </div>
-            <span>Meal Menu</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #81c784">
-              🚶
-            </div>
-            <span>Activities</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #64b5f6">
-              📞
-            </div>
-            <span>Contact Staff</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #ff8a65">
-              💬
-            </div>
-            <span>Family Chat</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #9575cd">
-              ❓
-            </div>
-            <span>Help & FAQ</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #4db6ac">
-              ⚙️
-            </div>
-            <span>Settings</span>
-          </a>
-        </div>
-      </div>
     </main>
-
-    <footer>
-      <div class="container footer-container">
-        <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Feedback</a>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
@@ -176,53 +126,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.resident-page {
-  --primary: #ff2474;
-  --primary-light: #ff5d98;
-  --secondary: #f4b942;
-  --dark: #2a3950;
-  --light: #f9f9f9;
-  --danger: #d64045;
-  --success: #4caf50;
-  --gray: #e5e9f0;
-  /* background-color: var(--light);
-  color: var(--dark);
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6; */
-}
-
 :deep(.resident-page *) {
   all: unset;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
-
-:deep(.resident-page body) {
-  background-color: var(--light);
-  color: var(--dark);
-  line-height: 1.6;
-}
-
-/* :deep(.resident-page header) {
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-} */
-
 .resident-page main {
   padding: 2rem 0;
 }
-
-/* .resident-page :deep(footer) {
-  background-color: white;
-  padding: 1.5rem 0;
-  margin-top: 3rem;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-} */
 
 .resident-page header {
   background-color: white;
@@ -231,13 +142,6 @@ onMounted(() => {
   position: sticky;
   top: 0;
   z-index: 100;
-}
-
-.resident-page footer {
-  background-color: white;
-  padding: 1.5rem 0;
-  margin-top: 3rem;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .container {
@@ -324,15 +228,16 @@ onMounted(() => {
 }
 
 .card-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  background-color: #e6e6e6;
+  color: #333;
+  border-radius: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: white;
+  justify-content: center;
+  margin: 1rem auto;
 }
 
 .card-appointments .card-icon {
@@ -424,22 +329,6 @@ onMounted(() => {
   align-items: center;
   color: white;
   font-size: 0.9rem;
-}
-
-.footer-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-links a {
-  color: var(--primary);
-  margin-left: 1rem;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
 }
 
 .alert-count {
