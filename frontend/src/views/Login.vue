@@ -9,15 +9,15 @@
     <div class="login-side">
       <div class="login-box">
         <h1>Sign In</h1>
-        <form id="loginForm">
+        <form id="loginForm" @submit.prevent="handleLogin">
           <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" type="text" required />
+            <input v-model="username" id="username" type="text" required />
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
-            <input id="password" type="password" required />
+            <input v-model="password" id="password" type="password" required />
           </div>
 
           <button type="submit">Login</button>
@@ -29,12 +29,22 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const username = ref('')
 const password = ref('')
+const router = useRouter()
 
 const handleLogin = () => {
-  console.log('Login attempt:', username.value)
+  if (username.value === 'resident' && password.value === 'pass') {
+    router.push('/resident')
+  } else if (username.value === 'staff' && password.value === 'pass') {
+    router.push('/staff')
+  } else if (username.value === 'admin' && password.value === 'pass') {
+    router.push('/admin')
+  } else {
+    alert('Invalid credentials')
+  }
 }
 </script>
 
@@ -100,9 +110,11 @@ label {
 input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #0c0c0c;
   border-radius: 4px;
   font-size: 16px;
+  background-color: rgb(251, 251, 251);
+  color: #0c0c0c;
 }
 
 button {
