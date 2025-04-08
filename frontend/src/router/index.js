@@ -8,8 +8,7 @@ import ResidentDashboard from '../views/resident/ResidentDashboard.vue'
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
 import Billing from '../views/resident/billing.vue'
 import ResidentAppointment from '../views/resident/appointments.vue'
-import Billing from '../views/resident/billing.vue'
-import ResidentAppointment from '../views/resident/appointments.vue'
+
 import StaffManagement from '../views/admin/StaffManagement.vue'
 
 const routes = [
