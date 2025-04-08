@@ -33,7 +33,9 @@
             Book or view your upcoming appointments with doctors, specialists,
             and staff.
           </p>
-          <a href="#" class="cta">Book Appointment</a>
+          <router-link to="/resident/ResidentAppointment" class="cta"
+            >View Appointmentts</router-link
+          >
         </div>
 
         <div class="card card-bills">
@@ -43,7 +45,7 @@
             View your current bills, payment history, and make new payments
             securely.
           </p>
-          <a href="#" class="cta">View Bills</a>
+          <router-link to="/resident/bill" class="cta">View Bills</router-link>
         </div>
 
         <div class="card card-medical">
