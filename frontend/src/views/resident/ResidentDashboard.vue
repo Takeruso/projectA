@@ -34,7 +34,7 @@
             and staff.
           </p>
           <router-link to="/resident/ResidentAppointment" class="cta"
-            >View Appointments</router-link
+            >View Appointmentts</router-link
           >
         </div>
 
