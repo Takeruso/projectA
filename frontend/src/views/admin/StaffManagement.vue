@@ -26,75 +26,29 @@
       </div>
 
       <div class="dashboard-grid">
-        <!-- Staff Management -->
+        <!-- View Staff Records -->
         <div class="card card-appointments">
           <div class="card-icon"><i class="fas fa-user-nurse"></i></div>
-          <h2>Staff Management</h2>
-          <p>
-            View and manage staff profiles, qualifications, schedules, and
-            assignments.
-          </p>
-          <router-link to="/admin/staff" class="cta">Manage Staff</router-link>
+          <h2>View Staff Records</h2>
+          <p>View staff records.</p>
+          <a href="#" class="cta">View Records</a>
         </div>
 
-        <!-- Facility Management -->
+        <!--  Add to Staff Records -->
         <div class="card card-appointments">
           <div class="card-icon"><i class="fas fa-hospital-alt"></i></div>
-          <h2>Facility Management</h2>
-          <p>
-            Check facility status, room availability, and manage utilities and
-            reservations.
-          </p>
-          <a href="#" class="cta">View Facilities</a>
+          <h2>Add to Staff Records</h2>
+          <p>Add new staff to records.</p>
+          <a href="#" class="cta">Add to Records</a>
         </div>
 
-        <!-- Scheduling -->
+        <!-- Edit existing Staff Records -->
         <div class="card card-appointments">
           <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
-          <h2>Scheduling</h2>
-          <p>
-            Assign and manage shifts, view upcoming schedules, and coordinate
-            staff availability.
-          </p>
-          <a href="#" class="cta">Manage Schedule</a>
+          <h2>Edit Existing Staff Records</h2>
+          <p>Remove any member from existing records.</p>
+          <a href="#" class="cta">Edit Records</a>
         </div>
-
-        <!-- Inventory Management -->
-        <div class="card card-appointments">
-          <div class="card-icon"><i class="fas fa-boxes"></i></div>
-          <h2>Inventory Management</h2>
-          <p>
-            Track inventory levels, manage supplies, and ensure essential goods
-            are available.
-          </p>
-          <a href="#" class="cta">View Inventory</a>
-        </div>
-      </div>
-      <div class="upcoming-section">
-        <h2>Upcoming Staff Shifts</h2>
-        <ul class="upcoming-list">
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 3<br />7:00 AM - 3:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Sarah Johnson - Registered Nurse</h3>
-              <p>Assigned to: Medical Wing, Room 102</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 5<br />8:00 AM - 4:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Tom Nguyen - Care Assistant</h3>
-              <p>Assigned to: Residential Unit B</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 7<br />10:00 AM - 6:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Alice Wong - Physiotherapist</h3>
-              <p>Assigned to: Therapy Center, Room 210</p>
-            </div>
-          </li>
-        </ul>
       </div>
     </main>
   </div>
