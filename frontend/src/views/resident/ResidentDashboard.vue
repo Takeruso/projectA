@@ -64,7 +64,7 @@
             Track your medications, view schedule, and request refills when
             needed.
           </p>
-          <a href="#" class="cta">Manage Medications</a>
+          <router-link to="/resident/medications" class="cta">View Medications</router-link>
         </div>
       </div>
 
