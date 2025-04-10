@@ -8,6 +8,7 @@ import ResidentDashboard from '../views/resident/ResidentDashboard.vue'
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
 import Billing from '../views/resident/billing.vue'
 import ResidentAppointment from '../views/resident/appointments.vue'
+import Medications from '../views/resident/medications.vue'
 
 import StaffManagement from '../views/admin/StaffManagement.vue'
 
@@ -19,7 +20,7 @@ const routes = [
   { path: '/admin', component: AdminDashboard },
   { path: '/resident', component: ResidentDashboard },
   { path: '/resident/bill', component: Billing },
-  { path: '/resident/ResidentAppointment', component: ResidentAppointment }
+  { path: '/resident/medications', component: Medications }
 ]
 
 export default createRouter({
