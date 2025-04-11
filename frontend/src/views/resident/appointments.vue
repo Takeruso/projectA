@@ -108,6 +108,7 @@
             <div class="appointment-details">
               <h3>{{ appt.reason }}</h3>
               <p>{{ appt.date }} at {{ appt.time }}</p>
+              <span>Status: Confirmed</span>
             </div>
           </li>
         </ul>
@@ -358,6 +359,54 @@ main {
   cursor: pointer;
 }
 
+.appointment-item {
+  background-color: var(--light);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.appointment-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.appointment-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.appointment-details h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--dark);
+  font-weight: bold;
+}
+
+.appointment-details p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.appointment-details span {
+  display: inline-block;
+  background-color: var(--primary-light);
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
 form label {
   display: block;
   margin-top: 10px;
@@ -407,24 +456,6 @@ form button:hover {
 
 .notification.success {
   background-color: var(--success);
-}
-
-.appointment-item {
-  background-color: var(--light);
-  border-radius: 5px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.appointment-item h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  color: var(--dark);
-}
-
-.appointment-item p {
-  color: #666;
 }
 </style>
 
