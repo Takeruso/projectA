@@ -37,6 +37,19 @@
           <router-link to="/admin/staff" class="cta">Manage Staff</router-link>
         </div>
 
+        <!-- Resident Management -->
+        <div class="card card-appointments">
+          <div class="card-icon"><i class="fas fa-procedures"></i></div>
+          <h2>Resident Management</h2>
+          <p>
+            Manage resident profiles, care plans, medical records, and personal
+            information securely.
+          </p>
+          <router-link to="/admin/residents" class="cta"
+            >Manage Residents</router-link
+          >
+        </div>
+
         <!-- Facility Management -->
         <div class="card card-appointments">
           <div class="card-icon"><i class="fas fa-hospital-alt"></i></div>
@@ -70,6 +83,7 @@
           <a href="#" class="cta">View Inventory</a>
         </div>
       </div>
+
       <div class="upcoming-section">
         <h2>Upcoming Staff Shifts</h2>
         <ul class="upcoming-list">
@@ -204,8 +218,10 @@ onMounted(() => {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .card {
@@ -219,12 +235,17 @@ onMounted(() => {
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100%;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-grid > div {
+  height: 100%;
 }
 
 .card-icon {
@@ -399,5 +420,17 @@ onMounted(() => {
 .upcoming-details h3 {
   font-size: 1rem;
   margin-bottom: 0.3rem;
+}
+
+@media (min-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1199px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 </style>
