@@ -8,8 +8,8 @@ import ResidentDashboard from '../views/resident/ResidentDashboard.vue'
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
 import Billing from '../views/resident/billing.vue'
 import ResidentAppointment from '../views/resident/appointments.vue'
-
 import StaffManagement from '../views/admin/StaffManagement.vue'
+import StaffRecord from '../views/admin/StaffRecords.vue'
 
 const routes = [
   { path: '/', component: Login },
@@ -19,7 +19,9 @@ const routes = [
   { path: '/admin', component: AdminDashboard },
   { path: '/resident', component: ResidentDashboard },
   { path: '/resident/bill', component: Billing },
-  { path: '/resident/ResidentAppointment', component: ResidentAppointment }
+  { path: '/resident/ResidentAppointment', component: ResidentAppointment },
+  { path: '/admin/staff', component: StaffManagement },
+  { path: '/admin/staffRecord', component: StaffRecord }
 ]
 
 export default createRouter({
