@@ -1,7 +1,7 @@
 export default [
   {
     path: '/',
-    component: () => import('@/views/Login.vue')
+    component: () => import('@/views/Landing.vue')
   },
   {
     path: '/dashboard',
@@ -10,5 +10,9 @@ export default [
   {
     path: '/sample',
     component: () => import('@/views/Sample.vue')
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/Login.vue')
   }
 ]
