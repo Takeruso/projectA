@@ -75,7 +75,7 @@
 
     <!-- Modals for Booking, Viewing, and Canceling Appointments -->
     <div id="bookModal" class="modal">
-      <div class="modal-content">
+      <div class="modal-content enhanced-container">
         <span class="close" @click="closeModal('bookModal')">&times;</span>
         <h2>Book Appointment</h2>
         <form id="bookForm" @submit.prevent="bookAppointment">
@@ -84,19 +84,52 @@
             type="text"
             id="reason"
             v-model="newAppointment.reason"
+            placeholder="E.g., Consultation, Check-up, etc."
             required
           />
+
+          <label for="department">Department:</label>
+          <select
+            id="department"
+            v-model="newAppointment.department"
+            @change="updateDoctors"
+            required
+          >
+            <option value="" disabled selected>Select Department</option>
+            <option
+              v-for="(doctors, department) in departments"
+              :key="department"
+              :value="department"
+            >
+              {{ department }}
+            </option>
+          </select>
+
+          <label for="doctor">Select Doctor:</label>
+          <select id="doctor" v-model="newAppointment.doctor" required>
+            <option value="" disabled selected>Select Doctor</option>
+            <option
+              v-for="doctor in availableDoctors"
+              :key="doctor"
+              :value="doctor"
+            >
+              {{ doctor }}
+            </option>
+          </select>
+
           <label for="date">Date:</label>
           <input type="date" id="date" v-model="newAppointment.date" required />
+
           <label for="time">Time:</label>
           <input type="time" id="time" v-model="newAppointment.time" required />
-          <button type="submit">Book</button>
+
+          <button type="submit" class="cta">Book</button>
         </form>
       </div>
     </div>
 
     <div id="viewModal" class="modal">
-      <div class="modal-content">
+      <div class="modal-content enhanced-container">
         <span class="close" @click="closeModal('viewModal')">&times;</span>
         <h2>View Appointments</h2>
         <ul>
@@ -108,6 +141,8 @@
             <div class="appointment-details">
               <h3>{{ appt.reason }}</h3>
               <p>{{ appt.date }} at {{ appt.time }}</p>
+              <p>Doctor: {{ appt.doctor }}</p>
+              <p>Department: {{ appt.department }}</p>
               <span>Status: Confirmed</span>
             </div>
           </li>
@@ -116,7 +151,7 @@
     </div>
 
     <div id="cancelModal" class="modal">
-      <div class="modal-content">
+      <div class="modal-content enhanced-container">
         <span class="close" @click="closeModal('cancelModal')">&times;</span>
         <h2>Cancel Appointment</h2>
         <form id="cancelForm" @submit.prevent="cancelAppointment">
@@ -130,7 +165,7 @@
               {{ appt.reason }} - {{ appt.date }} - {{ appt.time }}
             </option>
           </select>
-          <button type="submit">Cancel</button>
+          <button type="submit" class="cta">Cancel</button>
         </form>
       </div>
     </div>
@@ -148,7 +183,82 @@
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      appointments: [],
+      newAppointment: {
+        reason: '',
+        department: '',
+        doctor: '',
+        date: '',
+        time: ''
+      },
+      selectedAppointment: null,
+      availableDoctors: [],
+      notificationMessage: '',
+      notificationType: '',
+      departments: {
+        Cardiology: ['Dr. John Smith', 'Dr. Emily Clark'],
+        Dermatology: ['Dr. Rachel Adams', 'Dr. Michael Brown'],
+        Physiotherapy: ['Dr. Sarah Lee', 'Dr. Chris Pine'],
+        Neurology: ['Dr. Alan Grant', 'Dr. Ellie Sattler'],
+        Pediatrics: ['Dr. Jane Doe', 'Dr. Mark Green'],
+        Orthopedics: ['Dr. Sophia Black', 'Dr. Ethan Gray'],
+        Gastroenterology: ['Dr. Lisa White', 'Dr. Kevin Blue'],
+        Oncology: ['Dr. Paul Red', 'Dr. Clara Pink'],
+        Radiology: ['Dr. George Grey', 'Dr. Susan Violet'],
+        Endocrinology: ['Dr. Andrew Yellow', 'Dr. Olivia Orange']
+      }
+    }
+  },
+  methods: {
+    showModal(modalId) {
+      document.getElementById(modalId).style.display = 'block'
+    },
+    closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none'
+    },
+    bookAppointment() {
+      this.appointments.push({ ...this.newAppointment })
+      this.showNotification('Appointment booked successfully!', 'success')
+      this.closeModal('bookModal')
+      this.clearForm()
+    },
+    cancelAppointment() {
+      this.appointments.splice(this.selectedAppointment, 1)
+      this.showNotification('Appointment canceled successfully!', 'danger')
+      this.closeModal('cancelModal')
+    },
+    updateDoctors() {
+      this.availableDoctors =
+        this.departments[this.newAppointment.department] || []
+    },
+    showNotification(message, type) {
+      this.notificationMessage = message
+      this.notificationType = type
+      const notification = document.getElementById('notification')
+      notification.style.display = 'block'
+      setTimeout(() => {
+        notification.style.display = 'none'
+      }, 3000)
+    },
+    clearForm() {
+      this.newAppointment = {
+        reason: '',
+        department: '',
+        doctor: '',
+        date: '',
+        time: ''
+      }
+    }
+  }
+}
+</script>
+
 <style scoped>
+/* General and Button Styling */
 :root {
   --primary: #ff2474;
   --primary-light: #ff5d98;
@@ -167,12 +277,6 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-  background-color: var(--light);
-  color: var(--dark);
-  line-height: 1.6;
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -183,9 +287,6 @@ header {
   background-color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
 
 .header-container {
@@ -198,9 +299,6 @@ header {
   font-weight: bold;
   font-size: 1.5rem;
   color: var(--primary);
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .user-info {
@@ -221,26 +319,13 @@ header {
   color: var(--dark);
 }
 
-main {
-  padding: 2rem 0;
-}
-
+/* Appointments Section */
 .appointments-section {
   background-color: white;
   border-radius: 10px;
   padding: 2rem;
   margin-bottom: 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.appointments-section h1 {
-  margin-bottom: 1rem;
-  font-size: 1.8rem;
-  color: var(--dark);
-}
-
-.appointments-section p {
-  color: #666;
 }
 
 .dashboard-grid {
@@ -260,7 +345,7 @@ main {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  align-items: center;
 }
 
 .card:hover {
@@ -269,15 +354,8 @@ main {
 }
 
 .card-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1rem;
   font-size: 2rem;
-  color: white;
+  margin-bottom: 1rem;
 }
 
 .card-book-appointment .card-icon {
@@ -292,148 +370,59 @@ main {
   background-color: var(--danger);
 }
 
-.card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: var(--dark);
-}
-
-.card p {
-  color: #666;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  flex-grow: 1;
-}
-
-.card .cta {
+.cta {
   display: inline-block;
   padding: 0.75rem 1.5rem;
   background-color: var(--primary-light);
   color: white;
+  text-align: center;
   border-radius: 5px;
   text-decoration: none;
-  font-weight: bold;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
-  text-align: center;
-  margin-top: auto;
+  font-weight: bold;
   border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.card .cta:hover {
+.cta:hover {
   background-color: var(--primary);
 }
 
+/* Modal Styling */
 .modal {
   display: none;
   position: fixed;
   z-index: 1;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
+  background-color: white;
+  margin: 10% auto;
+  padding: 2rem;
+  border-radius: 10px;
   width: 80%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.enhanced-container {
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  box-shadow:
+    4px 4px 6px rgba(0, 0, 0, 0.1),
+    -4px -4px 6px rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 2rem;
 }
 
 .close {
-  color: #aaa;
   float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.appointment-item {
-  background-color: var(--light);
-  border-radius: 10px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.appointment-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
-
-.appointment-details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-.appointment-details h3 {
-  margin: 0;
   font-size: 1.5rem;
-  color: var(--dark);
-  font-weight: bold;
-}
-
-.appointment-details p {
-  margin: 0;
-  font-size: 1.1rem;
-  color: #555;
-  font-weight: 500;
-}
-
-.appointment-details span {
-  display: inline-block;
-  background-color: var(--primary-light);
-  color: white;
-  font-size: 0.9rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 5px;
-  font-weight: bold;
-  margin-top: 0.5rem;
-}
-
-form label {
-  display: block;
-  margin-top: 10px;
-}
-
-form input,
-form select,
-form button {
-  display: block;
-  width: 100%;
-  margin-top: 5px;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-}
-
-form button {
-  background-color: var(--primary-light);
-  color: white;
-  border-radius: 5px;
-  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-form button:hover {
-  background-color: var(--primary);
 }
 
 .notification {
@@ -447,72 +436,9 @@ form button:hover {
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  transition: opacity 0.3s ease;
 }
 
 .notification.danger {
   background-color: var(--danger);
 }
-
-.notification.success {
-  background-color: var(--success);
-}
 </style>
-
-<script>
-export default {
-  data() {
-    return {
-      appointments: [],
-      newAppointment: {
-        reason: '',
-        date: '',
-        time: ''
-      },
-      selectedAppointment: null,
-      notificationMessage: '',
-      notificationType: ''
-    }
-  },
-  methods: {
-    showModal(modalId) {
-      document.getElementById(modalId).style.display = 'block'
-      if (modalId === 'viewModal') {
-        this.updateAppointmentList()
-      } else if (modalId === 'cancelModal') {
-        this.updateCancelOptions()
-      }
-    },
-    closeModal(modalId) {
-      document.getElementById(modalId).style.display = 'none'
-    },
-    bookAppointment() {
-      this.appointments.push({ ...this.newAppointment })
-      this.showNotification('Appointment booked successfully!', 'success')
-      this.closeModal('bookModal')
-      this.updateAppointmentList()
-    },
-    cancelAppointment() {
-      this.appointments.splice(this.selectedAppointment, 1)
-      this.showNotification('Appointment canceled successfully!', 'danger')
-      this.closeModal('cancelModal')
-      this.updateAppointmentList()
-    },
-    updateAppointmentList() {
-      // This method updates the appointment list
-    },
-    updateCancelOptions() {
-      // This method updates the cancel options
-    },
-    showNotification(message, type) {
-      this.notificationMessage = message
-      this.notificationType = type
-      const notification = document.getElementById('notification')
-      notification.style.display = 'block'
-      setTimeout(() => {
-        notification.style.display = 'none'
-      }, 3000)
-    }
-  }
-}
-</script>
