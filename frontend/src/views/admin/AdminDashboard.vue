@@ -34,7 +34,9 @@
             View and manage staff profiles, qualifications, schedules, and
             assignments.
           </p>
-          <router-link to="/admin/staff" class="cta">Manage Staff</router-link>
+          <router-link to="/admin/staff-records" class="cta"
+            >Manage Staff</router-link
+          >
         </div>
 
         <!-- Resident Management -->
@@ -45,7 +47,7 @@
             Manage resident profiles, care plans, medical records, and personal
             information securely.
           </p>
-          <router-link to="/admin/residents" class="cta"
+          <router-link to="/admin/resident-management" class="cta"
             >Manage Residents</router-link
           >
         </div>
@@ -58,7 +60,9 @@
             Check facility status, room availability, and manage utilities and
             reservations.
           </p>
-          <a href="#" class="cta">View Facilities</a>
+          <router-link to="/admin/facility-management" class="cta"
+            >View Facilities</router-link
+          >
         </div>
 
         <!-- Scheduling -->
@@ -69,7 +73,9 @@
             Assign and manage shifts, view upcoming schedules, and coordinate
             staff availability.
           </p>
-          <a href="#" class="cta">Manage Schedule</a>
+          <router-link to="/admin/schedule" class="cta"
+            >Manage Schedule</router-link
+          >
         </div>
 
         <!-- Inventory Management -->
