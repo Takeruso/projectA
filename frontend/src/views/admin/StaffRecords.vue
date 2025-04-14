@@ -17,105 +17,143 @@
     </header>
 
     <main class="container">
-      <div class="welcome-banner">
-        <h1>Welcome back, Martha!</h1>
-        <p>
-          Today is Tuesday, April 1, 2025. You have 2 appointments scheduled
-          this week.
-        </p>
-      </div>
+      <!-- Staff Records Table -->
+      <div id="table" class="container mt-4">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="background-color: #ff2474">First Name</th>
+              <th style="background-color: #ff2474">Last Name</th>
+              <th style="background-color: #ff2474">Role</th>
+              <th style="background-color: #ff2474">Qualification</th>
+              <th style="background-color: #ff2474">Type of Employment</th>
+              <th style="background-color: #ff2474">Annual Salary</th>
+              <th style="background-color: #ff2474">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(m, index) in allRecords" :key="index">
+              <td>{{ m.first }}</td>
+              <td>{{ m.last }}</td>
+              <td>{{ m.role }}</td>
+              <td>{{ m.qualification }}</td>
+              <td>{{ m.employment }}</td>
+              <td>{{ m.salary }}</td>
+              <td>
+                <button @click="removeRecord(index)" class="btn pink">
+                  Remove
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-      <div class="dashboard-grid">
-        <!-- Staff Management -->
-        <div class="card card-appointments">
-          <div class="card-icon"><i class="fas fa-user-nurse"></i></div>
-          <h2>Staff Management</h2>
-          <p>
-            View and manage staff profiles, qualifications, schedules, and
-            assignments.
-          </p>
-          <router-link to="/admin/staff" class="cta">Manage Staff</router-link>
+        <!-- Input Fields to Add a New Record -->
+        <div class="row g-2">
+          <div class="col">
+            <input
+              v-model="aRecord.first"
+              class="form-control"
+              placeholder="First Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="aRecord.last"
+              class="form-control"
+              placeholder="Last Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="aRecord.role"
+              class="form-control"
+              placeholder="Role"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="aRecord.qualification"
+              class="form-control"
+              placeholder="Qualification"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="aRecord.employment"
+              class="form-control"
+              placeholder="Employment Type"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="aRecord.salary"
+              class="form-control"
+              placeholder="Annual Salary"
+            />
+          </div>
+          <div class="col">
+            <button @click="addRecord" class="btn pink">Submit</button>
+          </div>
         </div>
-
-        <!-- Resident Management -->
-        <div class="card card-appointments">
-          <div class="card-icon"><i class="fas fa-procedures"></i></div>
-          <h2>Resident Management</h2>
-          <p>
-            Manage resident profiles, care plans, medical records, and personal
-            information securely.
-          </p>
-          <router-link to="/admin/residents" class="cta"
-            >Manage Residents</router-link
-          >
-        </div>
-
-        <!-- Facility Management -->
-        <div class="card card-appointments">
-          <div class="card-icon"><i class="fas fa-hospital-alt"></i></div>
-          <h2>Facility Management</h2>
-          <p>
-            Check facility status, room availability, and manage utilities and
-            reservations.
-          </p>
-          <a href="#" class="cta">View Facilities</a>
-        </div>
-
-        <!-- Scheduling -->
-        <div class="card card-appointments">
-          <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
-          <h2>Scheduling</h2>
-          <p>
-            Assign and manage shifts, view upcoming schedules, and coordinate
-            staff availability.
-          </p>
-          <a href="#" class="cta">Manage Schedule</a>
-        </div>
-
-        <!-- Inventory Management -->
-        <div class="card card-appointments">
-          <div class="card-icon"><i class="fas fa-boxes"></i></div>
-          <h2>Inventory Management</h2>
-          <p>
-            Track inventory levels, manage supplies, and ensure essential goods
-            are available.
-          </p>
-          <a href="#" class="cta">View Inventory</a>
-        </div>
-      </div>
-
-      <div class="upcoming-section">
-        <h2>Upcoming Staff Shifts</h2>
-        <ul class="upcoming-list">
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 3<br />7:00 AM - 3:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Sarah Johnson - Registered Nurse</h3>
-              <p>Assigned to: Medical Wing, Room 102</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 5<br />8:00 AM - 4:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Tom Nguyen - Care Assistant</h3>
-              <p>Assigned to: Residential Unit B</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 7<br />10:00 AM - 6:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Alice Wong - Physiotherapist</h3>
-              <p>Assigned to: Therapy Center, Room 210</p>
-            </div>
-          </li>
-        </ul>
       </div>
     </main>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+
+// Data for staff records
+const aRecord = ref({
+  first: '',
+  last: '',
+  role: '',
+  qualification: '',
+  employment: '',
+  salary: ''
+})
+
+const allRecords = ref([
+  {
+    first: 'Bob',
+    last: 'Builder',
+    role: 'Doctor',
+    qualification: 'Bachelor of Medicine',
+    employment: 'Full Time',
+    salary: '$100,000'
+  },
+  {
+    first: 'Wendy',
+    last: 'Carpenter',
+    role: 'Nurse',
+    qualification: 'Bachelor of Nursing',
+    employment: 'Part Time',
+    salary: '$115,000'
+  }
+])
+
+// Methods for adding and removing records
+const removeRecord = (index) => {
+  allRecords.value.splice(index, 1)
+}
+
+const addRecord = () => {
+  const { first, last, role, qualification, employment, salary } = aRecord.value
+  if (first && last && role && qualification && employment && salary) {
+    allRecords.value.push({ ...aRecord.value })
+    aRecord.value = {
+      first: '',
+      last: '',
+      role: '',
+      qualification: '',
+      employment: '',
+      salary: ''
+    }
+  } else {
+    alert('Please fill in all fields before submitting.')
+  }
+}
 
 onMounted(() => {
   const cards = document.querySelectorAll('.card')
@@ -218,10 +256,8 @@ onMounted(() => {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .card {
@@ -235,17 +271,12 @@ onMounted(() => {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-grid > div {
-  height: 100%;
+  box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-icon {
@@ -422,15 +453,51 @@ onMounted(() => {
   margin-bottom: 0.3rem;
 }
 
-@media (min-width: 1200px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.pink {
+  background-color: #ff5d98;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-@media (max-width: 1199px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
+.pink:hover {
+  background-color: #ff2474;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.table th {
+  color: white;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.form-control {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.row {
+  margin-top: 1rem;
 }
 </style>
