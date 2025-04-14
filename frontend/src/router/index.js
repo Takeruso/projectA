@@ -1,28 +1,21 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
-import Login from '../views/Login.vue'
-import SamplePage from '../views/sample.vue'
-import StaffDashboard from '../views/staff/staffDashboard.vue'
-import ResidentDashboard from '../views/resident/ResidentDashboard.vue'
-import AdminDashboard from '../views/admin/AdminDashboard.vue'
-import Billing from '../views/resident/billing.vue'
-import ResidentAppointment from '../views/resident/appointments.vue'
 
-import StaffManagement from '../views/admin/StaffManagement.vue'
+import adminRoutes from './modules/admin'
+import staffRoutes from './modules/staff'
+import residentRoutes from './modules/resident'
+import commonRoutes from './modules/common'
 
 const routes = [
-  { path: '/', component: Login },
-  { path: '/dashboard', component: Dashboard },
-  { path: '/sample', component: SamplePage },
-  { path: '/staff', component: StaffDashboard },
-  { path: '/admin', component: AdminDashboard },
-  { path: '/resident', component: ResidentDashboard },
-  { path: '/resident/bill', component: Billing },
-  { path: '/resident/ResidentAppointment', component: ResidentAppointment }
+  ...commonRoutes,
+  ...adminRoutes,
+  ...staffRoutes,
+  ...residentRoutes
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+export default router
