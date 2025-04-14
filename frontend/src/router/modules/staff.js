@@ -4,11 +4,11 @@ export default [
     component: () => import('@/views/staff/staffDashboard.vue')
   },
   {
-    path: '/staff/appointments',
+    path: '/staff/appointment',
     component: () => import('@/views/staff/appointmentCarer.vue')
   },
   {
-    path: '/staff/residents',
+    path: '/staff/residentInfo',
     component: () => import('@/views/staff/residentInfo.vue')
   }
 ]
