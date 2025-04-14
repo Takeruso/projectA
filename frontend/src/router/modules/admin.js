@@ -14,5 +14,13 @@ export default [
   {
     path: '/admin/facility-management',
     component: () => import('@/views/admin/FacilityManagement.vue')
+  },
+  {
+    path: '/admin/resident-management',
+    component: () => import('@/views/admin/ResidentManagement.vue')
+  },
+  {
+    path: '/admin/schedule',
+    component: () => import('@/views/admin/ScheduleManagement.vue')
   }
 ]
