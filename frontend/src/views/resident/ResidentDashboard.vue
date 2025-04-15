@@ -33,7 +33,8 @@
             Book or view your upcoming appointments with doctors, specialists,
             and staff.
           </p>
-          <router-link to="/resident/appointments" class="cta">View Appointments</router-link
+          <router-link to="/resident/appointments" class="cta"
+            >View Appointments</router-link
           >
         </div>
 
@@ -53,7 +54,9 @@
           <p>
             Access your medical history, test results, and health assessments.
           </p>
-          <router-link to="/resident/reports" class="cta">View Reports</router-link>
+          <router-link to="/resident/reports" class="cta"
+            >View Reports</router-link
+          >
         </div>
 
         <div class="card card-medication">
@@ -63,7 +66,9 @@
             Track your medications, view schedule, and request refills when
             needed.
           </p>
-          <router-link to="/resident/medications" class="cta">View Medications</router-link>
+          <router-link to="/resident/medications" class="cta"
+            >View Medications</router-link
+          >
         </div>
       </div>
 

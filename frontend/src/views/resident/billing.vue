@@ -77,7 +77,11 @@
         <h2>View Bills</h2>
         <ul id="billsList">
           <li v-for="(bill, index) in bills" :key="index" class="bill-item">
-            Bill #{{ bill.id }} - ${{ bill.amount }} - Due: {{ bill.dueDate }}
+            <div class="bill-details">
+              <h3>Bill #{{ bill.id }}</h3>
+              <p>Amount: ${{ bill.amount }}</p>
+              <p>Due Date: {{ bill.dueDate }}</p>
+            </div>
           </li>
         </ul>
       </div>
@@ -129,8 +133,11 @@
             :key="index"
             class="payment-item"
           >
-            Bill #{{ payment.bill.id }} - ${{ payment.bill.amount }} - Paid with
-            card ending in {{ payment.cardNumber.slice(-4) }}
+            <div class="payment-details">
+              <h3>Bill #{{ payment.bill.id }}</h3>
+              <p>Amount Paid: ${{ payment.bill.amount }}</p>
+              <p>Paid with card ending in {{ payment.cardNumber.slice(-4) }}</p>
+            </div>
           </li>
         </ul>
       </div>
@@ -349,6 +356,39 @@ main {
   cursor: pointer;
 }
 
+.bill-item,
+.payment-item {
+  background-color: var(--light);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.bill-item:hover,
+.payment-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.bill-details h3,
+.payment-details h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--dark);
+  font-weight: bold;
+}
+
+.bill-details p,
+.payment-details p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+
 form label {
   display: block;
   margin-top: 10px;
@@ -377,49 +417,6 @@ form button {
 form button:hover {
   background-color: var(--primary);
 }
-
-.notification {
-  display: none;
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 1rem 2rem;
-  background-color: var(--success);
-  color: white;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  transition: opacity 0.3s ease;
-}
-
-.notification.danger {
-  background-color: var(--danger);
-}
-
-.notification.success {
-  background-color: var(--success);
-}
-
-.bill-item,
-.payment-item {
-  background-color: var(--light);
-  border-radius: 5px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.bill-item h3,
-.payment-item h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-  color: var(--dark);
-}
-
-.bill-item p,
-.payment-item p {
-  color: #666;
-}
 </style>
 
 <script>
@@ -436,9 +433,7 @@ export default {
         cardNumber: '',
         expiry: '',
         cvv: ''
-      },
-      notificationMessage: '',
-      notificationType: ''
+      }
     }
   },
   methods: {
