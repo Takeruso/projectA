@@ -28,6 +28,8 @@
               <th style="background-color: #ff2474">Qualification</th>
               <th style="background-color: #ff2474">Type of Employment</th>
               <th style="background-color: #ff2474">Annual Salary</th>
+              <th style="background-color: #ff2474">Date of Birth</th>
+              <th style="background-color: #ff2474">Gender</th>
               <th style="background-color: #ff2474">Action</th>
             </tr>
           </thead>
@@ -39,6 +41,8 @@
               <td>{{ m.qualification }}</td>
               <td>{{ m.employment }}</td>
               <td>{{ m.salary }}</td>
+              <td>{{ m.dob }}</td>
+              <td>{{ m.gender }}</td>
               <td>
                 <button @click="removeRecord(index)" class="btn pink">
                   Remove
@@ -93,6 +97,20 @@
             />
           </div>
           <div class="col">
+            <input
+              v-model="aRecord.dob"
+              class="form-control"
+              placeholder="Date of Birth"
+            />
+            <div class="col">
+              <input
+                v-model="aRecord.gender"
+                class="form-control"
+                placeholder="Gender"
+              />
+            </div>
+          </div>
+          <div class="col">
             <button @click="addRecord" class="btn pink">Submit</button>
           </div>
         </div>
@@ -111,7 +129,9 @@ const aRecord = ref({
   role: '',
   qualification: '',
   employment: '',
-  salary: ''
+  salary: '',
+  dob: '',
+  gender: ''
 })
 
 const allRecords = ref([
@@ -121,7 +141,9 @@ const allRecords = ref([
     role: 'Doctor',
     qualification: 'Bachelor of Medicine',
     employment: 'Full Time',
-    salary: '$100,000'
+    salary: '$100,000',
+    dob: '1/1/1970',
+    gender: 'Male'
   },
   {
     first: 'Wendy',
@@ -129,7 +151,9 @@ const allRecords = ref([
     role: 'Nurse',
     qualification: 'Bachelor of Nursing',
     employment: 'Part Time',
-    salary: '$115,000'
+    salary: '$115,000',
+    dob: '21/10/1985',
+    gender: 'Female'
   }
 ])
 
@@ -139,8 +163,18 @@ const removeRecord = (index) => {
 }
 
 const addRecord = () => {
-  const { first, last, role, qualification, employment, salary } = aRecord.value
-  if (first && last && role && qualification && employment && salary) {
+  const { first, last, role, qualification, employment, salary, dob, gender } =
+    aRecord.value
+  if (
+    first &&
+    last &&
+    role &&
+    qualification &&
+    employment &&
+    salary &&
+    dob &&
+    gender
+  ) {
     allRecords.value.push({ ...aRecord.value })
     aRecord.value = {
       first: '',
@@ -148,7 +182,9 @@ const addRecord = () => {
       role: '',
       qualification: '',
       employment: '',
-      salary: ''
+      salary: '',
+      dob: '',
+      gender: ''
     }
   } else {
     alert('Please fill in all fields before submitting.')
