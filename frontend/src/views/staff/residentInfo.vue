@@ -243,17 +243,6 @@
         </div>
       </div>
     </main>
-    <footer>
-      <div class="container footer-container">
-        <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Feedback</a>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 

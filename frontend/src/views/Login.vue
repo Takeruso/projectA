@@ -1,54 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="container mt-5">
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
-      <input
-        class="form-control my-2"
-        v-model="username"
-        placeholder="Username"
-        required
-      />
-      <input
-        class="form-control my-2"
-        v-model="password"
-        type="password"
-        placeholder="Password"
-        required
-      />
-      <button class="btn btn-primary" type="submit">Login</button>
-      <p v-if="error" class="text-danger mt-2">{{ error }}</p>
-    </form>
-  </div>
-</template>
-
-<script>
-import axios from 'axios'
-
-export default {
-  name: 'LoginView',
-  data() {
-    return {
-      username: '',
-      password: '',
-      error: ''
-    }
-  },
-  methods: {
-    async handleLogin() {
-      try {
-        const response = await axios.post('http://localhost:3000/api/users', {
-          username: this.username,
-          password: this.password
-        })
-        console.log('Login success:', response.data)
-        this.$router.push('/dashboard')
-      } catch (err) {
-        console.error('Login failed:', err)
-        this.error = 'Login failed. Please try again.'
-      }
-    }
-=======
   <div class="container">
     <!-- Left Side: Image -->
     <div class="image-side">
@@ -94,16 +44,11 @@ const handleLogin = () => {
     router.push('/admin')
   } else {
     alert('Invalid credentials')
->>>>>>> b59ca2c298dc4c3c5d9f73087f7dc9c7b73db2aa
   }
 }
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-.container {
-  max-width: 400px;
-=======
 * {
   margin: 0;
   padding: 0;
@@ -186,6 +131,5 @@ button {
 
 button:hover {
   background-color: var(--primary-dark);
->>>>>>> b59ca2c298dc4c3c5d9f73087f7dc9c7b73db2aa
 }
 </style>

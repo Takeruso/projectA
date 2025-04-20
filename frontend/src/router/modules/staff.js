@@ -1,3 +1,5 @@
+import path from 'path'
+
 export default [
   {
     path: '/staff',
@@ -10,5 +12,9 @@ export default [
   {
     path: '/staff/residentInfo',
     component: () => import('@/views/staff/residentInfo.vue')
+  },
+  {
+    path: '/staff/reports',
+    component: () => import('@/views/staff/staffMedicalReport.vue')
   }
 ]
