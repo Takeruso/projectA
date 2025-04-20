@@ -64,6 +64,17 @@
           </p>
           <a href="#" class="cta">View Reports</a>
         </div>
+        <!-- medical report -->
+        <div class="card card-medical">
+          <div class="card-icon">🏥</div>
+          <h2>Medical Reports</h2>
+          <p>
+            Access your medical history, test results, and health assessments.
+          </p>
+          <router-link to="/staff/medicalReport" class="cta"
+            >View Reports</router-link
+          >
+        </div>
 
         <div class="card card-medication">
           <div class="card-icon">💊</div>
@@ -71,7 +82,9 @@
           <p>
             Track medications inventory, view schedule, and refills when needed.
           </p>
-          <a href="#" class="cta">Manage Medications</a>
+          <router-link to="/staff/medicalReport" class="cta"
+            >View Medication</router-link
+          >
         </div>
       </div>
 
@@ -305,28 +318,19 @@ const totalAppoinment = computed(() => {
   line-height: 1.6;
 }
 
-:deep(.resident-page *) {
+:deep(.staff-page *) {
   all: unset;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
 
-:deep(.resident-page body) {
+:deep(.staff-page body) {
   background-color: var(--light);
   color: var(--dark);
   line-height: 1.6;
 }
 
-/* :deep(.resident-page header) {
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  } */
-
-.resident-page main {
+.staff-page main {
   padding: 2rem 0;
 }
 
@@ -337,7 +341,7 @@ const totalAppoinment = computed(() => {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   } */
 
-.resident-page header {
+.staff-page header {
   background-color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
@@ -346,7 +350,7 @@ const totalAppoinment = computed(() => {
   z-index: 100;
 }
 
-.resident-page footer {
+.staff-page footer {
   background-color: white;
   padding: 1.5rem 0;
   margin-top: 3rem;
