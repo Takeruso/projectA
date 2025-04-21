@@ -86,7 +86,9 @@
             Track inventory levels, manage supplies, and ensure essential goods
             are available.
           </p>
-          <a href="#" class="cta">View Inventory</a>
+          <router-link to="/admin/inventory" class="cta"
+            >View Inventory</router-link
+          >
         </div>
       </div>
 
