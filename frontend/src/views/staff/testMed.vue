@@ -3,47 +3,26 @@
     <header>
       <div class="container header-container">
         <div class="logo">
-          <router-link to="/staff" class="logo"
-            ><span>Swin Care</span></router-link
-          >
+          <span>Swin Care</span>
         </div>
         <div class="user-info">
           <button class="notifications-btn">
             📋
             <span class="alert-count">2</span>
           </button>
-          <div class="user-name">Serena Tr</div>
-          <div class="user-avatar">ST</div>
+          <div class="user-name">Eleanor Smith</div>
+          <div class="user-avatar">ES</div>
         </div>
       </div>
     </header>
     <main class="container">
       <div class="reports-section">
-        <h1>Patient Medical Reports</h1>
-        <p>View and request medical reports for your assigned patients.</p>
-
-        <!-- Select Resident Filter -->
-        <label for="residentSelect" class="filter-label"
-          >Select Resident:</label
-        >
-        <div class="select-container">
-          <select
-            id="residentSelect"
-            v-model="selectedResidentId"
-            class="custom-select"
-          >
-            <option value="">-- Select a resident --</option>
-            <option
-              v-for="resident in residents"
-              :key="resident.id"
-              :value="resident.id"
-            >
-              {{ resident.name }}
-            </option>
-          </select>
-        </div>
-
-        <div v-if="selectedResidentId" class="dashboard-grid">
+        <h1>Your Medical Reports</h1>
+        <p>
+          Access and review your medical reports, test results, and health
+          assessments in one convenient location.
+        </p>
+        <div class="dashboard-grid">
           <div class="card card-all-reports">
             <div class="card-icon">📝</div>
             <h2>All Reports</h2>
@@ -69,67 +48,44 @@
         </div>
 
         <!-- Health Summary Section -->
-
-        <!-- Health Summary Section -->
-        <div v-if="selectedResidentId" class="health-summary">
-          <h2>{{ selectedResident.name }}'s Health Summary</h2>
+        <div class="health-summary">
+          <h2>Your Health Summary</h2>
           <div class="summary-grid">
             <div class="summary-card">
               <div class="summary-icon">❤️</div>
               <div class="summary-info">
                 <h3>Blood Pressure</h3>
-                <p class="summary-value">
-                  {{ getHealthData('bloodPressure').value }}
-                </p>
-                <p class="summary-date">
-                  Last checked: {{ getHealthData('bloodPressure').date }}
-                </p>
+                <p class="summary-value">128/82 mmHg</p>
+                <p class="summary-date">Last checked: Apr 5, 2025</p>
               </div>
             </div>
             <div class="summary-card">
               <div class="summary-icon">🩸</div>
               <div class="summary-info">
                 <h3>Blood Sugar</h3>
-                <p class="summary-value">
-                  {{ getHealthData('bloodSugar').value }}
-                </p>
-                <p class="summary-date">
-                  Last checked: {{ getHealthData('bloodSugar').date }}
-                </p>
+                <p class="summary-value">112 mg/dL</p>
+                <p class="summary-date">Last checked: Apr 5, 2025</p>
               </div>
             </div>
             <div class="summary-card">
               <div class="summary-icon">⚖️</div>
               <div class="summary-info">
                 <h3>Weight</h3>
-                <p class="summary-value">{{ getHealthData('weight').value }}</p>
-                <p class="summary-date">
-                  Last checked: {{ getHealthData('weight').date }}
-                </p>
+                <p class="summary-value">68 kg</p>
+                <p class="summary-date">Last checked: Apr 5, 2025</p>
               </div>
             </div>
             <div class="summary-card">
               <div class="summary-icon">💊</div>
               <div class="summary-info">
                 <h3>Medications</h3>
-                <p class="summary-value">
-                  {{
-                    selectedResident.medications
-                      ? selectedResident.medications.length
-                      : 0
-                  }}
-                  active prescriptions
-                </p>
+                <p class="summary-value">4 active prescriptions</p>
                 <p class="summary-link" @click="showModal('medicationModal')">
                   View details
                 </p>
               </div>
             </div>
           </div>
-        </div>
-
-        <div v-if="!selectedResidentId" class="no-selection">
-          <p>Please select a resident to view their medical information</p>
         </div>
       </div>
     </main>
@@ -139,11 +95,7 @@
     <div id="allModal" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeModal('allModal')">&times;</span>
-        <!-- tailor report title based on Name -->
-        <h2>
-          {{ selectedResident ? selectedResident.name + "'s" : '' }} Medical
-          Reports
-        </h2>
+        <h2>All Medical Reports</h2>
         <div class="filter-bar">
           <label for="allReportType">Filter by type:</label>
           <select id="allReportType" v-model="allReportFilter">
@@ -186,18 +138,14 @@
     <div id="requestModal" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeModal('requestModal')">&times;</span>
-
-        <h2>
-          Request Report for
-          {{ selectedResident ? selectedResident.name : 'Resident' }}
-        </h2>
-        <form id="requestForm" @submit.prevent="requestReportForPatient">
+        <h2>Request Medical Report</h2>
+        <form id="requestForm" @submit.prevent="requestReport">
           <label for="reportTitle">Report Title/Description:</label>
           <input
             type="text"
             id="reportTitle"
             v-model="newRequest.title"
-            placeholder="e.g., Chest X-ray follow-up"
+            placeholder="e.g., Blood Test Results from March 2025"
             required
           />
           <label for="reportType">Report Type:</label>
@@ -211,10 +159,10 @@
           <textarea
             id="requestNotes"
             v-model="newRequest.notes"
-            placeholder="Include clinical notes, symptoms, or justification for request"
+            placeholder="Please provide any additional details that might help us locate your report."
             rows="4"
           ></textarea>
-          <button type="submit">Send Request to Doctor</button>
+          <button type="submit">Submit Request</button>
         </form>
       </div>
     </div>
@@ -224,38 +172,24 @@
         <span class="close" @click="closeModal('medicationModal')"
           >&times;</span
         >
-        <h2>
-          {{ selectedResident ? selectedResident.name + "'s" : '' }} Current
-          Medications
-        </h2>
-        <div
-          v-if="
-            selectedResident &&
-            selectedResident.medications &&
-            selectedResident.medications.length > 0
-          "
-        >
-          <ul class="medication-list">
-            <li
-              v-for="(med, index) in selectedResident.medications"
-              :key="index"
-              class="medication-item"
-            >
-              <div class="medication-name">
-                <h3>{{ med.name }} - {{ med.dosage }}</h3>
-                <p>{{ med.frequency }}</p>
-              </div>
-              <div class="medication-info">
-                <p><strong>Purpose:</strong> {{ med.purpose }}</p>
-                <p><strong>Prescribed by:</strong> Dr. {{ med.doctor }}</p>
-                <p><strong>Next Refill:</strong> {{ med.refill }}</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div v-else>
-          <p>No medications found for this resident.</p>
-        </div>
+        <h2>Current Medications</h2>
+        <ul class="medication-list">
+          <li
+            v-for="(med, index) in medications"
+            :key="index"
+            class="medication-item"
+          >
+            <div class="medication-name">
+              <h3>{{ med.name }} - {{ med.dosage }}</h3>
+              <p>{{ med.frequency }}</p>
+            </div>
+            <div class="medication-info">
+              <p><strong>Purpose:</strong> {{ med.purpose }}</p>
+              <p><strong>Prescribed by:</strong> Dr. {{ med.doctor }}</p>
+              <p><strong>Next Refill:</strong> {{ med.refill }}</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -343,91 +277,9 @@
 </template>
 
 <script>
-import { residents } from '@/data/residentsData.js' // Import the resident data
-
 export default {
   data() {
     return {
-      selectedResidentId: '',
-      residents: residents,
-      currentModal: null,
-      allReportFilter: 'all',
-      reportYear: 'all',
-      healthData: {
-        // Default health data that will be shown when resident is selected
-
-        bloodPressure: {
-          '00634': { value: '128/82 mmHg', date: 'Apr 5, 2025' },
-          '00641': { value: '118/72 mmHg', date: 'Apr 10, 2025' },
-          '00645': { value: '132/84 mmHg', date: 'Apr 7, 2025' },
-          '00374': { value: '140/90 mmHg', date: 'Apr 2, 2025' },
-          '00985': { value: '125/80 mmHg', date: 'Apr 8, 2025' },
-          '01012': { value: '135/82 mmHg', date: 'Apr 1, 2025' },
-          '01045': { value: '122/76 mmHg', date: 'Apr 9, 2025' },
-          '01087': { value: '142/88 mmHg', date: 'Apr 3, 2025' },
-          '01123': { value: '126/78 mmHg', date: 'Apr 12, 2025' }
-        },
-        bloodSugar: {
-          '00634': { value: '112 mg/dL', date: 'Apr 5, 2025' },
-          '00641': { value: '98 mg/dL', date: 'Apr 10, 2025' },
-          '00645': { value: '104 mg/dL', date: 'Apr 7, 2025' },
-          '00374': { value: '110 mg/dL', date: 'Apr 2, 2025' },
-          '00985': { value: '95 mg/dL', date: 'Apr 8, 2025' },
-          '01012': { value: '102 mg/dL', date: 'Apr 1, 2025' },
-          '01045': { value: '100 mg/dL', date: 'Apr 9, 2025' },
-          '01087': { value: '150 mg/dL', date: 'Apr 3, 2025' },
-          '01123': { value: '105 mg/dL', date: 'Apr 12, 2025' }
-        },
-        weight: {
-          '00634': { value: '68 kg', date: 'Apr 5, 2025' },
-          '00641': { value: '72 kg', date: 'Apr 10, 2025' },
-          '00645': { value: '65 kg', date: 'Apr 7, 2025' },
-          '00374': { value: '70 kg', date: 'Apr 2, 2025' },
-          '00985': { value: '75 kg', date: 'Apr 8, 2025' },
-          '01012': { value: '62 kg', date: 'Apr 1, 2025' },
-          '01045': { value: '58 kg', date: 'Apr 9, 2025' },
-          '01087': { value: '80 kg', date: 'Apr 3, 2025' },
-          '01123': { value: '64 kg', date: 'Apr 12, 2025' }
-        }
-      },
-      allReports: [
-        // Sample report data - in a real app this would come from an API
-        {
-          id: 2,
-          type: 'imaging',
-          title: 'Chest X-Ray',
-          date: 'March 15, 2025',
-          doctor: 'Michael Chen',
-          findings:
-            'No significant abnormalities detected. Lungs appear clear. Heart size normal.',
-          summary:
-            'Normal chest X-ray with no evidence of acute cardiopulmonary disease.'
-        },
-        {
-          id: 3,
-          type: 'assessment',
-          title: 'Cognitive Assessment',
-          date: 'February 10, 2025',
-          doctor: 'Rebecca Wilson',
-          sections: [
-            {
-              title: 'Memory Function',
-              content:
-                'Mild short-term memory impairment, long-term memory intact.'
-            },
-            {
-              title: 'Executive Function',
-              content: 'Normal planning and organization abilities.'
-            },
-            {
-              title: 'Language',
-              content: 'No difficulties with expression or comprehension.'
-            }
-          ],
-          summary:
-            'Mild cognitive impairment consistent with age. No significant concerns at this time.'
-        }
-      ],
       recentReports: [
         {
           id: 1,
@@ -457,6 +309,186 @@ export default {
               status: 'normal'
             }
           ]
+        },
+        {
+          id: 2,
+          type: 'assessment',
+          title: 'Monthly Health Assessment',
+          date: 'April 2, 2025',
+          doctor: 'James Wilson',
+          summary:
+            'Overall health is stable with some improvement in mobility.',
+          sections: [
+            {
+              title: 'Vital Signs',
+              content:
+                'Blood pressure: 128/82 mmHg, Heart rate: 72 bpm, Temperature: 36.8°C'
+            },
+            {
+              title: 'Mobility',
+              content:
+                'Showing improved mobility in walking exercises. Can now walk 100 meters without assistance.'
+            },
+            {
+              title: 'Cognitive Function',
+              content:
+                'Mental acuity remains excellent. Scored 28/30 on cognitive assessment.'
+            }
+          ]
+        },
+        {
+          id: 3,
+          type: 'imaging',
+          title: 'Chest X-Ray',
+          date: 'March 28, 2025',
+          doctor: 'Emily Chen',
+          summary: 'No significant abnormalities detected in chest X-ray.',
+          findings:
+            'Lungs are clear with no evidence of infiltrates or consolidation. Heart size is normal. No pleural effusion or pneumothorax. Bony structures show mild degenerative changes consistent with age.'
+        }
+      ],
+      allReports: [
+        // Recent reports would be included here as well, plus older ones
+        {
+          id: 4,
+          type: 'blood',
+          title: 'Lipid Panel',
+          date: 'February 15, 2025',
+          doctor: 'Sarah Johnson',
+          summary:
+            'Cholesterol levels are within normal range with slight elevation in LDL.',
+          results: [
+            {
+              name: 'Total Cholesterol',
+              value: '195 mg/dL',
+              range: '<200 mg/dL',
+              status: 'normal'
+            },
+            {
+              name: 'HDL',
+              value: '55 mg/dL',
+              range: '>40 mg/dL',
+              status: 'normal'
+            },
+            {
+              name: 'LDL',
+              value: '130 mg/dL',
+              range: '<100 mg/dL',
+              status: 'elevated'
+            },
+            {
+              name: 'Triglycerides',
+              value: '140 mg/dL',
+              range: '<150 mg/dL',
+              status: 'normal'
+            }
+          ]
+        },
+        {
+          id: 5,
+          type: 'assessment',
+          title: 'Quarterly Health Assessment',
+          date: 'January 10, 2025',
+          doctor: 'James Wilson',
+          summary:
+            'Overall health status is stable. Minor concerns addressed with medication adjustment.',
+          sections: [
+            {
+              title: 'Vital Signs',
+              content:
+                'Blood pressure: 130/85 mmHg, Heart rate: 75 bpm, Temperature: 36.7°C'
+            },
+            {
+              title: 'Mobility',
+              content:
+                'Mobility has remained consistent. Able to walk with assistance. Recommended daily walking exercises.'
+            },
+            {
+              title: 'Medication Review',
+              content:
+                'Adjusted blood pressure medication dosage. Continue with current medications for other conditions.'
+            }
+          ]
+        },
+        {
+          id: 6,
+          type: 'imaging',
+          title: 'Bone Density Scan',
+          date: 'December 5, 2024',
+          doctor: 'Emily Chen',
+          summary:
+            'Mild osteopenia detected. Recommended calcium and vitamin D supplements.',
+          findings:
+            'Bone mineral density measurements show mild osteopenia in the hip and spine. No evidence of fractures. Recommend calcium and vitamin D supplementation and regular weight-bearing exercises.'
+        },
+        {
+          id: 7,
+          type: 'blood',
+          title: 'Comprehensive Metabolic Panel',
+          date: 'November 22, 2024',
+          doctor: 'Robert Garcia',
+          summary:
+            'Kidney and liver function tests are normal. Glucose levels slightly elevated.',
+          results: [
+            {
+              name: 'Glucose',
+              value: '112 mg/dL',
+              range: '70-99 mg/dL',
+              status: 'elevated'
+            },
+            {
+              name: 'BUN',
+              value: '15 mg/dL',
+              range: '7-20 mg/dL',
+              status: 'normal'
+            },
+            {
+              name: 'Creatinine',
+              value: '0.9 mg/dL',
+              range: '0.6-1.2 mg/dL',
+              status: 'normal'
+            },
+            {
+              name: 'ALT',
+              value: '25 U/L',
+              range: '7-56 U/L',
+              status: 'normal'
+            }
+          ]
+        }
+      ],
+      medications: [
+        {
+          name: 'Lisinopril',
+          dosage: '10mg',
+          frequency: 'Once daily',
+          purpose: 'Blood pressure management',
+          doctor: 'Sarah Johnson',
+          refill: 'April 25, 2025'
+        },
+        {
+          name: 'Metformin',
+          dosage: '500mg',
+          frequency: 'Twice daily with meals',
+          purpose: 'Blood sugar control',
+          doctor: 'Robert Garcia',
+          refill: 'May 10, 2025'
+        },
+        {
+          name: 'Simvastatin',
+          dosage: '20mg',
+          frequency: 'Once daily at bedtime',
+          purpose: 'Cholesterol management',
+          doctor: 'Sarah Johnson',
+          refill: 'April 30, 2025'
+        },
+        {
+          name: 'Calcium + Vitamin D',
+          dosage: '600mg/800IU',
+          frequency: 'Once daily with food',
+          purpose: 'Bone health',
+          doctor: 'Emily Chen',
+          refill: 'June 5, 2025'
         }
       ],
       reportFilter: 'all',
@@ -473,14 +505,6 @@ export default {
     }
   },
   computed: {
-    selectedResident() {
-      return (
-        this.residents.find(
-          (resident) => resident.id === this.selectedResidentId
-        ) || null
-      )
-    },
-
     filteredRecentReports() {
       if (this.reportFilter === 'all') {
         return this.recentReports
@@ -512,18 +536,6 @@ export default {
     }
   },
   methods: {
-    getHealthData(type) {
-      if (!this.selectedResidentId) {
-        return { value: 'N/A', date: 'N/A' }
-      }
-
-      return (
-        this.healthData[type][this.selectedResidentId] || {
-          value: 'Not recorded',
-          date: 'N/A'
-        }
-      )
-    },
     showModal(modalId) {
       document.getElementById(modalId).style.display = 'block'
 
@@ -542,26 +554,8 @@ export default {
       this.selectedReport = report
       this.showModal('reportDetailModal')
     },
-    requestReportForPatient() {
-      if (!this.selectedResidentId) {
-        this.showNotification('Please select a resident first', 'danger')
-        return
-      }
-
-      // Add resident info to the request
-      const requestWithPatient = {
-        ...this.newRequest,
-        residentId: this.selectedResidentId,
-        residentName: this.selectedResident.name
-      }
-
-      // In a real app, you would send this to your API
-      console.log('Submitting report request:', requestWithPatient)
-
-      this.showNotification(
-        `Report request for ${this.selectedResident.name} submitted successfully!`,
-        'success'
-      )
+    requestReport() {
+      this.showNotification('Report request submitted successfully!', 'success')
       this.closeModal('requestModal')
       this.newRequest = {
         title: '',
@@ -625,8 +619,7 @@ header {
   background-color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
-  position: relative;
-  width: 100%;
+  position: sticky;
   top: 0;
   z-index: 100;
 }
@@ -644,7 +637,6 @@ header {
   display: flex;
   align-items: center;
   gap: 10px;
-  text-decoration: none;
 }
 
 .user-info {
@@ -713,7 +705,6 @@ main {
 
 .dashboard-grid {
   display: grid;
-  /* grid-template-columns: repeat(2, 1fr);  */
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
@@ -1273,63 +1264,5 @@ form button:hover {
 
 .notification.danger {
   background-color: var(--danger);
-}
-
-/* Filter Label */
-.filter-label {
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--dark);
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-/* Select Container */
-.select-container {
-  position: relative;
-  width: 100%;
-  max-width: 300px; /* Adjust width as needed */
-  margin: auto; /* Center the select container */
-  margin-bottom: 20px;
-}
-
-/* Custom Select */
-.custom-select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  color: var(--dark);
-  background-color: white;
-  border: 1px solid var(--gray);
-  border-radius: 5px;
-  appearance: none; /* Remove default dropdown arrow */
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-/* Custom Select Hover and Focus */
-.custom-select:hover {
-  border-color: var(--primary-light);
-}
-
-.custom-select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 5px rgba(255, 36, 116, 0.5);
-  outline: none;
-}
-
-/* Add a custom dropdown arrow */
-.select-container::after {
-  content: '▼';
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  font-size: 0.8rem;
-  color: var(--dark);
-  pointer-events: none;
 }
 </style>
