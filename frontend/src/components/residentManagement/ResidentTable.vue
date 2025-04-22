@@ -139,6 +139,13 @@
               >
                 Reject
               </button>
+              <!-- Delete -->
+              <button
+                class="btn btn-outline-danger btn-sm rounded-pill"
+                @click="confirmDelete(index)"
+              >
+                <i class="fas fa-trash-alt me-1"></i> Delete
+              </button>
             </div>
           </td>
         </tr>
@@ -151,32 +158,41 @@
 import { reactive, ref } from 'vue'
 
 const editingIndex = ref(null)
-const residents = reactive([
-  {
-    name: 'Taro Yamada',
-    age: 82,
-    room: '101',
-    floor: '1F',
-    status: 'present',
-    approval: 'admitted'
-  },
-  {
-    name: 'Hanako Suzuki',
-    age: 85,
-    room: '102',
-    floor: '1F',
-    status: 'on_leave',
-    approval: 'approved'
-  },
-  {
-    name: 'Kenta Tanaka',
-    age: 79,
-    room: '201',
-    floor: '2F',
-    status: 'hospitalized',
-    approval: 'pending'
+// const residents = reactive([
+//   {
+//     name: 'Taro Yamada',
+//     age: 82,
+//     room: '101',
+//     floor: '1F',
+//     status: 'present',
+//     approval: 'admitted'
+//   },
+//   {
+//     name: 'Hanako Suzuki',
+//     age: 85,
+//     room: '102',
+//     floor: '1F',
+//     status: 'on_leave',
+//     approval: 'approved'
+//   },
+//   {
+//     name: 'Kenta Tanaka',
+//     age: 79,
+//     room: '201',
+//     floor: '2F',
+//     status: 'hospitalized',
+//     approval: 'pending'
+//   }
+// ])
+// props
+const props = defineProps({
+  residents: {
+    type: Array,
+    required: true
   }
-])
+})
+
+const emit = defineEmits(['remove'])
 
 const editResident = (index) => {
   editingIndex.value = index
@@ -187,11 +203,23 @@ const saveResident = () => {
 }
 
 const approve = (index) => {
-  residents[index].approval = 'approved'
+  props.residents[index].approval = 'approved'
 }
 
 const reject = (index) => {
-  residents[index].approval = 'rejected'
+  props.residents[index].approval = 'rejected'
+}
+
+const confirmDelete = (index) => {
+  const confirmed = confirm(
+    `Are you sure you want to delete ${props.residents[index].name}?`
+  )
+  if (confirmed) {
+    emit('remove', index)
+    if (editingIndex.value === index) {
+      editingIndex.value = null
+    }
+  }
 }
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1)

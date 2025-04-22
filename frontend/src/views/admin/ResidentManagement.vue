@@ -1,11 +1,10 @@
-// FacilityManagement.vue
 <template>
   <div class="facility-page">
     <HeaderBar />
     <main class="container my-4 facility-page">
-      <FacilityHeader :count="allFacilities.length" />
-      <FacilityTable :facilities="allFacilities" @remove="removeFacility" />
-      <FacilityForm :facility="aFacility" @add="addFacility" />
+      <ResidentHeader :count="residents.length" />
+      <ResidentTable :residents="residents" @remove="removeResident" />
+      <ResidentForm @add="addResident" />
     </main>
   </div>
 </template>
@@ -13,52 +12,35 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import HeaderBar from '@/components/facility/HeaderBar.vue'
-import FacilityHeader from '@/components/residentManagement/ResidentHeader.vue'
-import FacilityTable from '@/components/residentManagement/ResidentTable.vue'
-// import FacilityForm from '@/components/residentManagement/FacilityForm.vue'
+import ResidentHeader from '@/components/residentManagement/ResidentHeader.vue'
+import ResidentTable from '@/components/residentManagement/ResidentTable.vue'
+import ResidentForm from '@/components/residentManagement/ResidentForm.vue'
 
-const aFacility = ref({
-  name: '',
-  location: '',
-  type: '',
-  capacity: '',
-  manager: '',
-  status: ''
-})
-
-const allFacilities = ref([
+const residents = ref([
   {
-    name: 'Sunrise Home',
-    location: 'Melbourne CBD',
-    type: 'Aged Care',
-    capacity: 120,
-    manager: 'Sarah Wilson',
-    status: 'Open'
+    name: 'Taro Yamada',
+    age: 82,
+    room: '101',
+    floor: '1F',
+    status: 'present',
+    approval: 'admitted'
   },
   {
-    name: 'Riverpark',
-    location: 'Richmond',
-    type: 'Disability Support',
-    capacity: 80,
-    manager: 'Tom Evans',
-    status: 'Under Maintenance'
+    name: 'Hanako Suzuki',
+    age: 85,
+    room: '102',
+    floor: '1F',
+    status: 'on_leave',
+    approval: 'approved'
   }
 ])
 
-const removeFacility = (index) => {
-  allFacilities.value.splice(index, 1)
+const addResident = (newResident) => {
+  residents.value.push({ ...newResident })
 }
 
-const addFacility = (facility) => {
-  allFacilities.value.push({ ...facility })
-  aFacility.value = {
-    name: '',
-    location: '',
-    type: '',
-    capacity: '',
-    manager: '',
-    status: ''
-  }
+const removeResident = (index) => {
+  residents.value.splice(index, 1)
 }
 
 onMounted(() => {
