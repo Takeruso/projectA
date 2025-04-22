@@ -24,6 +24,7 @@
             <tr>
               <th style="background-color: #ff2474">Name</th>
               <th style="background-color: #ff2474">Stock</th>
+              <th style="background-color: #ff2474">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -32,9 +33,36 @@
               <td>
                 <input type="number" v-model="m.stock" min="0" max="100" />
               </td>
+              <td>
+                <button @click="removeRecord(index)" class="btn pink">
+                  Remove
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
+        <div class="row g-2">
+          <div class="col">
+            <input
+              v-model="aRecord.name"
+              class="form-control"
+              placeholder="Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              v-model.number="aRecord.stock"
+              class="form-control"
+              placeholder="Stock"
+              min="1"
+              step="1"
+            />
+          </div>
+          <div class="col">
+            <button @click="addRecord" class="btn pink">Submit</button>
+          </div>
+        </div>
       </div>
     </main>
   </div>
@@ -63,6 +91,22 @@ const allRecords = ref([
     stock: '1'
   }
 ])
+
+const removeRecord = (index) => {
+  allRecords.value.splice(index, 1)
+}
+
+const addRecord = () => {
+  const { name, stock } = aRecord.value
+  const stockNum = Number(stock)
+
+  if (name.trim() && Number.isInteger(stockNum) && stockNum >= 1) {
+    allRecords.value.push({ name: name.trim(), stock: stockNum })
+    aRecord.value = { name: '', stock: '' }
+  } else {
+    alert('Please enter a valid name and stock (must be integer ≥ 1).')
+  }
+}
 
 onMounted(() => {
   const cards = document.querySelectorAll('.card')
