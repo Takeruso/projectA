@@ -212,7 +212,7 @@ const reject = (index) => {
 
 const confirmDelete = (index) => {
   const confirmed = confirm(
-    `Are you sure you want to delete ${props.residents[index].name}?`
+    `Are you REALLY sure you want to delete ${props.residents[index].name}?`
   )
   if (confirmed) {
     emit('remove', index)

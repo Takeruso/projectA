@@ -26,7 +26,7 @@ const residents = ref([
     approval: 'admitted'
   },
   {
-    name: 'Hanako Suzuki',
+    name: 'Hanako YAMAHA',
     age: 85,
     room: '102',
     floor: '1F',

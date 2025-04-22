@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white rounded shadow-sm p-4 mt-4">
-    <!-- Form Title -->
+    <!-- Form Title OMG -->
     <h5 class="mb-3 text-dark">
       <i class="fas fa-user-plus text-primary me-2"></i>
       Add New Resident
