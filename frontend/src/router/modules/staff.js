@@ -17,5 +17,9 @@ export default [
     path: '/staff/reports',
     component: () => import('@/views/staff/staffMedicalReport.vue')
     // component: () => import('@/views/staff/testMed.vue'),
+  },
+  {
+    path: '/staff/medication',
+    component: () => import('@/views/staff/staffMedications.vue')
   }
 ]

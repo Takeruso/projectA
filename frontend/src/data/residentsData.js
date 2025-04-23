@@ -15,7 +15,8 @@ export const residents = [
         time: '8:00 AM',
         purpose: 'Reduce fever and inflammation',
         doctor: '   Kim Chang',
-        refill: 'April 25, 2025'
+        refill: 'April 24, 2025',
+        stockLevel: 1
       },
       {
         name: 'Metformin',
@@ -25,7 +26,8 @@ export const residents = [
         notes: 'with breakfast',
         purpose: 'Blood sugar control',
         doctor: '   Robert Garcia',
-        refill: 'May 10, 2025'
+        refill: 'May 10, 2025',
+        stockLevel: 30
       },
       {
         name: 'Metformin',
@@ -35,7 +37,8 @@ export const residents = [
         notes: 'with dinner',
         purpose: 'Blood sugar control',
         doctor: '   Robert Garcia',
-        refill: 'May 10, 2025'
+        refill: 'May 10, 2025',
+        stockLevel: 30
       }
     ],
     carePlan: {
@@ -95,7 +98,8 @@ export const residents = [
         notes: 'with breakfast',
         purpose: 'Blood pressure management',
         doctor: '   Sarah Johnson',
-        refill: 'April 25, 2025'
+        refill: 'April 25, 2025',
+        stockLevel: 20
       }
     ],
     carePlan: {
@@ -136,7 +140,8 @@ export const residents = [
         time: '6:00 PM',
         purpose: 'Prevent blood clots',
         doctor: '   Amelia Blake',
-        refill: 'May 5, 2025'
+        refill: 'May 5, 2025',
+        stockLevel: 47
       },
       {
         name: 'Atorvastatin',
@@ -145,7 +150,8 @@ export const residents = [
         time: '9:00 PM',
         purpose: 'Cholesterol control',
         doctor: '   Olivia Singh',
-        refill: 'May 12, 2025'
+        refill: 'May 12, 2025',
+        stockLevel: 25
       },
       {
         name: 'Metoprolol',
@@ -154,7 +160,8 @@ export const residents = [
         time: '8:00 AM',
         purpose: 'Heart rate and blood pressure',
         doctor: '   Ethan Park',
-        refill: 'April 28, 2025'
+        refill: 'April 28, 2025',
+        stockLevel: 33
       },
       {
         name: 'Metoprolol',
@@ -163,7 +170,8 @@ export const residents = [
         time: '8:00 PM',
         purpose: 'Heart rate and blood pressure',
         doctor: '   Ethan Park',
-        refill: 'April 28, 2025'
+        refill: 'April 28, 2025',
+        stockLevel: 33
       }
     ],
     carePlan: {
@@ -235,7 +243,8 @@ export const residents = [
         time: '6:00 PM',
         purpose: 'Prevent blood clots',
         doctor: '   Olivia Singh',
-        refill: 'May 5, 2025'
+        refill: 'May 5, 2025',
+        stockLevel: 47
       },
       {
         name: 'Atorvastatin',
@@ -244,7 +253,8 @@ export const residents = [
         time: '9:00 PM',
         purpose: 'Cholesterol control',
         doctor: '   Angela Lee',
-        refill: 'May 14, 2025'
+        refill: 'May 14, 2025',
+        stockLevel: 25
       },
       {
         name: 'Metoprolol',
@@ -253,7 +263,8 @@ export const residents = [
         time: '8:00 AM / 8:00 PM',
         purpose: 'Heart rate and blood pressure',
         doctor: '   Ethan Park',
-        refill: 'May 1, 2025'
+        refill: 'May 1, 2025',
+        stockLevel: 33
       }
     ],
     carePlan: {
@@ -308,7 +319,8 @@ export const residents = [
         time: '8:00 AM',
         purpose: 'Alzheimer’s treatment',
         doctor: '   Sophie Nguyen',
-        refill: 'May 9, 2025'
+        refill: 'May 9, 2025',
+        stockLevel: 20
       },
       {
         name: 'Memantine',
@@ -317,7 +329,8 @@ export const residents = [
         time: '8:00 PM',
         purpose: 'Memory and cognition',
         doctor: '   Sophie Nguyen',
-        refill: 'May 9, 2025'
+        refill: 'May 9, 2025',
+        stockLevel: 17
       }
     ],
     carePlan: {
@@ -362,7 +375,8 @@ export const residents = [
         time: '8:00 AM',
         purpose: 'Bone health',
         doctor: '   Carla Mitchell',
-        refill: 'May 1, 2025'
+        refill: 'May 1, 2025',
+        stockLevel: 60
       },
       {
         name: 'Vitamin D',
@@ -371,7 +385,8 @@ export const residents = [
         time: '8:00 AM',
         purpose: 'Calcium absorption',
         doctor: '   Carla Mitchell',
-        refill: 'May 1, 2025'
+        refill: 'May 1, 2025',
+        stockLevel: 60
       },
       {
         name: 'Alendronate',
@@ -380,7 +395,8 @@ export const residents = [
         time: 'Monday, 7:00 AM',
         purpose: 'Osteoporosis prevention',
         doctor: '   Carla Mitchell',
-        refill: 'May 15, 2025'
+        refill: 'May 15, 2025',
+        stockLevel: 4
       }
     ],
     carePlan: {
@@ -424,7 +440,8 @@ export const residents = [
         time: '8:00 AM / 2:00 PM / 8:00 PM',
         purpose: 'Nerve pain relief',
         doctor: '  Jonathan Rhodes',
-        refill: 'April 30, 2025'
+        refill: 'April 30, 2025',
+        stockLevel: 28
       },
       {
         name: 'Tramadol',
@@ -433,7 +450,8 @@ export const residents = [
         time: 'when needed',
         purpose: 'Pain relief',
         doctor: '   Jonathan Rhodes',
-        refill: 'May 7, 2025'
+        refill: 'May 7, 2025',
+        stockLevel: 15
       }
     ],
     carePlan: {
@@ -470,4 +488,36 @@ export const residents = [
     },
     emergencyContact: 'Steven Webb (Son) - 555-4567'
   }
-]
+].map((resident) => {
+  resident.medications = resident.medications.map((medication) => {
+    const refillDate = new Date(medication.refill)
+    const today = new Date()
+    const timeDiff = refillDate.getTime() - today.getTime()
+    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24))
+
+    let dailyDosage = 0
+    if (medication.frequency.toLowerCase().includes('daily')) {
+      if (medication.frequency.toLowerCase().includes('twice')) {
+        dailyDosage = 2
+      } else if (medication.frequency.toLowerCase().includes('three times')) {
+        dailyDosage = 3
+      } else {
+        dailyDosage = 1
+      }
+    } else if (medication.frequency.toLowerCase().includes('weekly')) {
+      dailyDosage = 1 / 7
+    }
+
+    const estimatedConsumption = daysLeft * dailyDosage
+
+    if (medication.name === 'Tramadol') {
+      return medication
+    }
+    if (estimatedConsumption > medication.stockLevel) {
+      medication.needsRefill = true
+    }
+
+    return medication
+  })
+  return resident
+})
