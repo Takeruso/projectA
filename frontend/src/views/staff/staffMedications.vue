@@ -19,6 +19,15 @@
     </header>
   </div>
   <main class="medications-section">
+    <div v-if="medicationsNeedingRefill.length > 0" class="refill-overview">
+      <h2>Medications Needing Refill Across All Residents</h2>
+      <ul class="refill-list">
+        <li v-for="med in medicationsNeedingRefill" :key="med.name">
+          {{ med.name }} ({{ getResidentName(med.residentId) }})
+        </li>
+      </ul>
+    </div>
+
     <h2>Resident Medications</h2>
 
     <div class="select-container">
@@ -53,10 +62,7 @@
             <p>Stock: {{ med.stockLevel }}</p>
             <p>Refill Date: {{ med.refill }}</p>
           </div>
-          <div
-            class="medication-status"
-            :class="{ due: med.dueNow, refill: med.needsRefill }"
-          >
+          <div class="medication-status" :class="{ refill: med.needsRefill }">
             {{
               med.needsRefill
                 ? 'Refill'
@@ -75,33 +81,51 @@
 </template>
 
 <script>
-import { residents } from '@/data/residentsData.js' // Adjust the path as necessary
+import { residents as initialResidents } from '@/data/residentsData.js' // Import your initial data
 
 export default {
   data() {
     return {
-      residents: residents,
+      residents: initialResidents, // Use the imported data here
       selectedResidentId: null
     }
+  },
+  created() {
+    // Loop through the initial residents data and set needsRefill flag
+    this.residents.forEach((resident) => {
+      if (resident.medications) {
+        resident.medications.forEach((medication) => {
+          medication.needsRefill = medication.stockLevel <= 5 // Your refill threshold
+          medication.residentId = resident.id // Add residentId to medication object
+        })
+      }
+    })
   },
   methods: {
     getSelectedResident() {
       return this.residents.find(
         (resident) => resident.id === this.selectedResidentId
       )
+    },
+    getResidentName(residentId) {
+      const resident = this.residents.find((r) => r.id === residentId)
+      return resident ? resident.name : 'Unknown Resident'
     }
   },
   computed: {
     selectedResident() {
-      const resident = this.residents.find(
+      return this.residents.find(
         (resident) => resident.id === this.selectedResidentId
       )
-      if (resident) {
-        resident.medications.forEach((medication) => {
-          medication.needsRefill = medication.stockLevel <= 5
-        })
-      }
-      return resident
+    },
+    medicationsNeedingRefill() {
+      const allMedications = []
+      this.residents.forEach((resident) => {
+        if (resident.medications) {
+          allMedications.push(...resident.medications)
+        }
+      })
+      return allMedications.filter((med) => med.needsRefill)
     }
   }
 }
@@ -296,5 +320,54 @@ header {
   content: '⚠️';
   margin-right: 0.5rem;
   font-size: 1rem;
+}
+
+.refill-overview {
+  background-color: #fef0f0; /* Light red background */
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #e74c3c; /* Subtle red border */
+  box-shadow: 0 2px 5px rgba(231, 76, 60, 0.1); /* Soft red shadow */
+}
+
+.refill-overview h2 {
+  font-size: 1.3rem;
+  color: #c0392b; /* Darker red text */
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #e74c3c; /* Red underline */
+  padding-bottom: 0.5rem;
+}
+
+.refill-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.refill-list li {
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  color: #333; /* Dark gray text for list items */
+  display: flex;
+  align-items: center;
+}
+
+.refill-list li::before {
+  content: '💊'; /* Pill emoji for visual cue */
+  margin-right: 0.8rem;
+  font-size: 1.1rem;
+  color: #e74c3c;
+}
+
+.refill-list li span {
+  font-weight: bold; /* Make the medication name bold */
+  color: #2c3e50; /* Dark blue for emphasis */
+}
+
+.refill-list li .resident-name {
+  font-style: italic; /* Italicize the resident's name */
+  color: #777;
+  margin-left: 0.5rem;
 }
 </style>
