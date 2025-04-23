@@ -20,10 +20,10 @@
   </div>
   <main class="medications-section">
     <div v-if="medicationsNeedingRefill.length > 0" class="refill-overview">
-      <h2>Medications Needing Refill Across All Residents</h2>
+      <h2>Medications Needing Refill</h2>
       <ul class="refill-list">
         <li v-for="med in medicationsNeedingRefill" :key="med.name">
-          {{ med.name }} ({{ getResidentName(med.residentId) }})
+          {{ med.name }} (for {{ getResidentName(med.residentId) }})
         </li>
       </ul>
     </div>
@@ -323,7 +323,6 @@ header {
 }
 
 .refill-overview {
-  background-color: #fef0f0; /* Light red background */
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 2rem;
