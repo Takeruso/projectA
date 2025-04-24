@@ -116,41 +116,57 @@
 <script setup>
 import { reactive, ref, watch } from 'vue'
 
-const editingIndex = ref(null)
-const rooms = reactive([
-  {
-    id: '101',
-    type: 'shared',
-    floor: '1F',
-    capacity: 2,
-    occupied: 2,
-    status: 'reserved'
-  },
-  {
-    id: '102',
-    type: 'shared',
-    floor: '1F',
-    capacity: 2,
-    occupied: 1,
-    status: 'vacant'
-  },
-  {
-    id: '201',
-    type: 'single',
-    floor: '2F',
-    capacity: 1,
-    occupied: 0,
-    status: 'reserved'
-  },
-  {
-    id: '202',
-    type: 'shared',
-    floor: '2F',
-    capacity: 2,
-    occupied: 2,
-    status: 'cleaning'
+import { onMounted } from 'vue'
+import api from '@/api'
+
+onMounted(async () => {
+  try {
+    const response = await api.get('/rooms')
+    response.data.forEach((room) => {
+      rooms.push(room)
+    })
+  } catch (err) {
+    console.error('Failed to fetch rooms:', err)
   }
-])
+})
+
+const editingIndex = ref(null)
+const rooms = reactive([])
+
+// const rooms = reactive([
+//   {
+//     id: '101',
+//     type: 'shared',
+//     floor: '1F',
+//     capacity: 2,
+//     occupied: 2,
+//     status: 'reserved'
+//   },
+//   {
+//     id: '102',
+//     type: 'shared',
+//     floor: '1F',
+//     capacity: 2,
+//     occupied: 1,
+//     status: 'vacant'
+//   },
+//   {
+//     id: '201',
+//     type: 'single',
+//     floor: '2F',
+//     capacity: 1,
+//     occupied: 0,
+//     status: 'reserved'
+//   },
+//   {
+//     id: '202',
+//     type: 'shared',
+//     floor: '2F',
+//     capacity: 2,
+//     occupied: 2,
+//     status: 'cleaning'
+//   }
+// ])
 
 const editRoom = (index) => {
   editingIndex.value = index
