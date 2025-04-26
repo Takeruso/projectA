@@ -17,12 +17,13 @@
     </header>
 
     <main class="container">
+      <!-- Welcome Section -->
       <div class="row align-items-center">
         <div class="welcome-banner col-8 mx-2">
           <h1>Welcome back, Serena!</h1>
           <p>
             Today is {{ todayDate }}. You have
-            {{ totalAppoinment }} appointments scheduled this week.
+            {{ totalAppointment }} appointments scheduled this week.
           </p>
         </div>
         <div class="welcome-banner col-3">
@@ -30,6 +31,8 @@
           <p>Female: 10 Male: 17</p>
         </div>
       </div>
+
+      <!-- Dashboard Cards -->
       <div class="dashboard-grid">
         <div class="card card-appointments">
           <div class="card-icon"><i class="fa-solid fa-phone"></i></div>
@@ -62,9 +65,11 @@
             View facility status, including cleanliness, safety, and maintenance
             issues.
           </p>
-          <a href="#" class="cta">View Reports</a>
+          <router-link to="/staff/facilityCheckup" class="cta"
+            >View Reports</router-link
+          >
         </div>
-        <!-- medical report -->
+
         <div class="card card-medical">
           <div class="card-icon">🏥</div>
           <h2>Medical Reports</h2>
@@ -88,6 +93,7 @@
         </div>
       </div>
 
+      <!-- Calendar Section -->
       <div class="schedule-header">
         <h2>Next Schedules</h2>
         <span class="small-date"> April 2025 </span>
@@ -110,7 +116,6 @@
               <div class="date">{{ date.getDate() }}</div>
               <div class="appointments">
                 <div v-if="index === 3">
-                  <!-- Wednesday -->
                   <div class="appointment clickable" @click="highlightTask">
                     <div class="appointment-title">
                       Morning Medication Rounds
@@ -125,17 +130,8 @@
                     </div>
                     <div class="appointment-time">2:00pm - 2:30pm</div>
                   </div>
-                  <div class="appointment clickable" @click="highlightTask">
-                    <div class="appointment-title">
-                      Morning Medication Rounds
-                    </div>
-                    <div class="appointment-location">All Resident Rooms</div>
-                    <div class="appointment-time">8:00am - 9:00am</div>
-                  </div>
                 </div>
-
                 <div v-if="index === 4">
-                  <!-- Thursday -->
                   <div class="appointment clickable" @click="highlightTask">
                     <div class="appointment-title">
                       Routine Health Assessments
@@ -150,11 +146,6 @@
                     <div class="appointment-location">Front Desk</div>
                     <div class="appointment-time">2:00pm - 3:00pm</div>
                   </div>
-                  <div class="appointment clickable" @click="highlightTask">
-                    <div class="appointment-title">Evening Checkups</div>
-                    <div class="appointment-location">All Resident Rooms</div>
-                    <div class="appointment-time">5:00pm - 6:30pm</div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -162,6 +153,33 @@
         </div>
       </div>
 
+      <!-- Staff Checklist Table Section -->
+      <section class="mt-10 bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4 text-pink-700 checklist-title">
+          📝 Staff Shift Duties & Checklist
+        </h2>
+
+        <table class="table checklist-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Task</th>
+              <th>Completed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(task, index) in checklist" :key="index">
+              <td>{{ task.time }}</td>
+              <td>{{ task.task }}</td>
+              <td class="text-center">
+                <input type="checkbox" v-model="task.completed" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Quick Access Section -->
       <div class="quick-access">
         <h2>Quick Access</h2>
         <div class="quick-links">
@@ -208,24 +226,26 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { computed } from 'vue'
-// import {ref} from 'vue'
-const currentDate = ref(new Date()) // Holds the current date
+import { ref, computed, onMounted } from 'vue'
 
-// Function to get the month and year for display
-const currentMonthYear = computed(() => {
-  return currentDate.value.toLocaleString('default', {
+const currentDate = ref(new Date())
+
+const todayDate = computed(() => {
+  const options = {
+    weekday: 'long',
+    year: 'numeric',
     month: 'long',
-    year: 'numeric'
-  })
+    day: 'numeric'
+  }
+  return new Date().toLocaleDateString('en-US', options)
 })
 
-// Function to get the week dates dynamically
+const totalAppointment = computed(() => 3)
+
 const getWeekDates = () => {
   const weekDates = []
   const startOfWeek = new Date(currentDate.value)
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()) // Set to Sunday
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(startOfWeek)
@@ -235,8 +255,8 @@ const getWeekDates = () => {
   return weekDates
 }
 
-// Reactive property for the week dates
 const weekDates = computed(() => getWeekDates())
+
 onMounted(() => {
   const cards = document.querySelectorAll('.card')
   cards.forEach((card) => {
@@ -256,34 +276,63 @@ onMounted(() => {
       )
     })
   }
-  // Highlight upcoming schedules with animation and shadow
-  const upcomingItems = document.querySelectorAll('.upcoming-item')
-
-  upcomingItems.forEach((item) => {
-    // Add click event to each schedule
-    item.addEventListener('click', () => {
-      // Remove highlight from all items
-      upcomingItems.forEach((i) => i.classList.remove('highlight'))
-
-      // Add highlight to the clicked item
-      item.classList.add('highlight')
-    })
-  })
 })
-//add currentDate to the welcome message
 
-const todayDate = computed(() => {
-  const options = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }
-  return new Date().toLocaleDateString('en-US', options)
-})
-const totalAppoinment = computed(() => {
-  return 3
-})
+const checklist = ref([
+  { time: '08:00 AM', task: 'Morning Wake-up Assistance', completed: false },
+  {
+    time: '08:00 AM',
+    task: 'Assist residents to attend their upcoming appointments or activities',
+    completed: false
+  },
+  {
+    time: '08:30 AM',
+    task: 'Help with toileting & hygiene (bathing, brushing, grooming)',
+    completed: false
+  },
+  {
+    time: '08:45 AM',
+    task: 'Assist with dressing (according to weather & preference)',
+    completed: false
+  },
+  {
+    time: '09:00 AM',
+    task: 'Breakfast Service or assist with feeding',
+    completed: false
+  },
+  {
+    time: '09:30 AM',
+    task: 'Administer or assist with medications',
+    completed: false
+  },
+  {
+    time: '10:00 AM',
+    task: 'Record vital signs (if required)',
+    completed: false
+  },
+  { time: '10:15 AM', task: 'Medication Round 1', completed: false },
+  {
+    time: '11:45 PM',
+    task: 'Lunch Service and assist with feeding',
+    completed: false
+  },
+  { time: '12:30 PM', task: 'Break time', completed: false },
+  { time: '01:30 PM', task: 'Keep common areas tidy', completed: false },
+  { time: '01:45 PM', task: 'Medication Round 2', completed: false },
+  { time: '02:00 PM', task: 'Facility Checkup', completed: false },
+  {
+    time: '03:35 PM',
+    task: 'Support mobility like help residents walk/stretch/exercise',
+    completed: false
+  },
+  {
+    time: '04:00 PM',
+    task: 'Record fluid/food intake for required residents',
+    completed: false
+  },
+  { time: '04:15 PM', task: 'Check tasks before end', completed: false },
+  { time: '04:30 PM', task: 'End shift', completed: false }
+])
 </script>
 
 <style scoped>
@@ -615,6 +664,43 @@ const totalAppoinment = computed(() => {
   border: none;
   position: relative;
   cursor: pointer;
+}
+
+.checklist-title {
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5 rem;
+  color: #d81b60;
+  border-left: 6px solid #f06292;
+  padding-left: 0px;
+}
+
+.checklist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background-color: white;
+}
+
+.checklist-table th,
+.checklist-table td {
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  text-align: left;
+}
+
+.checklist-table th {
+  background-color: #ffe4ec;
+  color: #880e4f;
+}
+
+.checklist-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.checklist-table tr:hover {
+  background-color: #fff3f6;
 }
 
 .upcoming-section {
