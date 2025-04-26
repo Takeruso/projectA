@@ -2,9 +2,9 @@
   <div class="staff-page">
     <header>
       <div class="container header-container">
-        <router-link to="/staff" class="logo"
-          ><span>Swin Care</span></router-link
-        >
+        <router-link to="/staff" class="logo">
+          <span>Swin Care</span>
+        </router-link>
         <div class="user-info">
           <button class="notifications-btn">
             📋
@@ -17,131 +17,190 @@
     </header>
 
     <main class="container">
-      <div class="row align-items-center">
-        <div class="welcome-banner col-8 mx-2">
-          <h1>Appointments</h1>
-          <p>
-            Today is {{ todayDate }}. You have
-            {{ totalAppoinment }} appointments scheduled this week.
-          </p>
+      <!-- Appointments View -->
+      <div v-if="showAppointments">
+        <div class="row align-items-center">
+          <div class="welcome-banner col-8 mx-2">
+            <h1>Appointments</h1>
+            <p>
+              Today is {{ todayDate }}. You have
+              {{ totalAppoinment }} appointments scheduled this week.
+            </p>
+          </div>
+          <div class="welcome-banner col-3">
+            <p><b>Total Patients</b></p>
+            <p class="text-2xl font-bold mt-1">
+              Count: {{ filteredAppointments.length }}
+            </p>
+          </div>
         </div>
-        <div class="welcome-banner col-3">
-          <p><b>Total Patients</b></p>
-          <p class="text-2xl font-bold mt-1">
-            Count: {{ filteredAppointments.length }}
-          </p>
-        </div>
-      </div>
 
-      <!-- Centered Search Bar and Refresh Button -->
-      <div class="flex flex-col items-center gap-4 mb-8">
-        <div class="flex items-center gap-2">
-          <input
-            type="text"
-            v-model="search"
-            placeholder="Search..."
-            class="search-input"
-          />
-          <button @click="refreshDate" title="Refresh date" class="refresh-btn">
-            Refresh Date 🔄
+        <!-- Buttons -->
+        <div class="mb-4 text-center">
+          <button class="refresh-btn mx-2" @click="toggleView('booking')">
+            Book Appointment
           </button>
         </div>
-      </div>
 
-      <!-- Appointments Table -->
-      <div class="overflow-x-auto">
-        <table class="min-w-full table-auto border rounded shadow bg-pink-800">
-          <thead class="bg-pink-500">
-            <tr>
-              <th scope="col" id="id" class="px-4 py-2 text-left">ID#</th>
-              <th scope="col" id="patientname" class="px-4 py-2 text-left">
-                Patient's Name
-              </th>
-              <th scope="col" id="visittype" class="px-4 py-2 text-left">
-                Visit Type
-              </th>
-              <th scope="col" id="date/time" class="px-4 py-2 text-left">
-                Date/Time
-              </th>
-              <th scope="col" id="status" class="px-4 py-2 text-left">
-                Status
-              </th>
-              <th scope="col" id="action" class="px-4 py-2 text-left">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="appointment in filteredAppointments"
-              :key="appointment.id"
-              class="border-t"
+        <div class="flex flex-col items-center gap-4 mb-8">
+          <div class="flex items-center gap-2">
+            <input
+              type="text"
+              v-model="search"
+              placeholder="Search..."
+              class="search-input"
+            />
+            <button @click="refresh" class="refresh-btn">Refresh🔄</button>
+          </div>
+        </div>
+
+        <!-- Appointment Table -->
+        <div class="overflow-x-auto">
+          <table
+            class="min-w-full table-auto border rounded shadow bg-pink-800"
+          >
+            <thead class="bg-pink-500">
+              <tr>
+                <th class="px-4 py-2 text-left">ID#</th>
+                <th class="px-4 py-2 text-left">Patient's Name</th>
+                <th class="px-4 py-2 text-left">Visit Type</th>
+                <th class="px-4 py-2 text-left">Date/Time</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="appointment in filteredAppointments"
+                :key="appointment.id"
+                class="border-t"
+              >
+                <td class="px-4 py-2">{{ appointment.id }}</td>
+                <td class="px-4 py-2">{{ appointment.name }}</td>
+                <td class="px-4 py-2">{{ appointment.visitType }}</td>
+                <td class="px-4 py-2">{{ appointment.dateTime }}</td>
+                <td class="px-4 py-2">
+                  <span
+                    v-if="appointment.note"
+                    class="text-pink-400 font-semibold"
+                  >
+                    {{ appointment.note }}
+                  </span>
+                  <span
+                    v-else
+                    :class="{
+                      'text-gray-400 italic': appointment.status === 'Pending',
+                      'text-yellow-400 font-semibold':
+                        appointment.status === 'Cancel'
+                    }"
+                  >
+                    {{ appointment.status }}
+                  </span>
+                </td>
+                <!-- ✅ Wrap the button inside a table cell -->
+                <td class="px-4 py-2">
+                  <button
+                    class="bg-gray-700 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-gray-600"
+                    @click="editNote(appointment)"
+                  >
+                    ✏️ Add Note
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Modal for Add Note -->
+        <div
+          v-if="selectedAppointment"
+          class="mt-4 p-4 rounded shadow bg-light"
+        >
+          <h3 class="text-lg font-semibold mb-2">
+            Add Note for {{ selectedAppointment.name }}
+          </h3>
+          <textarea
+            v-model="selectedAppointment.note"
+            rows="3"
+            class="w-full p-3 border border-gray-700 rounded bg-gray-100 text-black"
+            placeholder="Please type the note here."
+          ></textarea>
+          <div class="mt-2 flex gap-2">
+            <button
+              class="bg-pink-600 text-white px-4 py-1 rounded hover:bg-pink-500"
+              @click="saveNote"
             >
-              <td class="px-4 py-2">{{ appointment.id }}</td>
-              <td class="px-4 py-2">{{ appointment.name }}</td>
-              <td class="px-4 py-2">{{ appointment.visitType }}</td>
-              <td class="px-4 py-2">{{ appointment.dateTime }}</td>
-              <td class="px-4 py-2">
-                <span
-                  :class="{
-                    'text-gray-400 italic': appointment.status === 'View Only',
-                    'text-yellow-400 font-semibold':
-                      appointment.status === 'Cancel'
-                  }"
-                >
-                  {{ appointment.status }}
-                </span>
-              </td>
-              <td class="px-4 py-2">
-                <button
-                  class="bg-gray-700 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-gray-600"
-                  @click="editNote(appointment)"
-                >
-                  ✏️ <span>Add Note</span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              Save Note
+            </button>
+            <button
+              class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-400"
+              @click="selectedAppointment = null"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
 
-      <!-- Modal or Note Dialog -->
-      <div v-if="selectedAppointment" class="mt-4 p-4 rounded shadow">
-        <h3 class="text-lg font-semibold mb-2">
-          Add Note for {{ selectedAppointment.name }}
-        </h3>
-        <textarea
-          v-model="selectedAppointment.note"
-          rows="3"
-          class="w-full p-3 border border-gray-700 rounded bg-gray-900 text-black"
-          placeholder="*This note is only for cancellation if the consent has been given."
-        ></textarea>
-        <div class="mt-2">
-          <button
-            class="bg-pink-600 text-white px-4 py-1 rounded hover:bg-pink-500"
-            @click="saveNote"
-          >
-            Save Note
-          </button>
-          <button
-            class="bg-pink-600 text-white px-4 py-1 rounded hover:bg-pink-500"
-            @click="selectedAppointment = null"
-          >
-            Cancel
-          </button>
-        </div>
+      <!-- Booking Form -->
+      <div v-if="showBookingForm" class="card shadow p-4 mb-4">
+        <h4 class="card-title text-center mb-4" style="color: #e83e8c">
+          📅 Book New Appointment
+        </h4>
+        <form @submit.prevent="submitBooking">
+          <div class="mb-3">
+            <label for="name" class="form-label fw-bold">Patient's Name</label>
+            <input
+              type="text"
+              v-model="newBooking.name"
+              class="form-control"
+              id="name"
+              required
+              placeholder="Enter patient's name"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="visitType" class="form-label fw-bold">Visit Type</label>
+            <input
+              type="text"
+              v-model="newBooking.visitType"
+              class="form-control"
+              id="visitType"
+              required
+              placeholder="e.g., Follow up visit"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="dateTime" class="form-label fw-bold">Date & Time</label>
+            <input
+              type="datetime-local"
+              v-model="newBooking.dateTime"
+              class="form-control"
+              id="dateTime"
+              required
+            />
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-pink btn-lg">
+              Confirm Booking
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              @click="toggleView('appointments')"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </main>
-    <footer>
-      <div class="container footer-container">
-        <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Feedback</a>
-        </div>
-      </div>
+
+    <footer class="mt-10 py-4 text-center bg-gray-900 text-white">
+      © 2025 Swin Care - All rights reserved.
     </footer>
   </div>
 </template>
@@ -151,94 +210,142 @@ export default {
   name: 'AppointmentCarer',
   data() {
     return {
+      showAppointments: true,
+      showBookingForm: false,
+      selectedAppointment: null,
+      search: '',
+      newBooking: { name: '', visitType: '', dateTime: '' },
       appointments: [
         {
-          id: '0063',
+          id: '00063',
           name: 'Floyd Miles',
           visitType: 'New symptom visit',
-          dateTime: '2025-04-10/9:00 am',
+          dateTime: '2025-04-26/10:30 am',
           note: '',
-          status: 'View Only'
+          status: 'Pending'
         },
         {
           id: '00645',
           name: 'Devon Lane',
           visitType: 'Follow up visit',
-          dateTime: '2025-04-10/10:45 am',
+          dateTime: '2025-04-26/10:45 am',
           note: '',
-          status: 'View Only'
+          status: 'Pending'
         },
         {
           id: '00443',
           name: 'Marvin McKinney',
           visitType: 'Follow up visit',
-          dateTime: '2025-04-10/09:00 am',
+          dateTime: '2025-04-26/10:50 am',
           note: '',
-          status: 'View Only'
+          status: 'Pending'
         },
         {
           id: '00374',
           name: 'Cody Fisher',
           visitType: 'Video Conference',
-          dateTime: '2025-04-10/15:15 pm',
+          dateTime: '2025-04-26/03:15 pm',
           note: '',
-          status: 'View Only'
+          status: 'Pending'
         },
         {
           id: '00985',
           name: 'Cameron Williamson',
           visitType: 'Chronic care visit',
-          dateTime: '2025-04-10/11:10 am',
+          dateTime: '2025-04-10/04:30 pm',
           note: '',
-          status: 'View Only'
+          status: 'Pending'
         }
-      ],
-      selectedAppointment: null,
-      search: ''
+      ]
     }
   },
   computed: {
     filteredAppointments() {
       const term = this.search.toLowerCase()
-      return this.appointments.filter((a) => {
-        return (
+      return this.appointments.filter(
+        (a) =>
           a.name.toLowerCase().includes(term) ||
           a.id.includes(term) ||
           a.visitType.toLowerCase().includes(term) ||
           a.dateTime.toLowerCase().includes(term)
-        )
-      })
+      )
     },
     todayDate() {
-      const options = {
+      return new Date().toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric'
-      }
-      return new Date().toLocaleDateString('en-US', options)
+      })
     },
     totalAppoinment() {
-      return this.appointments.length // Assuming total appointments are the length of the appointments array
+      return this.appointments.length
     }
   },
   methods: {
+    toggleView(view) {
+      this.showAppointments = view === 'appointments'
+      this.showBookingForm = view === 'booking'
+      this.selectedAppointment = null
+    },
+    cancelAppointment(appointment) {
+      if (
+        confirm(
+          `Are you sure you want to cancel appointment for ${appointment.name}?`
+        )
+      ) {
+        appointment.status = 'Cancel'
+        alert('Appointment cancelled.')
+      }
+    },
     editNote(appointment) {
       this.selectedAppointment = appointment
     },
     saveNote() {
-      if (this.selectedAppointment && this.selectedAppointment.note.trim()) {
-        this.selectedAppointment.status = 'Cancel'
-        alert('Note saved: ' + this.selectedAppointment.note)
-      }
+      alert('Note saved!')
       this.selectedAppointment = null
     },
-    refreshDate() {
-      alert('Date refreshed')
+    refresh() {
+      this.appointments.forEach((appointment) => {
+        appointment.note = ''
+        appointment.status = 'Pending'
+      })
+      this.selectedAppointment = null
+      alert('All notes/statuses reset.')
+    },
+    submitBooking() {
+      const newId = String(Math.floor(Math.random() * 100000)).padStart(5, '0')
+      const formattedDateTime = this.formatDateTime(this.newBooking.dateTime)
+      this.appointments.push({
+        id: newId,
+        name: this.newBooking.name,
+        visitType: this.newBooking.visitType,
+        dateTime: formattedDateTime,
+        note: '',
+        status: 'Pending'
+      })
+      alert('Appointment booked!')
+      this.newBooking = { name: '', visitType: '', dateTime: '' }
+      this.toggleView('appointments')
+    },
+    formatDateTime(dateTimeString) {
+      const date = new Date(dateTimeString)
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      let hours = date.getHours()
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const ampm = hours >= 12 ? 'pm' : 'am'
+      hours = hours % 12 || 12
+      return `${year}-${month}-${day}/${hours}:${minutes} ${ampm}`
     }
   }
 }
 </script>
+
+<style scoped>
+/* your CSS remains the same */
+</style>
 
 <style scoped>
 .staff-page {
@@ -257,6 +364,16 @@ export default {
   line-height: 1.6;
 }
 
+.btn-pink {
+  background-color: #ff5d98;
+  color: white;
+  border: none;
+}
+
+.btn-pink:hover {
+  background-color: #d63384; /* slightly darker pink when hover */
+  color: white;
+}
 .container {
   width: 80vw;
   max-width: 1200px; /* Set a max width for larger screens */

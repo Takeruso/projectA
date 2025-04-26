@@ -41,6 +41,16 @@
         </div>
       </div>
 
+      <!-- Shift selector -->
+      <div class="mb-4 flex items-center gap-4">
+        <label for="shift" class="font-medium">Select Shift:</label>
+        <select v-model="nurseShift" id="shift" class="border p-2 rounded">
+          <option value="Morning">Morning</option>
+          <option value="Evening">Evening</option>
+          <option value="Night">Night</option>
+        </select>
+      </div>
+
       <div class="overflow-x-auto">
         <table class="min-w-full table-auto border rounded shadow bg-pink-800">
           <thead class="bg-pink-500">
@@ -66,8 +76,41 @@
               <td class="px-4 py-1">{{ resident.name }}</td>
               <td class="px-4 py-1">{{ resident.age }}</td>
               <td class="px-4 py-1">{{ resident.roomId }}</td>
-              <td class="px-4 py-1">{{ resident.carePlan }}</td>
-              <td class="px-4 py-1">{{ resident.medications.join(', ') }}</td>
+              <!-- <td class="px-4 py-1">{{ resident.carePlan }}</td>
+              <td class="px-4 py-1">{{ resident.medications.join(', ') }}</td> -->
+
+              <td class="px-4 py-1">
+                <div v-if="typeof resident.carePlan === 'string'">
+                  {{ resident.carePlan }}
+                </div>
+                <div>
+                  <ul>
+                    <li
+                      v-for="(task, i) in getShiftTasks(resident.carePlan)"
+                      :key="nurseShift + '-' + i"
+                    >
+                      {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
+                    </li>
+                  </ul>
+                </div>
+              </td>
+
+              <td class="px-4 py-1">
+                <div v-if="Array.isArray(resident.medications)">
+                  <ul>
+                    <li
+                      v-for="(medication, index) in resident.medications"
+                      :key="'medication-' + index"
+                    >
+                      <span class="list-content">
+                        <strong>{{ medication.name }}</strong> -
+                        {{ medication.dosage }} ({{ medication.frequency }} at
+                        {{ medication.time }})
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </td>
               <td class="py-1">
                 <button @click="viewDetails(resident)" class="details-btn">
                   <i
@@ -129,7 +172,44 @@
               <p><strong>Gender:</strong> {{ selectedResident.gender }}</p>
               <p><strong>Age:</strong> {{ selectedResident.age }}</p>
               <p><strong>Room:</strong> {{ selectedResident.roomId }}</p>
-              <p><strong>Care Plan:</strong> {{ selectedResident.carePlan }}</p>
+              <!-- <p><strong>Care Plan:</strong> {{ selectedResident.carePlan }}</p> -->
+              <div v-if="typeof selectedResident.carePlan === 'string'">
+                <p>
+                  <strong>Care Plan:</strong> {{ selectedResident.carePlan }}
+                </p>
+              </div>
+              <div v-else>
+                <p><strong>Morning Tasks:</strong></p>
+                <ul>
+                  <li
+                    v-for="(task, i) in selectedResident.carePlan.Morning"
+                    :key="'Morning-' + i"
+                  >
+                    {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
+                  </li>
+                </ul>
+
+                <p><strong>Afternoon & Evening Tasks:</strong></p>
+                <ul>
+                  <li
+                    v-for="(task, i) in selectedResident.carePlan.Evening"
+                    :key="'Evening-' + i"
+                  >
+                    {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
+                  </li>
+                </ul>
+
+                <p><strong>Night Tasks:</strong></p>
+                <ul>
+                  <li
+                    v-for="(task, i) in selectedResident.carePlan.Night"
+                    :key="'Night-' + i"
+                  >
+                    {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
+                  </li>
+                </ul>
+              </div>
+
               <!-- display emergenc contact, allergies, etc -->
               <p>
                 <strong>Emergency Contact:</strong>
@@ -141,8 +221,20 @@
               </p>
               <p>
                 <strong>Medications:</strong>
-                {{ selectedResident.medications.join(', ') }}
               </p>
+              <ul class="styled-list">
+                <li
+                  v-for="(medication, index) in selectedResident.medications"
+                  :key="'medication-' + index"
+                >
+                  <span class="list-icon">💊</span>
+                  <span class="list-content">
+                    <strong>{{ medication.name }}</strong> -
+                    {{ medication.dosage }} ({{ medication.frequency }} at
+                    {{ medication.time }})
+                  </span>
+                </li>
+              </ul>
               <button @click="closeDetails" class="refresh-btn mt-4">
                 Close
               </button>
@@ -151,21 +243,11 @@
         </div>
       </div>
     </main>
-    <footer>
-      <div class="container footer-container">
-        <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Feedback</a>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script>
+import { residents } from '@/data/residentsData.js' // Import the residents data
 export default {
   name: 'ResidentInfo',
   data() {
@@ -178,118 +260,8 @@ export default {
       currentPage: 1,
       residentsPerPage: 5,
       totalResidents: 0,
-      residents: [
-        {
-          id: '00634',
-          name: 'Floyd Miles',
-          gender: 'Male',
-          age: 82,
-          roomId: '101',
-          carePlan: 'High-level support, daily visits',
-          medications: ['Aspirin', 'Metformin'],
-          emergencyContact: 'Jane Miles (Daughter) - 555-1234',
-          allergies: ['Penicillin', 'Dust']
-        },
-        {
-          id: '00641',
-          name: 'Harold Finch',
-          gender: 'Male',
-          age: 79,
-          roomId: '102',
-          carePlan: 'Independent living with weekly check-ins',
-          medications: ['Lisinopril'],
-          emergencyContact: 'John Finch (Son) - 555-5678',
-          allergies: ['Pollen']
-        },
-        {
-          id: '00645',
-          name: 'Devon Lane',
-          gender: 'Male',
-          age: 91,
-          roomId: '203',
-          carePlan: '24/7 in-home care with night supervision',
-          medications: ['Warfarin', 'Atorvastatin', 'Metoprolol'],
-          emergencyContact: 'Emily Lane (Daughter) - 555-2345',
-          allergies: ['Latex']
-        },
-        {
-          id: '00443',
-          name: 'Marvin McKinney',
-          gender: 'Male',
-          age: 78,
-          roomId: '203',
-          carePlan: 'Routine Check-up and Monitoring',
-          medications: ['Amlodipine', 'Simvastatin'],
-          emergencyContact: 'Lisa McKinney (Wife) - 555-6789',
-          allergies: ['N/A']
-        },
-        {
-          id: '00374',
-          name: 'Cody Fisher',
-          gender: 'Male',
-          age: 83,
-          roomId: '305',
-          carePlan: '24/7 in-home care with night supervision',
-          medications: ['Warfarin', 'Atorvastatin', 'Metoprolol'],
-          emergencyContact: 'Ryan Fisher (Son) - 555-3456',
-          allergies: ['Peanuts']
-        },
-        {
-          id: '00985',
-          name: 'Cameron Williamson',
-          gender: 'Male',
-          age: 90,
-          roomId: '111',
-          carePlan: 'Dementia Care Plan',
-          medications: ['Donepezil', 'Memantine'],
-          emergencyContact: 'Rachel Williamson (Daughter) - 555-7890',
-          allergies: ['None']
-        },
-        {
-          id: '01012',
-          name: 'Eleanor Pena',
-          gender: 'Female',
-          age: 87,
-          roomId: '212',
-          carePlan: 'Fall Prevention Program',
-          medications: ['Calcium', 'Vitamin D', 'Alendronate'],
-          emergencyContact: 'Maria Pena (Daughter) - 555-9012',
-          allergies: ['None']
-        },
-        {
-          id: '01045',
-          name: 'Theresa Webb',
-          gender: 'Female',
-          age: 85,
-          roomId: '220',
-          carePlan: 'Chronic Pain Management',
-          medications: ['Gabapentin', 'Tramadol'],
-          emergencyContact: 'Steven Webb (Son) - 555-4567',
-          allergies: ['Peanuts']
-        },
-        {
-          id: '01087',
-          name: 'Albert Flores',
-          gender: 'Male',
-          age: 80,
-          roomId: '306',
-          carePlan: 'Diabetes Management Plan',
-          medications: ['Metformin', 'Insulin'],
-          emergencyContact: 'Carlos Flores (Brother) - 555-3450',
-          allergies: ['None']
-        },
-        {
-          id: '01123',
-          name: 'Arlene McCoy',
-          gender: 'Female',
-          age: 76,
-          roomId: '108',
-          carePlan: 'Cognitive Stimulation Activities',
-          medications: ['Donepezil'],
-          emergencyContact: 'Paul McCoy (Husband) - 555-5670',
-          allergies: ['Milk']
-        }
-      ]
+      nurseShift: 'Morning',
+      residents
     }
   },
   computed: {
@@ -328,6 +300,9 @@ export default {
     closeDetails() {
       this.selectedResident = null
       this.showDetails = false
+    },
+    getShiftTasks(carePlan) {
+      return carePlan[this.nurseShift] || []
     }
   },
   watch: {
@@ -410,6 +385,8 @@ export default {
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   width: 100%;
+  max-height: 90%; /* Set a maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
   position: relative;
 }
 
@@ -532,7 +509,9 @@ export default {
 .table-auto tbody tr:hover {
   background-color: hsl(338, 100%, 87%);
 }
-
+.table-auto td {
+  text-align: left;
+}
 .bg-gray-800 {
   background-color: var(--dark);
 }
@@ -684,5 +663,32 @@ textarea:focus {
 
 .refresh-btn:hover {
   background-color: var(--primary-light); /* Lighter pink on hover */
+}
+.styled-list {
+  list-style: none; /* Remove default bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+.styled-list li {
+  display: flex; /* Align icon and content horizontally */
+  align-items: center; /* Vertically center the icon and text */
+  padding: 0.5rem 0; /* Add spacing between list items */
+  border-bottom: 1px solid var(--gray); /* Add a subtle divider */
+}
+
+.styled-list li:last-child {
+  border-bottom: none; /* Remove divider for the last item */
+}
+
+.list-icon {
+  margin-right: 0.5rem; /* Add spacing between the icon and text */
+  font-size: 1.2rem; /* Adjust icon size */
+  color: var(--primary); /* Use the primary color for the icon */
+}
+
+.list-content {
+  flex: 1; /* Allow the content to take up remaining space */
+  color: var(--dark); /* Use the dark color for text */
 }
 </style>
