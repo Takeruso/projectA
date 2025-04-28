@@ -1,7 +1,7 @@
 export default [
   {
     path: '/resident',
-    component: () => import('@/views/resident/residentDashboard.vue')
+    component: () => import('@/views/resident/ResidentDashboard.vue')
   },
   {
     path: '/resident/bill',
