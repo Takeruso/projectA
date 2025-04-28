@@ -48,14 +48,14 @@
           <router-link to="/resident/bill" class="cta">View Bills</router-link>
         </div>
 
-        <div class="card card-medical">
-          <div class="card-icon">🏥</div>
-          <h2>Medical Reports</h2>
+        <div class="card card-recreation">
+          <div class="card-icon">🎡</div>
+          <h2>Recreational Activities</h2>
           <p>
-            Access your medical history, test results, and health assessments.
+            Access recreational activities, book and track them.
           </p>
-          <router-link to="/resident/reports" class="cta"
-            >View Reports</router-link
+          <router-link to="/resident/recreation" class="cta"
+            >View Activities</router-link
           >
         </div>
 
@@ -63,8 +63,7 @@
           <div class="card-icon">💊</div>
           <h2>Medication</h2>
           <p>
-            Track your medications, view schedule, and request refills when
-            needed.
+            Track your medications, view schedule, 
           </p>
           <router-link to="/resident/medications" class="cta"
             >View Medications</router-link
@@ -204,31 +203,12 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
-/* :deep(.resident-page body) {
-  background-color: var(--light);
-  color: var(--dark);
-  line-height: 1.6;
-} */
-
-/* :deep(.resident-page header) {
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-} */
 
 .resident-page main {
   padding: 2rem 0;
 }
 
-/* .resident-page :deep(footer) {
-  background-color: white;
-  padding: 1.5rem 0;
-  margin-top: 3rem;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-} */
+
 
 .resident-page header {
   background-color: white;
@@ -349,7 +329,7 @@ onMounted(() => {
   background-color: var(--secondary);
 }
 
-.card-medical .card-icon {
+.card-recreation .card-icon {
   background-color: var(--success);
 }
 

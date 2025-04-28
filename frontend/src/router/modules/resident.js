@@ -16,7 +16,7 @@ export default [
     component: () => import('@/views/resident/medications.vue')
   },
   {
-    path: '/resident/reports',
-    component: () => import('@/views/resident/reports.vue')
+    path: '/resident/recreation',
+    component: () => import('@/views/resident/recreation.vue')
   }
 ]
