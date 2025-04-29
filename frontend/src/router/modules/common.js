@@ -10,5 +10,13 @@ export default [
   {
     path: '/login',
     component: () => import('@/views/Login.vue')
+  },
+  {
+    path: '/privacy',
+    component: () => import('@/views/Privacypolicy.vue')
+  },
+  {
+    path: '/terms',
+    component: () => import('@/views/TermsOfUse.vue')
   }
 ]
