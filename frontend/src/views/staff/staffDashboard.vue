@@ -69,7 +69,6 @@
             >View Reports</router-link
           >
         </div>
-        <<<<<<< HEAD =======
 
         <div class="card card-medical">
           <div class="card-icon">🏥</div>
@@ -81,7 +80,6 @@
             >View Reports</router-link
           >
         </div>
-        >>>>>>> 684ddc3 (Update staffDashboard.vue)
 
         <div class="card card-medication">
           <div class="card-icon">💊</div>
