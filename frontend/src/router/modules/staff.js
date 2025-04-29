@@ -10,5 +10,18 @@ export default [
   {
     path: '/staff/residentInfo',
     component: () => import('@/views/staff/residentInfo.vue')
+  },
+  {
+    path: '/staff/reports',
+    component: () => import('@/views/staff/staffMedicalReport.vue')
+    // component: () => import('@/views/staff/testMed.vue'),
+  },
+  {
+    path: '/staff/medication',
+    component: () => import('@/views/staff/staffMedications.vue')
+  },
+  {
+    path: '/staff/facilityCheckup',
+    component: () => import('@/views/staff/facilityCheckup.vue')
   }
 ]
