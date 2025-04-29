@@ -87,7 +87,7 @@
           <p>
             Track medications inventory, view schedule, and refills when needed.
           </p>
-          <router-link to="/staff/medicalReport" class="cta"
+          <router-link to="/staff/medication" class="cta"
             >View Medication</router-link
           >
         </div>
