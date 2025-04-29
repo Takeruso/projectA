@@ -1,10 +1,10 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 
-import adminRoutes from './modules/admin'
-import staffRoutes from './modules/staff'
-import residentRoutes from './modules/resident'
-import commonRoutes from './modules/common'
+import adminRoutes from './modules/admin.js'
+import staffRoutes from './modules/staff.js'
+import residentRoutes from './modules/resident.js'
+import commonRoutes from './modules/common.js'
 
 const routes = [
   ...commonRoutes,
