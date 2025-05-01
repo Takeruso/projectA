@@ -19,6 +19,78 @@
     <main class="container">
       <!-- Staff Records Table -->
       <div id="table" class="container mt-4">
+        <!-- Filters -->
+        <div class="row g-2 mb-3">
+          <div class="col">
+            <input
+              v-model="filters.firstName"
+              class="form-control"
+              placeholder="Filter by First Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.lastName"
+              class="form-control"
+              placeholder="Filter by Last Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.role"
+              class="form-control"
+              placeholder="Filter by Role"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.qualification"
+              class="form-control"
+              placeholder="Filter by Qualification"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.salary"
+              class="form-control"
+              placeholder="Filter by Annual Salary"
+            />
+          </div>
+          <div class="col">
+            <select v-model="filters.employment" class="form-control">
+              <option value="">Filter by Employment Type</option>
+              <option value="Full Time">Full Time</option>
+              <option value="Part Time">Part Time</option>
+              <option value="Contract">Contract</option>
+              <option value="Casual">Casual</option>
+            </select>
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.dob"
+              type="date"
+              class="form-control"
+              placeholder="Filter by Date of Birth"
+            />
+          </div>
+          <div class="col">
+            <div>
+              <label>
+                <input type="radio" v-model="filters.gender" value="Male" />
+                Male
+              </label>
+              <label>
+                <input type="radio" v-model="filters.gender" value="Female" />
+                Female
+              </label>
+              <label>
+                <input type="radio" v-model="filters.gender" value="" />
+                All
+              </label>
+            </div>
+          </div>
+        </div>
+
         <table class="table">
           <thead>
             <tr>
@@ -34,7 +106,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(m, index) in allRecords" :key="index">
+            <tr v-for="(m, index) in filteredRecords" :key="index">
               <td>{{ m.first }}</td>
               <td>{{ m.last }}</td>
               <td>{{ m.role }}</td>
@@ -574,6 +646,18 @@ onMounted(async () => {
   }
 })
 
+// Filters
+const filters = ref({
+  firstName: '',
+  lastName: '',
+  role: '',
+  qualification: '',
+  salary: '',
+  employment: '',
+  dob: '',
+  gender: ''
+})
+
 // Extended data for staff records
 const aRecord = ref({
   first: '',
@@ -640,6 +724,36 @@ const allRecords = ref([
     gender: 'Female'
   }
 ])
+
+// Computed property for filtered records
+const filteredRecords = computed(() => {
+  return allRecords.value.filter((record) => {
+    return (
+      (!filters.value.firstName ||
+        record.first
+          .toLowerCase()
+          .includes(filters.value.firstName.toLowerCase())) &&
+      (!filters.value.lastName ||
+        record.last
+          .toLowerCase()
+          .includes(filters.value.lastName.toLowerCase())) &&
+      (!filters.value.role ||
+        record.role.toLowerCase().includes(filters.value.role.toLowerCase())) &&
+      (!filters.value.qualification ||
+        record.qualification
+          .toLowerCase()
+          .includes(filters.value.qualification.toLowerCase())) &&
+      (!filters.value.salary ||
+        record.salary
+          .toLowerCase()
+          .includes(filters.value.salary.toLowerCase())) &&
+      (!filters.value.employment ||
+        record.employment === filters.value.employment) &&
+      (!filters.value.dob || record.dob === filters.value.dob) &&
+      (!filters.value.gender || record.gender === filters.value.gender)
+    )
+  })
+})
 
 // Methods for adding, removing records and resetting form
 const removeRecord = async (index) => {
@@ -708,50 +822,6 @@ const addRecord = async () => {
   }
 }
 
-// const addRecord = () => {
-//   // Check for required fields (simplified check - would be more comprehensive in production)
-//   const requiredFields = [
-//     'first',
-//     'last',
-//     'role',
-//     'qualification',
-//     'employment',
-//     'salary',
-//     'dob',
-//     'gender',
-//     'email',
-//     'phone',
-//     'address'
-//   ]
-
-//   // Check if required fields are filled
-//   const missingFields = requiredFields.filter((field) => !aRecord.value[field])
-
-//   if (missingFields.length === 0 && aRecord.value.termsCheck) {
-//     // Add the record with only the fields shown in the table
-//     allRecords.value.push({
-//       first: aRecord.value.first,
-//       last: aRecord.value.last,
-//       role: aRecord.value.role,
-//       qualification: aRecord.value.qualification,
-//       employment: aRecord.value.employment,
-//       salary: aRecord.value.salary,
-//       dob: aRecord.value.dob,
-//       gender: aRecord.value.gender
-//     })
-
-//     // Reset the form after submission
-//     resetForm()
-//     alert('Staff record added successfully!')
-//   } else {
-//     if (!aRecord.value.termsCheck) {
-//       alert('Please confirm that all information is accurate and complete.')
-//     } else {
-//       alert('Please fill in all required fields marked with *')
-//     }
-//   }
-// }
-
 const resetForm = () => {
   // Reset all fields to default values
   aRecord.value = {
@@ -818,7 +888,6 @@ onMounted(() => {
     })
   }
 })
-// omg
 </script>
 
 <style scoped>

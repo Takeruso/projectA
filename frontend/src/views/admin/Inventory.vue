@@ -19,6 +19,16 @@
     <main class="container">
       <!-- Inventory -->
       <div id="table" class="container mt-4">
+        <!-- Filter Input -->
+        <div class="row g-2 mb-3">
+          <div class="col">
+            <input
+              v-model="filterText"
+              class="form-control"
+              placeholder="Filter by name"
+            />
+          </div>
+        </div>
         <table class="table">
           <thead>
             <tr>
@@ -28,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(m, index) in allRecords" :key="index">
+            <tr v-for="(m, index) in filteredRecords" :key="index">
               <td>{{ m.name }}</td>
               <td>
                 <input type="number" v-model="m.stock" min="0" max="100" />
@@ -69,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 // Data for staff records
 const aRecord = ref({
@@ -91,6 +101,15 @@ const allRecords = ref([
     stock: '1'
   }
 ])
+
+const filterText = ref('')
+
+// Computed property for filtered records
+const filteredRecords = computed(() => {
+  return allRecords.value.filter((record) =>
+    record.name.toLowerCase().includes(filterText.value.toLowerCase())
+  )
+})
 
 const removeRecord = (index) => {
   allRecords.value.splice(index, 1)
