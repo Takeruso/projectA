@@ -126,6 +126,10 @@ import api from '@/api'
 
 const editingIndex = ref(null)
 
+const props = defineProps({
+  facilities: Array
+})
+
 const rooms = reactive([])
 
 onMounted(async () => {
@@ -136,6 +140,49 @@ onMounted(async () => {
     console.error('Failed to fetch rooms:', err)
   }
 })
+
+watch(
+  () => rooms.map((r) => r.occupied),
+  (newVals) => {
+    newVals.forEach((occupied, i) => {
+      const room = rooms[i]
+      if (room.status === 'reserved' || room.status === 'cleaning') return
+      if (occupied === 0) {
+        room.status = 'vacant'
+      } else {
+        room.status = 'occupied'
+      }
+    })
+  },
+  { deep: true }
+)
+
+watch(
+  () => rooms.map((r) => r.status),
+  (newVals) => {
+    newVals.forEach((status, i) => {
+      const room = rooms[i]
+      if (
+        status === 'vacant' ||
+        status === 'reserved' ||
+        status === 'cleaning'
+      ) {
+        room.occupied = 0
+      } else if (status === 'occupied' && room.occupied === 0) {
+        room.occupied = 1
+      }
+    })
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.facilities,
+  (newVal) => {
+    rooms.splice(0, rooms.length, ...newVal)
+  },
+  { immediate: true, deep: true }
+)
 
 const editRoom = (index) => {
   editingIndex.value = index

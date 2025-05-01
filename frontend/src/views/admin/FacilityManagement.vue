@@ -49,6 +49,13 @@ onMounted(async () => {
 })
 
 const addFacility = async (facility) => {
+  if (!facility.type) facility.type = 'single'
+  facility.capacity = facility.type === 'single' ? 1 : 2
+  if (!facility.status) facility.status = 'vacant'
+  if (!facility.floor) facility.floor = '1F'
+  if (facility.occupied > facility.capacity) {
+    facility.occupied = facility.capacity
+  }
   if (!facility.id) {
     facility.id = generateRoomId(facility)
   }
@@ -60,9 +67,11 @@ const addFacility = async (facility) => {
       name: '',
       location: '',
       type: '',
-      capacity: '',
+      capacity: 0,
       manager: '',
-      status: ''
+      status: 'vacant',
+      floor: '1F',
+      occupied: 0
     }
   } catch (err) {
     console.error('Failed to add facility:', err)
@@ -70,7 +79,8 @@ const addFacility = async (facility) => {
 }
 
 function generateRoomId(facility) {
-  return `${facility.floor}-${Date.now()}`
+  const floor = facility.floor || 'F' // fallback
+  return `${floor}-${Date.now()}-${Math.floor(Math.random() * 1000)}`
 }
 
 const removeFacility = async (index) => {

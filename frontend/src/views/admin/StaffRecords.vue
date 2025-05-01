@@ -553,7 +553,26 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { ref, onMounted, watch, computed } from 'vue'
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/staff')
+    allRecords.value = response.data.map((staff) => ({
+      first: staff.first_name,
+      last: staff.last_name,
+      role: staff.role,
+      qualification: staff.qualification,
+      employment: staff.employment_type,
+      salary: staff.annual_salary,
+      dob: staff.date_of_birth,
+      gender: staff.gender
+    }))
+  } catch (err) {
+    console.error('Failed to load staff:', err)
+  }
+})
 
 // Extended data for staff records
 const aRecord = ref({
@@ -623,12 +642,17 @@ const allRecords = ref([
 ])
 
 // Methods for adding, removing records and resetting form
-const removeRecord = (index) => {
-  allRecords.value.splice(index, 1)
+const removeRecord = async (index) => {
+  const staffId = allRecords.value[index].id
+  try {
+    await axios.delete(`/api/staff/${staffId}`)
+    allRecords.value.splice(index, 1)
+  } catch (err) {
+    console.error('Failed to delete staff:', err)
+  }
 }
 
-const addRecord = () => {
-  // Check for required fields (simplified check - would be more comprehensive in production)
+const addRecord = async () => {
   const requiredFields = [
     'first',
     'last',
@@ -643,25 +667,38 @@ const addRecord = () => {
     'address'
   ]
 
-  // Check if required fields are filled
   const missingFields = requiredFields.filter((field) => !aRecord.value[field])
-
   if (missingFields.length === 0 && aRecord.value.termsCheck) {
-    // Add the record with only the fields shown in the table
-    allRecords.value.push({
-      first: aRecord.value.first,
-      last: aRecord.value.last,
-      role: aRecord.value.role,
-      qualification: aRecord.value.qualification,
-      employment: aRecord.value.employment,
-      salary: aRecord.value.salary,
-      dob: aRecord.value.dob,
-      gender: aRecord.value.gender
-    })
-
-    // Reset the form after submission
-    resetForm()
-    alert('Staff record added successfully!')
+    try {
+      const payload = {
+        first_name: aRecord.value.first,
+        last_name: aRecord.value.last,
+        role: aRecord.value.role,
+        qualification: aRecord.value.qualification,
+        employment_type: aRecord.value.employment,
+        annual_salary: aRecord.value.salary,
+        date_of_birth: aRecord.value.dob,
+        gender: aRecord.value.gender,
+        phone: aRecord.value.phone,
+        email: aRecord.value.email,
+        shift: aRecord.value.shift
+      }
+      const response = await axios.post('/api/staff', payload)
+      allRecords.value.push({
+        first: response.data.first_name,
+        last: response.data.last_name,
+        role: response.data.role,
+        qualification: response.data.qualification,
+        employment: response.data.employment_type,
+        salary: response.data.annual_salary,
+        dob: response.data.date_of_birth,
+        gender: response.data.gender
+      })
+      resetForm()
+      alert('Staff record added successfully!')
+    } catch (err) {
+      console.error('Failed to add staff:', err)
+    }
   } else {
     if (!aRecord.value.termsCheck) {
       alert('Please confirm that all information is accurate and complete.')
@@ -670,6 +707,50 @@ const addRecord = () => {
     }
   }
 }
+
+// const addRecord = () => {
+//   // Check for required fields (simplified check - would be more comprehensive in production)
+//   const requiredFields = [
+//     'first',
+//     'last',
+//     'role',
+//     'qualification',
+//     'employment',
+//     'salary',
+//     'dob',
+//     'gender',
+//     'email',
+//     'phone',
+//     'address'
+//   ]
+
+//   // Check if required fields are filled
+//   const missingFields = requiredFields.filter((field) => !aRecord.value[field])
+
+//   if (missingFields.length === 0 && aRecord.value.termsCheck) {
+//     // Add the record with only the fields shown in the table
+//     allRecords.value.push({
+//       first: aRecord.value.first,
+//       last: aRecord.value.last,
+//       role: aRecord.value.role,
+//       qualification: aRecord.value.qualification,
+//       employment: aRecord.value.employment,
+//       salary: aRecord.value.salary,
+//       dob: aRecord.value.dob,
+//       gender: aRecord.value.gender
+//     })
+
+//     // Reset the form after submission
+//     resetForm()
+//     alert('Staff record added successfully!')
+//   } else {
+//     if (!aRecord.value.termsCheck) {
+//       alert('Please confirm that all information is accurate and complete.')
+//     } else {
+//       alert('Please fill in all required fields marked with *')
+//     }
+//   }
+// }
 
 const resetForm = () => {
   // Reset all fields to default values

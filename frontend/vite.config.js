@@ -12,5 +12,10 @@ export default defineConfig({
   },
   build: {
     minify: 'terser'
+  },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
   }
 })
