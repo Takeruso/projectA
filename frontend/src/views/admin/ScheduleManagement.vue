@@ -296,7 +296,7 @@ export default {
       staffList: [
         {
           id: 1,
-          name: 'Jennifer Lopez',
+          name: 'Serena Tr',
           role: 'Registered Nurse',
           preferredHours: 32,
           availability: {}
