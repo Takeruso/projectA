@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose()
 const path = require('path')
+const { residents } = require('./residentsData.js')
 
 const db = new sqlite3.Database(path.join(__dirname, 'database.sqlite'))
 
@@ -44,16 +45,56 @@ db.serialize(() => {
   `)
 
   // Patients table
+  // db.run(`
+  //   CREATE TABLE IF NOT EXISTS patients (
+  //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //     name TEXT NOT NULL,
+  //     age INTEGER NOT NULL,
+  //     room_id TEXT,
+  //     medical_notes TEXT,
+  //     FOREIGN KEY (room_id) REFERENCES rooms(id)
+  //   );
+  // `)
+
   db.run(`
-    CREATE TABLE IF NOT EXISTS patients (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      age INTEGER NOT NULL,
-      room_id TEXT,
-      medical_notes TEXT,
-      FOREIGN KEY (room_id) REFERENCES rooms(id)
-    );
-  `)
+  CREATE TABLE IF NOT EXISTS patients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    room_id TEXT,
+    medical_notes TEXT,
+    allergies TEXT,
+    medications TEXT,
+    care_plan TEXT,
+    emergency_contact TEXT,
+    FOREIGN KEY (room_id) REFERENCES rooms(id)
+  );
+`)
+  residents.forEach((resident) => {
+    db.run(
+      `INSERT INTO patients (name, age, room_id, medical_notes, allergies, medications, care_plan, emergency_contact)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        resident.name,
+        resident.age,
+        resident.roomId,
+        null,
+        JSON.stringify(resident.allergies),
+        JSON.stringify(resident.medications),
+        JSON.stringify(resident.carePlan),
+        resident.emergencyContact
+      ],
+      function (err) {
+        if (err) {
+          console.error('Error inserting patient:', err.message)
+        } else {
+          console.log(
+            `Inserted patient ${resident.name} with id ${this.lastID}`
+          )
+        }
+      }
+    )
+  })
 
   // Staff availability / scheduling table
   db.run(`
@@ -385,5 +426,6 @@ db.serialize(() => {
       ]
     )
   })
+
   module.exports = db
 })

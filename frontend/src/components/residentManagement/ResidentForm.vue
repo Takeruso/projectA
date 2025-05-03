@@ -1,12 +1,10 @@
 <template>
   <section class="bg-white rounded shadow-sm p-4 mt-4">
-    <!-- Form Title OMG -->
     <h5 class="mb-3 text-dark">
       <i class="fas fa-user-plus text-primary me-2"></i>
       Add New Resident
     </h5>
 
-    <!-- Form -->
     <form class="row g-3" @submit.prevent="handleSubmit">
       <!-- Name -->
       <div class="col-md-4">
@@ -31,45 +29,75 @@
         />
       </div>
 
-      <!-- Room -->
+      <!-- Room ID -->
       <div class="col-md-2">
         <input
-          v-model="local.room"
+          v-model="local.room_id"
           type="text"
           class="form-control"
-          placeholder="Room"
+          placeholder="Room ID"
           required
         />
       </div>
 
-      <!-- Floor -->
-      <div class="col-md-2">
-        <select v-model="local.floor" class="form-select" required>
-          <option disabled value="">Floor</option>
-          <option value="1F">1F</option>
-          <option value="2F">2F</option>
-        </select>
+      <!-- Medical Notes -->
+      <div class="col-md-12">
+        <textarea
+          v-model="local.medical_notes"
+          class="form-control"
+          placeholder="Medical Notes"
+          rows="2"
+        ></textarea>
       </div>
 
-      <!-- Status -->
-      <div class="col-md-3">
-        <select v-model="local.status" class="form-select" required>
-          <option disabled value="">Status</option>
-          <option value="present">Present</option>
-          <option value="hospitalized">Hospitalized</option>
-          <option value="on_leave">On Leave</option>
-        </select>
+      <!-- Allergies -->
+      <div class="col-md-6">
+        <input
+          v-model="local.allergiesInput"
+          type="text"
+          class="form-control"
+          placeholder="Allergies (comma-separated)"
+        />
       </div>
 
-      <!-- Approval -->
-      <div class="col-md-3">
-        <select v-model="local.approval" class="form-select" required>
-          <option disabled value="">Approval</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-          <option value="admitted">Admitted</option>
-        </select>
+      <!-- Medications -->
+      <div class="col-md-6">
+        <input
+          v-model="local.medicationsInput"
+          type="text"
+          class="form-control"
+          placeholder="Medications (comma-separated)"
+        />
+      </div>
+
+      <!-- Care Plan Morning -->
+      <div class="col-md-6">
+        <input
+          v-model="local.carePlanMorning"
+          type="text"
+          class="form-control"
+          placeholder="Morning Tasks (comma-separated)"
+        />
+      </div>
+
+      <!-- Care Plan Evening -->
+      <div class="col-md-6">
+        <input
+          v-model="local.carePlanEvening"
+          type="text"
+          class="form-control"
+          placeholder="Evening Tasks (comma-separated)"
+        />
+      </div>
+
+      <!-- Emergency Contact -->
+      <div class="col-md-6">
+        <input
+          v-model="local.emergency_contact"
+          type="text"
+          class="form-control"
+          placeholder="Emergency Contact"
+        />
       </div>
 
       <!-- Submit Button -->
@@ -91,17 +119,25 @@ const props = defineProps({
     default: () => ({
       name: '',
       age: 0,
-      room: '',
-      floor: '',
-      status: '',
-      approval: 'pending'
+      room_id: '',
+      medical_notes: '',
+      allergies: [],
+      medications: [],
+      care_plan: {},
+      emergency_contact: ''
     })
   }
 })
 
 const emit = defineEmits(['add'])
 
-const local = reactive({ ...props.resident })
+const local = reactive({
+  ...props.resident,
+  allergiesInput: '',
+  medicationsInput: '',
+  carePlanMorning: '',
+  carePlanEvening: ''
+})
 
 watch(
   () => props.resident,
@@ -110,7 +146,21 @@ watch(
 )
 
 const handleSubmit = () => {
-  emit('add', { ...local })
+  const formattedResident = {
+    name: local.name,
+    age: local.age,
+    room_id: local.room_id,
+    medical_notes: local.medical_notes,
+    allergies: local.allergiesInput.split(',').map((a) => a.trim()),
+    medications: local.medicationsInput.split(',').map((m) => m.trim()),
+    care_plan: {
+      Morning: local.carePlanMorning.split(',').map((t) => t.trim()),
+      Evening: local.carePlanEvening.split(',').map((t) => t.trim())
+    },
+    emergency_contact: local.emergency_contact
+  }
+
+  emit('add', formattedResident)
 }
 </script>
 
@@ -120,21 +170,10 @@ form {
 }
 
 input::placeholder,
+textarea::placeholder,
 select {
   font-size: 0.95rem;
 }
-
-/* .row {
-    margin-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  
-  .col {
-    flex: 1;
-    min-width: 160px;
-  } */
 
 .form-control {
   border-radius: 4px;
