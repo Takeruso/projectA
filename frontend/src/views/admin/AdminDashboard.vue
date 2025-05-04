@@ -86,35 +86,10 @@
             Track inventory levels, manage supplies, and ensure essential goods
             are available.
           </p>
-          <a href="#" class="cta">View Inventory</a>
+          <router-link to="/admin/inventory" class="cta"
+            >View Inventory</router-link
+          >
         </div>
-      </div>
-
-      <div class="upcoming-section">
-        <h2>Upcoming Staff Shifts</h2>
-        <ul class="upcoming-list">
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 3<br />7:00 AM - 3:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Sarah Johnson - Registered Nurse</h3>
-              <p>Assigned to: Medical Wing, Room 102</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 5<br />8:00 AM - 4:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Tom Nguyen - Care Assistant</h3>
-              <p>Assigned to: Residential Unit B</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 7<br />10:00 AM - 6:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Alice Wong - Physiotherapist</h3>
-              <p>Assigned to: Therapy Center, Room 210</p>
-            </div>
-          </li>
-        </ul>
       </div>
     </main>
   </div>

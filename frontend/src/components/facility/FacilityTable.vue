@@ -106,6 +106,13 @@
             >
               <i class="fas fa-check me-1"></i> Save
             </button>
+
+            <button
+              class="btn btn-outline-danger btn-sm rounded-pill px-3"
+              @click="removeRoom(index)"
+            >
+              <i class="fas fa-trash-alt me-1"></i>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -114,50 +121,97 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
+import api from '@/api'
 
 const editingIndex = ref(null)
-const rooms = reactive([
-  {
-    id: '101',
-    type: 'shared',
-    floor: '1F',
-    capacity: 2,
-    occupied: 2,
-    status: 'reserved'
-  },
-  {
-    id: '102',
-    type: 'shared',
-    floor: '1F',
-    capacity: 2,
-    occupied: 1,
-    status: 'vacant'
-  },
-  {
-    id: '201',
-    type: 'single',
-    floor: '2F',
-    capacity: 1,
-    occupied: 0,
-    status: 'reserved'
-  },
-  {
-    id: '202',
-    type: 'shared',
-    floor: '2F',
-    capacity: 2,
-    occupied: 2,
-    status: 'cleaning'
+
+const props = defineProps({
+  facilities: Array
+})
+
+const rooms = reactive([])
+
+onMounted(async () => {
+  try {
+    const response = await api.get('/rooms')
+    rooms.splice(0, rooms.length, ...response.data)
+  } catch (err) {
+    console.error('Failed to fetch rooms:', err)
   }
-])
+})
+
+watch(
+  () => rooms.map((r) => r.occupied),
+  (newVals) => {
+    newVals.forEach((occupied, i) => {
+      const room = rooms[i]
+      if (room.status === 'reserved' || room.status === 'cleaning') return
+      if (occupied === 0) {
+        room.status = 'vacant'
+      } else {
+        room.status = 'occupied'
+      }
+    })
+  },
+  { deep: true }
+)
+
+watch(
+  () => rooms.map((r) => r.status),
+  (newVals) => {
+    newVals.forEach((status, i) => {
+      const room = rooms[i]
+      if (
+        status === 'vacant' ||
+        status === 'reserved' ||
+        status === 'cleaning'
+      ) {
+        room.occupied = 0
+      } else if (status === 'occupied' && room.occupied === 0) {
+        room.occupied = 1
+      }
+    })
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.facilities,
+  (newVal) => {
+    rooms.splice(0, rooms.length, ...newVal)
+  },
+  { immediate: true, deep: true }
+)
 
 const editRoom = (index) => {
   editingIndex.value = index
 }
 
-const saveRoom = () => {
-  editingIndex.value = null
+const saveRoom = async () => {
+  const room = rooms[editingIndex.value]
+  try {
+    await api.put(`/rooms/${room.id}`, room)
+    editingIndex.value = null
+  } catch (err) {
+    console.error('Failed to save room:', err)
+  }
+}
+
+const removeRoom = async (index) => {
+  const target = rooms[index]
+
+  const confirmed = window.confirm(
+    `Are you sure you want to delete room "${target.id}"?`
+  )
+  if (!confirmed) return
+
+  try {
+    await api.delete(`/rooms/${target.id}`)
+    rooms.splice(index, 1)
+  } catch (err) {
+    console.error('Failed to delete facility:', err)
+  }
 }
 
 watch(

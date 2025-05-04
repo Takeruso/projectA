@@ -8,11 +8,15 @@ export default [
     component: () => import('@/views/Dashboard.vue')
   },
   {
-    path: '/sample',
-    component: () => import('@/views/Sample.vue')
-  },
-  {
     path: '/login',
     component: () => import('@/views/Login.vue')
+  },
+  {
+    path: '/privacy',
+    component: () => import('@/views/Privacypolicy.vue')
+  },
+  {
+    path: '/terms',
+    component: () => import('@/views/TermsOfUse.vue')
   }
 ]

@@ -12,6 +12,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import api from '@/api'
+
 import HeaderBar from '@/components/facility/HeaderBar.vue'
 import FacilityHeader from '@/components/facility/FacilityHeader.vue'
 import FacilityTable from '@/components/facility/FacilityTable.vue'
@@ -26,42 +28,16 @@ const aFacility = ref({
   status: ''
 })
 
-const allFacilities = ref([
-  {
-    name: 'Sunrise Home',
-    location: 'Melbourne CBD',
-    type: 'Aged Care',
-    capacity: 120,
-    manager: 'Sarah Wilson',
-    status: 'Open'
-  },
-  {
-    name: 'Riverpark',
-    location: 'Richmond',
-    type: 'Disability Support',
-    capacity: 80,
-    manager: 'Tom Evans',
-    status: 'Under Maintenance'
+const allFacilities = ref([])
+
+onMounted(async () => {
+  try {
+    const response = await api.get('/rooms')
+    allFacilities.value = response.data
+  } catch (err) {
+    console.error('Failed to load facilities:', err)
   }
-])
 
-const removeFacility = (index) => {
-  allFacilities.value.splice(index, 1)
-}
-
-const addFacility = (facility) => {
-  allFacilities.value.push({ ...facility })
-  aFacility.value = {
-    name: '',
-    location: '',
-    type: '',
-    capacity: '',
-    manager: '',
-    status: ''
-  }
-}
-
-onMounted(() => {
   const notificationsBtn = document.querySelector('.notifications-btn')
   if (notificationsBtn) {
     notificationsBtn.addEventListener('click', function () {
@@ -71,6 +47,51 @@ onMounted(() => {
     })
   }
 })
+
+const addFacility = async (facility) => {
+  if (!facility.type) facility.type = 'single'
+  facility.capacity = facility.type === 'single' ? 1 : 2
+  if (!facility.status) facility.status = 'vacant'
+  if (!facility.floor) facility.floor = '1F'
+  if (facility.occupied > facility.capacity) {
+    facility.occupied = facility.capacity
+  }
+  if (!facility.id) {
+    facility.id = generateRoomId(facility)
+  }
+  try {
+    const response = await api.post('/rooms', facility)
+    allFacilities.value.push(response.data)
+    aFacility.value = {
+      id: '',
+      name: '',
+      location: '',
+      type: '',
+      capacity: 0,
+      manager: '',
+      status: 'vacant',
+      floor: '1F',
+      occupied: 0
+    }
+  } catch (err) {
+    console.error('Failed to add facility:', err)
+  }
+}
+
+function generateRoomId(facility) {
+  const floor = facility.floor || 'F' // fallback
+  return `${floor}-${Date.now()}-${Math.floor(Math.random() * 1000)}`
+}
+
+const removeFacility = async (index) => {
+  const target = allFacilities.value[index]
+  try {
+    await api.delete(`/rooms/${target.id}`)
+    allFacilities.value.splice(index, 1)
+  } catch (err) {
+    console.error('Failed to delete facility:', err)
+  }
+}
 </script>
 
 <style scoped>

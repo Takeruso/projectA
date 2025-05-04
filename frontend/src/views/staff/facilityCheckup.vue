@@ -98,133 +98,22 @@
       </div>
     </main>
 
-    <footer class="mt-10 py-4 text-center bg-gray-900 text-white">
+    <!-- <footer class="mt-10 py-4 text-center bg-gray-900 text-white">
       © 2025 Swin Care - All rights reserved.
-    </footer>
+    </footer> -->
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'FacilityCheckup',
   data() {
     return {
       selectedStatus: '',
       selectedType: '',
-      facilityData: [
-        {
-          roomNo: '101',
-          type: 'Private',
-          occupant: 'Floyd Miles',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:00 PM'
-        },
-        {
-          roomNo: '102',
-          type: 'Shared',
-          occupant: 'Harold Finch',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:05 PM'
-        },
-        {
-          roomNo: '203',
-          type: 'Private',
-          occupant: 'Devon Lane',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:10 PM'
-        },
-        {
-          roomNo: '305',
-          type: 'Shared',
-          occupant: 'Cody Fisher',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:15 PM'
-        },
-        {
-          roomNo: '111',
-          type: '3-Bedroom Standard',
-          occupant: 'Cameron Williamson',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:20 PM'
-        },
-        {
-          roomNo: '212',
-          type: '2-Bedroom Standard',
-          occupant: 'Eleanor Pena',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:25 PM'
-        },
-        {
-          roomNo: '220',
-          type: '2-Bedroom Standard',
-          occupant: 'Theresa Webb',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:30 PM'
-        },
-        {
-          roomNo: '103',
-          type: 'Private',
-          occupant: '',
-          status: 'Reserved',
-          lastChecked: '2025-04-26 02:35 PM'
-        },
-        {
-          roomNo: '104',
-          type: 'Shared',
-          occupant: 'Emily Smith',
-          status: 'Occupied',
-          lastChecked: '2025-04-26 02:40 PM'
-        },
-        {
-          roomNo: '110',
-          type: 'Private',
-          occupant: '',
-          status: 'Reserved',
-          lastChecked: '2025-04-26 02:45 PM'
-        },
-        {
-          roomNo: '112',
-          type: '3-Bedroom Standard',
-          occupant: '',
-          status: 'Available',
-          lastChecked: '2025-04-26 02:50 PM'
-        },
-        {
-          roomNo: '113',
-          type: '3-Bedroom Standard',
-          occupant: '',
-          status: 'Available',
-          lastChecked: '2025-04-26 02:55 PM'
-        },
-        {
-          roomNo: '114',
-          type: 'Private',
-          occupant: '',
-          status: 'Available',
-          lastChecked: '2025-04-26 03:00 PM'
-        },
-        {
-          roomNo: '115',
-          type: '2-Bedroom Standard',
-          occupant: '',
-          status: 'Available',
-          lastChecked: '2025-04-26 03:05 PM'
-        },
-        {
-          roomNo: '116',
-          type: 'Private',
-          occupant: '',
-          status: 'Available',
-          lastChecked: '2025-04-26 03:10 PM'
-        },
-        {
-          roomNo: '117',
-          type: '2-Bedroom Standard',
-          occupant: '',
-          status: 'Available',
-          lastChecked: '2025-04-26 03:15 PM'
-        }
-      ]
+      facilityData: []
     }
   },
   computed: {
@@ -237,7 +126,6 @@ export default {
       })
     },
     filteredFacilities() {
-      // Filter by status and type first
       let filtered = this.facilityData.filter((room) => {
         const matchesStatus =
           !this.selectedStatus ||
@@ -249,7 +137,6 @@ export default {
         return matchesStatus && matchesType
       })
 
-      // Return only one entry per unique roomNo (first match)
       const seen = new Set()
       return filtered.filter((room) => {
         if (seen.has(room.roomNo)) return false
@@ -259,10 +146,56 @@ export default {
     }
   },
   methods: {
+    async fetchFacilities() {
+      try {
+        const response = await axios.get('/api/rooms')
+        if (!Array.isArray(response.data)) {
+          console.error('Expected array, but got:', response.data)
+          return
+        }
+        this.facilityData = response.data.map((room) => ({
+          roomNo: room.id,
+          type: this.mapType(room.type),
+          occupant: '', // DBにないので空欄
+          status: this.mapStatus(room.status),
+          lastChecked: this.generateDummyTime()
+        }))
+      } catch (error) {
+        console.error('Failed to load facilities:', error)
+      }
+    },
+    mapType(type) {
+      if (type === 'single') return 'Private'
+      if (type === 'shared') return 'Shared'
+      if (type === '2-bedroom standard') return '2-Bedroom Standard'
+      if (type === '3-bedroom standard') return '3-Bedroom Standard'
+      return type.charAt(0).toUpperCase() + type.slice(1)
+    },
+    mapStatus(status) {
+      if (status === 'vacant') return 'Available'
+      if (status === 'occupied') return 'Occupied'
+      if (status === 'reserved') return 'Reserved'
+      if (status === 'cleaning') return 'Cleaning'
+      return status.charAt(0).toUpperCase() + status.slice(1)
+    },
+    generateDummyTime() {
+      const now = new Date()
+      return now.toLocaleString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric'
+      })
+    },
     resetFilters() {
-      this.selectedStatus = '' // Reset status filter
-      this.selectedType = '' // Reset type filter
+      this.selectedStatus = ''
+      this.selectedType = ''
     }
+  },
+  mounted() {
+    this.fetchFacilities()
   }
 }
 </script>

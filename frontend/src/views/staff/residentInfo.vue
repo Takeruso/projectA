@@ -182,17 +182,19 @@
                 <p><strong>Morning Tasks:</strong></p>
                 <ul>
                   <li
-                    v-for="(task, i) in selectedResident.carePlan.Morning"
+                    v-for="(task, i) in selectedResident.carePlan?.Morning ||
+                    []"
                     :key="'Morning-' + i"
                   >
                     {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
                   </li>
                 </ul>
 
-                <p><strong>Afternoon & Evening Tasks:</strong></p>
+                <p><strong>Evening Tasks:</strong></p>
                 <ul>
                   <li
-                    v-for="(task, i) in selectedResident.carePlan.Evening"
+                    v-for="(task, i) in selectedResident.carePlan?.Evening ||
+                    []"
                     :key="'Evening-' + i"
                   >
                     {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
@@ -202,7 +204,7 @@
                 <p><strong>Night Tasks:</strong></p>
                 <ul>
                   <li
-                    v-for="(task, i) in selectedResident.carePlan.Night"
+                    v-for="(task, i) in selectedResident.carePlan?.Night || []"
                     :key="'Night-' + i"
                   >
                     {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
@@ -253,15 +255,13 @@ export default {
   data() {
     return {
       search: '',
-      // vars for resident details card
       showDetails: false,
       selectedResident: null,
-      // pagination
       currentPage: 1,
       residentsPerPage: 5,
       totalResidents: 0,
       nurseShift: 'Morning',
-      residents
+      residents: []
     }
   },
   computed: {
@@ -279,7 +279,6 @@ export default {
         day: 'numeric'
       })
     },
-    // pagination logic
     paginatedResidents() {
       const start = (this.currentPage - 1) * this.residentsPerPage
       const end = start + this.residentsPerPage
@@ -290,8 +289,19 @@ export default {
     }
   },
   methods: {
+    async fetchResidents() {
+      try {
+        const response = await fetch('/api/patients')
+        if (!response.ok) throw new Error('Failed to fetch data')
+        const data = await response.json()
+        this.residents = data
+        this.totalResidents = data.length
+      } catch (error) {
+        console.error('Error fetching residents:', error)
+      }
+    },
     refreshData() {
-      window.location.reload()
+      this.fetchResidents()
     },
     viewDetails(resident) {
       this.selectedResident = resident
@@ -302,6 +312,9 @@ export default {
       this.showDetails = false
     },
     getShiftTasks(carePlan) {
+      if (!carePlan || typeof carePlan !== 'object') {
+        return []
+      }
       return carePlan[this.nurseShift] || []
     }
   },
@@ -311,7 +324,7 @@ export default {
     }
   },
   mounted() {
-    this.totalResidents = this.residents.length
+    this.fetchResidents()
   }
 }
 </script>

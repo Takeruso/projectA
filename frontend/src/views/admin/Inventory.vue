@@ -17,142 +17,115 @@
     </header>
 
     <main class="container">
-      <div class="welcome-banner">
-        <h1>Welcome back, Martha!</h1>
-        <p>
-          Today is Tuesday, April 1, 2025. You have 2 appointments scheduled
-          this week.
-        </p>
-      </div>
-
-      <div class="dashboard-grid">
-        <div class="card card-appointments">
-          <div class="card-icon">📅</div>
-          <h2>Appointments</h2>
-          <p>
-            Book or view your upcoming appointments with doctors, specialists,
-            and staff.
-          </p>
-          <router-link to="/resident/appointments" class="cta"
-            >View Appointments</router-link
-          >
+      <!-- Inventory -->
+      <div id="table" class="container mt-4">
+        <!-- Filter Input -->
+        <div class="row g-2 mb-3">
+          <div class="col">
+            <input
+              v-model="filterText"
+              class="form-control"
+              placeholder="Filter by name"
+            />
+          </div>
         </div>
-
-        <div class="card card-bills">
-          <div class="card-icon">📜</div>
-          <h2>Billing & Payments</h2>
-          <p>
-            View your current bills, payment history, and make new payments
-            securely.
-          </p>
-          <router-link to="/resident/bill" class="cta">View Bills</router-link>
-        </div>
-
-        <div class="card card-recreation">
-          <div class="card-icon">🎡</div>
-          <h2>Recreational Activities</h2>
-          <p>Access recreational activities, book and track them.</p>
-          <router-link to="/resident/recreation" class="cta"
-            >View Activities</router-link
-          >
-        </div>
-
-        <div class="card card-medication">
-          <div class="card-icon">💊</div>
-          <h2>Medication</h2>
-          <p>Track your medications, view schedule,</p>
-          <router-link to="/resident/medications" class="cta"
-            >View Medications</router-link
-          >
-        </div>
-      </div>
-
-      <div class="upcoming-section">
-        <h2>Upcoming Schedule</h2>
-        <ul class="upcoming-list">
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 3<br />9:30 AM</div>
-            <div class="upcoming-details">
-              <h3>Dr. Williams - Regular Checkup</h3>
-              <p>Location: Medical Wing, Room 102</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 5<br />2:00 PM</div>
-            <div class="upcoming-details">
-              <h3>Physical Therapy Session</h3>
-              <p>Location: Therapy Center, Room 210</p>
-            </div>
-          </li>
-          <li class="upcoming-item">
-            <div class="upcoming-date">Apr 7<br />11:00 AM</div>
-            <div class="upcoming-details">
-              <h3>Community Garden Club</h3>
-              <p>Location: Garden Area, East Wing</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="quick-access">
-        <h2>Quick Access</h2>
-        <div class="quick-links">
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #e57373">
-              🍽️
-            </div>
-            <span>Meal Menu</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #81c784">
-              🚶
-            </div>
-            <span>Activities</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #64b5f6">
-              📞
-            </div>
-            <span>Contact Staff</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #ff8a65">
-              💬
-            </div>
-            <span>Family Chat</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #9575cd">
-              ❓
-            </div>
-            <span>Help & FAQ</span>
-          </a>
-          <a href="#" class="quick-link">
-            <div class="quick-link-icon" style="background-color: #4db6ac">
-              ⚙️
-            </div>
-            <span>Settings</span>
-          </a>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="background-color: #ff2474">Name</th>
+              <th style="background-color: #ff2474">Stock</th>
+              <th style="background-color: #ff2474">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(m, index) in filteredRecords" :key="index">
+              <td>{{ m.name }}</td>
+              <td>
+                <input type="number" v-model="m.stock" min="0" max="100" />
+              </td>
+              <td>
+                <button @click="removeRecord(index)" class="btn pink">
+                  Remove
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row g-2">
+          <div class="col">
+            <input
+              v-model="aRecord.name"
+              class="form-control"
+              placeholder="Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              v-model.number="aRecord.stock"
+              class="form-control"
+              placeholder="Stock"
+              min="1"
+              step="1"
+            />
+          </div>
+          <div class="col">
+            <button @click="addRecord" class="btn pink">Submit</button>
+          </div>
         </div>
       </div>
     </main>
-
-    <!-- <footer>
-      <div class="container footer-container">
-        <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Feedback</a>
-        </div>
-      </div>
-    </footer> -->
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+
+// Data for staff records
+const aRecord = ref({
+  name: '',
+  quantity: ''
+})
+
+const allRecords = ref([
+  {
+    name: 'Melatonin 500mg',
+    stock: '5'
+  },
+  {
+    name: 'Paracetamol 500mg',
+    stock: '3'
+  },
+  {
+    name: 'Ibuprofen 200mg',
+    stock: '1'
+  }
+])
+
+const filterText = ref('')
+
+// Computed property for filtered records
+const filteredRecords = computed(() => {
+  return allRecords.value.filter((record) =>
+    record.name.toLowerCase().includes(filterText.value.toLowerCase())
+  )
+})
+
+const removeRecord = (index) => {
+  allRecords.value.splice(index, 1)
+}
+
+const addRecord = () => {
+  const { name, stock } = aRecord.value
+  const stockNum = Number(stock)
+
+  if (name.trim() && Number.isInteger(stockNum) && stockNum >= 1) {
+    allRecords.value.push({ name: name.trim(), stock: stockNum })
+    aRecord.value = { name: '', stock: '' }
+  } else {
+    alert('Please enter a valid name and stock (must be integer ≥ 1).')
+  }
+}
 
 onMounted(() => {
   const cards = document.querySelectorAll('.card')
@@ -177,28 +150,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* .resident-page {
-  --primary: #ff2474;
-  --primary-light: #ff5d98;
-  --secondary: #f4b942;
-  --dark: #2a3950;
-  --light: #f9f9f9;
-  --danger: #d64045;
-  --success: #4caf50;
-  --gray: #e5e9f0;
-  background-color: var(--light);
-  color: var(--dark);
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-} */
-
 :deep(.resident-page *) {
   all: unset;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
-
 .resident-page main {
   padding: 2rem 0;
 }
@@ -211,13 +167,6 @@ onMounted(() => {
   top: 0;
   z-index: 100;
 }
-
-/* .resident-page footer {
-  background-color: white;
-  padding: 1.5rem 0;
-  margin-top: 3rem;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-} */
 
 .container {
   width: 80vw;
@@ -303,15 +252,16 @@ onMounted(() => {
 }
 
 .card-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  background-color: #e6e6e6;
+  color: #333;
+  border-radius: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: white;
+  justify-content: center;
+  margin: 1rem auto;
 }
 
 .card-appointments .card-icon {
@@ -322,7 +272,7 @@ onMounted(() => {
   background-color: var(--secondary);
 }
 
-.card-recreation .card-icon {
+.card-medical .card-icon {
   background-color: var(--success);
 }
 
@@ -405,22 +355,6 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-/* .footer-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-links a {
-  color: var(--primary);
-  margin-left: 1rem;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
-} */
-
 .alert-count {
   background-color: var(--danger);
   color: white;
@@ -489,5 +423,53 @@ onMounted(() => {
 .upcoming-details h3 {
   font-size: 1rem;
   margin-bottom: 0.3rem;
+}
+
+.pink {
+  background-color: #ff5d98;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pink:hover {
+  background-color: #ff2474;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.table th {
+  color: white;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.form-control {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.row {
+  margin-top: 1rem;
 }
 </style>

@@ -22,5 +22,9 @@ export default [
   {
     path: '/admin/schedule',
     component: () => import('@/views/admin/ScheduleManagement.vue')
+  },
+  {
+    path: '/admin/inventory',
+    component: () => import('@/views/admin/Inventory.vue')
   }
 ]

@@ -1,77 +1,79 @@
-// FacilityManagement.vue
-<template>
-  <div class="facility-page">
-    <HeaderBar />
-    <main class="container my-4 facility-page">
-      <FacilityHeader :count="allFacilities.length" />
-      <FacilityTable :facilities="allFacilities" @remove="removeFacility" />
-      <FacilityForm :facility="aFacility" @add="addFacility" />
-    </main>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import HeaderBar from '@/components/facility/HeaderBar.vue'
-import FacilityHeader from '@/components/residentManagement/ResidentHeader.vue'
-import FacilityTable from '@/components/residentManagement/ResidentTable.vue'
-// import FacilityForm from '@/components/residentManagement/FacilityForm.vue'
+import ResidentHeader from '@/components/residentManagement/ResidentHeader.vue'
+import ResidentTable from '@/components/residentManagement/ResidentTable.vue'
+import ResidentForm from '@/components/residentManagement/ResidentForm.vue'
 
-const aFacility = ref({
-  name: '',
-  location: '',
-  type: '',
-  capacity: '',
-  manager: '',
-  status: ''
-})
+const residents = ref([])
 
-const allFacilities = ref([
-  {
-    name: 'Sunrise Home',
-    location: 'Melbourne CBD',
-    type: 'Aged Care',
-    capacity: 120,
-    manager: 'Sarah Wilson',
-    status: 'Open'
-  },
-  {
-    name: 'Riverpark',
-    location: 'Richmond',
-    type: 'Disability Support',
-    capacity: 80,
-    manager: 'Tom Evans',
-    status: 'Under Maintenance'
-  }
-])
-
-const removeFacility = (index) => {
-  allFacilities.value.splice(index, 1)
-}
-
-const addFacility = (facility) => {
-  allFacilities.value.push({ ...facility })
-  aFacility.value = {
-    name: '',
-    location: '',
-    type: '',
-    capacity: '',
-    manager: '',
-    status: ''
+const fetchResidents = async () => {
+  try {
+    const res = await fetch('/api/patients')
+    if (!res.ok) throw new Error('Failed to fetch')
+    residents.value = await res.json()
+  } catch (err) {
+    console.error('Fetch error:', err)
   }
 }
 
-onMounted(() => {
-  const notificationsBtn = document.querySelector('.notifications-btn')
-  if (notificationsBtn) {
-    notificationsBtn.addEventListener('click', function () {
-      alert(
-        'You have 2 facility alerts:\n- Facility inspection pending\n- Capacity limit exceeded'
-      )
+const addResident = async (newResident) => {
+  try {
+    const res = await fetch('/api/patients', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newResident)
     })
+    if (!res.ok) throw new Error('Failed to add')
+    const created = await res.json()
+    residents.value.push(created.patient)
+  } catch (err) {
+    console.error('Add error:', err)
   }
-})
+}
+
+const saveResident = async (updatedResident) => {
+  try {
+    const res = await fetch(`/api/patients/${updatedResident.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedResident)
+    })
+    if (!res.ok) throw new Error('Failed to save')
+    const idx = residents.value.findIndex((r) => r.id === updatedResident.id)
+    if (idx !== -1) residents.value[idx] = updatedResident
+  } catch (err) {
+    console.error('Save error:', err)
+  }
+}
+
+const removeResident = async (id) => {
+  try {
+    const response = await fetch(`/api/patients/${id}`, { method: 'DELETE' })
+    if (!response.ok) throw new Error('Failed to delete')
+    residents.value = residents.value.filter((r) => r.id !== id)
+  } catch (error) {
+    console.error('Delete error:', error)
+  }
+}
+
+onMounted(fetchResidents)
 </script>
+
+<template>
+  <div class="facility-page">
+    <HeaderBar />
+    <main class="container my-4">
+      <ResidentHeader :count="residents.length" />
+      <ResidentTable
+        :residents="residents"
+        @save="saveResident"
+        @remove="removeResident"
+      />
+      <ResidentForm @add="addResident" />
+    </main>
+  </div>
+</template>
 
 <style scoped>
 .facility-page {

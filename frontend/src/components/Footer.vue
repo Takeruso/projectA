@@ -3,10 +3,12 @@
     <div class="container footer-container">
       <div class="copyright">© 2025 Swin Care. All rights reserved.</div>
       <div class="footer-links">
-        <router-link to="/privacy-policy">Privacy Policy</router-link>
+        <router-link to="/privacy">Privacy Policy</router-link>
         <router-link to="/terms">Terms of Use</router-link>
-        <router-link to="/contact">Contact Us</router-link>
-        <router-link to="/feedback">Feedback</router-link>
+        <!-- Link to the #contact section on the Landing page -->
+        <router-link to="/#contact">Contact Us</router-link>
+        <!-- Link to the #feedback section on the Landing page -->
+        <router-link to="/#feedback">Feedback</router-link>
       </div>
     </div>
   </footer>

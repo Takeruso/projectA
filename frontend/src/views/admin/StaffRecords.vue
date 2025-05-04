@@ -19,6 +19,78 @@
     <main class="container">
       <!-- Staff Records Table -->
       <div id="table" class="container mt-4">
+        <!-- Filters -->
+        <div class="row g-2 mb-3">
+          <div class="col">
+            <input
+              v-model="filters.firstName"
+              class="form-control"
+              placeholder="Filter by First Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.lastName"
+              class="form-control"
+              placeholder="Filter by Last Name"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.role"
+              class="form-control"
+              placeholder="Filter by Role"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.qualification"
+              class="form-control"
+              placeholder="Filter by Qualification"
+            />
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.salary"
+              class="form-control"
+              placeholder="Filter by Annual Salary"
+            />
+          </div>
+          <div class="col">
+            <select v-model="filters.employment" class="form-control">
+              <option value="">Filter by Employment Type</option>
+              <option value="Full Time">Full Time</option>
+              <option value="Part Time">Part Time</option>
+              <option value="Contract">Contract</option>
+              <option value="Casual">Casual</option>
+            </select>
+          </div>
+          <div class="col">
+            <input
+              v-model="filters.dob"
+              type="date"
+              class="form-control"
+              placeholder="Filter by Date of Birth"
+            />
+          </div>
+          <div class="col">
+            <div>
+              <label>
+                <input type="radio" v-model="filters.gender" value="Male" />
+                Male
+              </label>
+              <label>
+                <input type="radio" v-model="filters.gender" value="Female" />
+                Female
+              </label>
+              <label>
+                <input type="radio" v-model="filters.gender" value="" />
+                All
+              </label>
+            </div>
+          </div>
+        </div>
+
         <table class="table">
           <thead>
             <tr>
@@ -34,7 +106,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(m, index) in allRecords" :key="index">
+            <tr v-for="(m, index) in filteredRecords" :key="index">
               <td>{{ m.first }}</td>
               <td>{{ m.last }}</td>
               <td>{{ m.role }}</td>
@@ -52,66 +124,499 @@
           </tbody>
         </table>
 
-        <!-- Input Fields to Add a New Record -->
-        <div class="row g-2">
-          <div class="col">
-            <input
-              v-model="aRecord.first"
-              class="form-control"
-              placeholder="First Name"
-            />
-          </div>
-          <div class="col">
-            <input
-              v-model="aRecord.last"
-              class="form-control"
-              placeholder="Last Name"
-            />
-          </div>
-          <div class="col">
-            <input
-              v-model="aRecord.role"
-              class="form-control"
-              placeholder="Role"
-            />
-          </div>
-          <div class="col">
-            <input
-              v-model="aRecord.qualification"
-              class="form-control"
-              placeholder="Qualification"
-            />
-          </div>
-          <div class="col">
-            <input
-              v-model="aRecord.employment"
-              class="form-control"
-              placeholder="Employment Type"
-            />
-          </div>
-          <div class="col">
-            <input
-              v-model="aRecord.salary"
-              class="form-control"
-              placeholder="Annual Salary"
-            />
-          </div>
-          <div class="col">
-            <input
-              v-model="aRecord.dob"
-              class="form-control"
-              placeholder="Date of Birth"
-            />
-            <div class="col">
-              <input
-                v-model="aRecord.gender"
-                class="form-control"
-                placeholder="Gender"
-              />
+        <!-- Enhanced Staff Onboarding Form -->
+        <div class="form-container">
+          <h2 class="form-title">Staff Onboarding Form</h2>
+
+          <div class="form-section">
+            <h3>Personal Information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first">First Name*</label>
+                <input
+                  id="first"
+                  v-model="aRecord.first"
+                  class="form-control"
+                  placeholder="First Name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="last">Last Name*</label>
+                <input
+                  id="last"
+                  v-model="aRecord.last"
+                  class="form-control"
+                  placeholder="Last Name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="dob">Date of Birth*</label>
+                <input
+                  id="dob"
+                  v-model="aRecord.dob"
+                  type="date"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="gender">Gender*</label>
+                <select
+                  id="gender"
+                  v-model="aRecord.gender"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Non-binary">Non-binary</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="nationality">Nationality*</label>
+                <input
+                  id="nationality"
+                  v-model="aRecord.nationality"
+                  class="form-control"
+                  placeholder="Nationality"
+                />
+              </div>
+              <div class="form-group">
+                <label for="maritalStatus">Marital Status</label>
+                <select
+                  id="maritalStatus"
+                  v-model="aRecord.maritalStatus"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select Status</option>
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
+                  <option value="Divorced">Divorced</option>
+                  <option value="Widowed">Widowed</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div class="col">
-            <button @click="addRecord" class="btn pink">Submit</button>
+
+          <div class="form-section">
+            <h3>Contact Information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Email Address*</label>
+                <input
+                  id="email"
+                  v-model="aRecord.email"
+                  type="email"
+                  class="form-control"
+                  placeholder="Email Address"
+                />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number*</label>
+                <input
+                  id="phone"
+                  v-model="aRecord.phone"
+                  class="form-control"
+                  placeholder="Phone Number"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="address">Residential Address*</label>
+                <input
+                  id="address"
+                  v-model="aRecord.address"
+                  class="form-control"
+                  placeholder="Full Address"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City*</label>
+                <input
+                  id="city"
+                  v-model="aRecord.city"
+                  class="form-control"
+                  placeholder="City"
+                />
+              </div>
+              <div class="form-group">
+                <label for="state">State/Province*</label>
+                <input
+                  id="state"
+                  v-model="aRecord.state"
+                  class="form-control"
+                  placeholder="State/Province"
+                />
+              </div>
+              <div class="form-group">
+                <label for="postal">Postal Code*</label>
+                <input
+                  id="postal"
+                  v-model="aRecord.postal"
+                  class="form-control"
+                  placeholder="Postal Code"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="emergencyContact">Emergency Contact Name*</label>
+                <input
+                  id="emergencyContact"
+                  v-model="aRecord.emergencyContact"
+                  class="form-control"
+                  placeholder="Emergency Contact Name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="emergencyPhone">Emergency Contact Phone*</label>
+                <input
+                  id="emergencyPhone"
+                  v-model="aRecord.emergencyPhone"
+                  class="form-control"
+                  placeholder="Emergency Contact Phone"
+                />
+              </div>
+              <div class="form-group">
+                <label for="emergencyRelation">Relationship*</label>
+                <input
+                  id="emergencyRelation"
+                  v-model="aRecord.emergencyRelation"
+                  class="form-control"
+                  placeholder="Relationship to Contact"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Professional Information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="role">Position/Role*</label>
+                <input
+                  id="role"
+                  v-model="aRecord.role"
+                  class="form-control"
+                  placeholder="Position/Role"
+                />
+              </div>
+              <div class="form-group">
+                <label for="department">Department*</label>
+                <select
+                  id="department"
+                  v-model="aRecord.department"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select Department</option>
+                  <option value="Medical">Medical</option>
+                  <option value="Nursing">Nursing</option>
+                  <option value="Administration">Administration</option>
+                  <option value="Support Staff">Support Staff</option>
+                  <option value="Management">Management</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="employmentDate">Start Date*</label>
+                <input
+                  id="employmentDate"
+                  v-model="aRecord.employmentDate"
+                  type="date"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="employment">Employment Type*</label>
+                <select
+                  id="employment"
+                  v-model="aRecord.employment"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select Type</option>
+                  <option value="Full Time">Full Time</option>
+                  <option value="Part Time">Part Time</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Casual">Casual</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="workHours">Working Hours/Week*</label>
+                <input
+                  id="workHours"
+                  v-model="aRecord.workHours"
+                  type="number"
+                  min="0"
+                  class="form-control"
+                  placeholder="Hours per Week"
+                />
+              </div>
+              <div class="form-group">
+                <label for="salary">Annual Salary*</label>
+                <input
+                  id="salary"
+                  v-model="aRecord.salary"
+                  class="form-control"
+                  placeholder="Annual Salary"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Qualifications & Experience</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="qualification">Highest Qualification*</label>
+                <input
+                  id="qualification"
+                  v-model="aRecord.qualification"
+                  class="form-control"
+                  placeholder="Highest Qualification"
+                />
+              </div>
+              <div class="form-group">
+                <label for="institution">Institution*</label>
+                <input
+                  id="institution"
+                  v-model="aRecord.institution"
+                  class="form-control"
+                  placeholder="Institution Name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="gradYear">Year of Graduation*</label>
+                <input
+                  id="gradYear"
+                  v-model="aRecord.gradYear"
+                  type="number"
+                  min="1950"
+                  :max="new Date().getFullYear()"
+                  class="form-control"
+                  placeholder="Year of Graduation"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="experience">Years of Experience*</label>
+                <input
+                  id="experience"
+                  v-model="aRecord.experience"
+                  type="number"
+                  min="0"
+                  class="form-control"
+                  placeholder="Years of Experience"
+                />
+              </div>
+              <div class="form-group full-width">
+                <label for="specialization">Specialization/Skills</label>
+                <input
+                  id="specialization"
+                  v-model="aRecord.specialization"
+                  class="form-control"
+                  placeholder="Specialization/Skills"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="certification">Professional Certifications</label>
+                <input
+                  id="certification"
+                  v-model="aRecord.certification"
+                  class="form-control"
+                  placeholder="Professional Certifications"
+                />
+              </div>
+              <div class="form-group">
+                <label for="license">License Number (if applicable)</label>
+                <input
+                  id="license"
+                  v-model="aRecord.license"
+                  class="form-control"
+                  placeholder="License Number"
+                />
+              </div>
+              <div class="form-group">
+                <label for="licenseExpiry">License Expiry Date</label>
+                <input
+                  id="licenseExpiry"
+                  v-model="aRecord.licenseExpiry"
+                  type="date"
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Banking & Identification</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="taxId">Tax ID/SSN*</label>
+                <input
+                  id="taxId"
+                  v-model="aRecord.taxId"
+                  class="form-control"
+                  placeholder="Tax ID/SSN"
+                />
+              </div>
+              <div class="form-group">
+                <label for="bankName">Bank Name*</label>
+                <input
+                  id="bankName"
+                  v-model="aRecord.bankName"
+                  class="form-control"
+                  placeholder="Bank Name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="accountNumber">Account Number*</label>
+                <input
+                  id="accountNumber"
+                  v-model="aRecord.accountNumber"
+                  class="form-control"
+                  placeholder="Account Number"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="idType">ID Type*</label>
+                <select
+                  id="idType"
+                  v-model="aRecord.idType"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select ID Type</option>
+                  <option value="Passport">Passport</option>
+                  <option value="Driver's License">Driver's License</option>
+                  <option value="National ID">National ID</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="idNumber">ID Number*</label>
+                <input
+                  id="idNumber"
+                  v-model="aRecord.idNumber"
+                  class="form-control"
+                  placeholder="ID Number"
+                />
+              </div>
+              <div class="form-group">
+                <label for="idExpiry">ID Expiry Date*</label>
+                <input
+                  id="idExpiry"
+                  v-model="aRecord.idExpiry"
+                  type="date"
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Additional Information</h3>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="medicalConditions"
+                  >Medical Conditions/Allergies</label
+                >
+                <textarea
+                  id="medicalConditions"
+                  v-model="aRecord.medicalConditions"
+                  class="form-control"
+                  placeholder="List any medical conditions or allergies"
+                  rows="2"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="criminalRecord">Criminal Record Check</label>
+                <select
+                  id="criminalRecord"
+                  v-model="aRecord.criminalRecord"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select Status</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Not Required">Not Required</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="referenceCheck">Reference Check</label>
+                <select
+                  id="referenceCheck"
+                  v-model="aRecord.referenceCheck"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select Status</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Not Required">Not Required</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="vaccinationStatus"
+                  >COVID-19 Vaccination Status*</label
+                >
+                <select
+                  id="vaccinationStatus"
+                  v-model="aRecord.vaccinationStatus"
+                  class="form-control"
+                >
+                  <option value="" disabled selected>Select Status</option>
+                  <option value="Fully Vaccinated">Fully Vaccinated</option>
+                  <option value="Partially Vaccinated">
+                    Partially Vaccinated
+                  </option>
+                  <option value="Not Vaccinated">Not Vaccinated</option>
+                  <option value="Exempt">Exempt</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                id="termsCheck"
+                v-model="aRecord.termsCheck"
+              />
+              <label for="termsCheck"
+                >I confirm all information provided is accurate and
+                complete*</label
+              >
+            </div>
+
+            <div class="form-buttons">
+              <button @click="resetForm" class="btn reset-btn">
+                Reset Form
+              </button>
+              <button @click="addRecord" class="btn pink">
+                Submit Staff Record
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -120,9 +625,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { ref, onMounted, watch, computed } from 'vue'
 
-// Data for staff records
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/staff')
+    allRecords.value = response.data.map((staff) => ({
+      first: staff.first_name,
+      last: staff.last_name,
+      role: staff.role,
+      qualification: staff.qualification,
+      employment: staff.employment_type,
+      salary: staff.annual_salary,
+      dob: staff.date_of_birth,
+      gender: staff.gender
+    }))
+  } catch (err) {
+    console.error('Failed to load staff:', err)
+  }
+})
+
+// Filters
+const filters = ref({
+  firstName: '',
+  lastName: '',
+  role: '',
+  qualification: '',
+  salary: '',
+  employment: '',
+  dob: '',
+  gender: ''
+})
+
+// Extended data for staff records
 const aRecord = ref({
   first: '',
   last: '',
@@ -131,7 +667,39 @@ const aRecord = ref({
   employment: '',
   salary: '',
   dob: '',
-  gender: ''
+  gender: '',
+  nationality: '',
+  maritalStatus: '',
+  email: '',
+  phone: '',
+  address: '',
+  city: '',
+  state: '',
+  postal: '',
+  emergencyContact: '',
+  emergencyPhone: '',
+  emergencyRelation: '',
+  department: '',
+  employmentDate: '',
+  workHours: '',
+  institution: '',
+  gradYear: '',
+  experience: '',
+  specialization: '',
+  certification: '',
+  license: '',
+  licenseExpiry: '',
+  taxId: '',
+  bankName: '',
+  accountNumber: '',
+  idType: '',
+  idNumber: '',
+  idExpiry: '',
+  medicalConditions: '',
+  criminalRecord: '',
+  referenceCheck: '',
+  vaccinationStatus: '',
+  termsCheck: false
 })
 
 const allRecords = ref([
@@ -157,37 +725,146 @@ const allRecords = ref([
   }
 ])
 
-// Methods for adding and removing records
-const removeRecord = (index) => {
-  allRecords.value.splice(index, 1)
+// Computed property for filtered records
+const filteredRecords = computed(() => {
+  return allRecords.value.filter((record) => {
+    return (
+      (!filters.value.firstName ||
+        record.first
+          .toLowerCase()
+          .includes(filters.value.firstName.toLowerCase())) &&
+      (!filters.value.lastName ||
+        record.last
+          .toLowerCase()
+          .includes(filters.value.lastName.toLowerCase())) &&
+      (!filters.value.role ||
+        record.role.toLowerCase().includes(filters.value.role.toLowerCase())) &&
+      (!filters.value.qualification ||
+        record.qualification
+          .toLowerCase()
+          .includes(filters.value.qualification.toLowerCase())) &&
+      (!filters.value.salary ||
+        record.salary
+          .toLowerCase()
+          .includes(filters.value.salary.toLowerCase())) &&
+      (!filters.value.employment ||
+        record.employment === filters.value.employment) &&
+      (!filters.value.dob || record.dob === filters.value.dob) &&
+      (!filters.value.gender || record.gender === filters.value.gender)
+    )
+  })
+})
+
+// Methods for adding, removing records and resetting form
+const removeRecord = async (index) => {
+  const staffId = allRecords.value[index].id
+  try {
+    await axios.delete(`/api/staff/${staffId}`)
+    allRecords.value.splice(index, 1)
+  } catch (err) {
+    console.error('Failed to delete staff:', err)
+  }
 }
 
-const addRecord = () => {
-  const { first, last, role, qualification, employment, salary, dob, gender } =
-    aRecord.value
-  if (
-    first &&
-    last &&
-    role &&
-    qualification &&
-    employment &&
-    salary &&
-    dob &&
-    gender
-  ) {
-    allRecords.value.push({ ...aRecord.value })
-    aRecord.value = {
-      first: '',
-      last: '',
-      role: '',
-      qualification: '',
-      employment: '',
-      salary: '',
-      dob: '',
-      gender: ''
+const addRecord = async () => {
+  const requiredFields = [
+    'first',
+    'last',
+    'role',
+    'qualification',
+    'employment',
+    'salary',
+    'dob',
+    'gender',
+    'email',
+    'phone',
+    'address'
+  ]
+
+  const missingFields = requiredFields.filter((field) => !aRecord.value[field])
+  if (missingFields.length === 0 && aRecord.value.termsCheck) {
+    try {
+      const payload = {
+        first_name: aRecord.value.first,
+        last_name: aRecord.value.last,
+        role: aRecord.value.role,
+        qualification: aRecord.value.qualification,
+        employment_type: aRecord.value.employment,
+        annual_salary: aRecord.value.salary,
+        date_of_birth: aRecord.value.dob,
+        gender: aRecord.value.gender,
+        phone: aRecord.value.phone,
+        email: aRecord.value.email,
+        shift: aRecord.value.shift
+      }
+      const response = await axios.post('/api/staff', payload)
+      allRecords.value.push({
+        first: response.data.first_name,
+        last: response.data.last_name,
+        role: response.data.role,
+        qualification: response.data.qualification,
+        employment: response.data.employment_type,
+        salary: response.data.annual_salary,
+        dob: response.data.date_of_birth,
+        gender: response.data.gender
+      })
+      resetForm()
+      alert('Staff record added successfully!')
+    } catch (err) {
+      console.error('Failed to add staff:', err)
     }
   } else {
-    alert('Please fill in all fields before submitting.')
+    if (!aRecord.value.termsCheck) {
+      alert('Please confirm that all information is accurate and complete.')
+    } else {
+      alert('Please fill in all required fields marked with *')
+    }
+  }
+}
+
+const resetForm = () => {
+  // Reset all fields to default values
+  aRecord.value = {
+    first: '',
+    last: '',
+    role: '',
+    qualification: '',
+    employment: '',
+    salary: '',
+    dob: '',
+    gender: '',
+    nationality: '',
+    maritalStatus: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    postal: '',
+    emergencyContact: '',
+    emergencyPhone: '',
+    emergencyRelation: '',
+    department: '',
+    employmentDate: '',
+    workHours: '',
+    institution: '',
+    gradYear: '',
+    experience: '',
+    specialization: '',
+    certification: '',
+    license: '',
+    licenseExpiry: '',
+    taxId: '',
+    bankName: '',
+    accountNumber: '',
+    idType: '',
+    idNumber: '',
+    idExpiry: '',
+    medicalConditions: '',
+    criminalRecord: '',
+    referenceCheck: '',
+    vaccinationStatus: '',
+    termsCheck: false
   }
 }
 
@@ -272,153 +949,6 @@ onMounted(() => {
   color: var(--dark);
 }
 
-.welcome-banner {
-  background-color: white;
-  border-radius: 10px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.welcome-banner h1 {
-  margin-bottom: 1rem;
-  font-size: 1.8rem;
-  color: var(--dark);
-}
-
-.welcome-banner p {
-  color: #666;
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.card {
-  background-color: white;
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
-}
-
-.card-icon {
-  font-size: 2.5rem;
-  width: 60px;
-  height: 60px;
-  background-color: #e6e6e6;
-  color: #333;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 1rem auto;
-}
-
-.card-appointments .card-icon {
-  background-color: var(--primary);
-}
-
-.card-bills .card-icon {
-  background-color: var(--secondary);
-}
-
-.card-medical .card-icon {
-  background-color: var(--success);
-}
-
-.card-medication .card-icon {
-  background-color: var(--danger);
-}
-
-.card h2 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  color: var(--dark);
-}
-
-.card p {
-  color: #666;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  flex-grow: 1;
-}
-
-.card .cta {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: var(--primary-light);
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 0.9rem;
-  transition: background-color 0.3s ease;
-  text-align: center;
-  margin-top: auto;
-}
-
-.card .cta:hover {
-  background-color: var(--primary);
-}
-
-.quick-access {
-  margin-top: 2rem;
-}
-
-.quick-access h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: var(--dark);
-}
-
-.quick-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1rem;
-}
-
-.quick-link {
-  background-color: white;
-  border-radius: 10px;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  text-decoration: none;
-  color: var(--dark);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-}
-
-.quick-link:hover {
-  transform: translateY(-3px);
-}
-
-.quick-link-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 0.9rem;
-}
-
 .alert-count {
   background-color: var(--danger);
   color: white;
@@ -441,71 +971,10 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.upcoming-section {
-  margin-top: 2rem;
-  background-color: white;
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.upcoming-section h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: var(--dark);
-}
-
-.upcoming-list {
-  list-style-type: none;
-}
-
-.upcoming-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--gray);
-}
-
-.upcoming-item:last-child {
-  border-bottom: none;
-}
-
-.upcoming-date {
-  min-width: 80px;
-  text-align: center;
-  padding: 0.5rem;
-  background-color: var(--gray);
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-.upcoming-details {
-  flex: 1;
-}
-
-.upcoming-details h3 {
-  font-size: 1rem;
-  margin-bottom: 0.3rem;
-}
-
-.pink {
-  background-color: #ff5d98;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.pink:hover {
-  background-color: #ff2474;
-}
-
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .table th,
@@ -527,13 +996,141 @@ onMounted(() => {
   background-color: #f1f1f1;
 }
 
-.form-control {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+/* Enhanced Staff Form Styles */
+.form-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
-.row {
-  margin-top: 1rem;
+.form-title {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 2px solid #ff2474;
+  padding-bottom: 1rem;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.form-section h3 {
+  color: #ff2474;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-group.full-width {
+  flex-basis: 100%;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: #ff2474;
+  outline: none;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-check input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.form-footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.pink {
+  background-color: #ff5d98;
+  color: white;
+  border: none;
+}
+
+.pink:hover {
+  background-color: #ff2474;
+}
+
+.reset-btn {
+  background-color: #f2f2f2;
+  color: #555;
+  border: 1px solid #ddd;
+}
+
+.reset-btn:hover {
+  background-color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-group {
+    min-width: 100%;
+  }
 }
 </style>
