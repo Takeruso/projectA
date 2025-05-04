@@ -97,16 +97,36 @@ db.serialize(() => {
   })
 
   // Staff availability / scheduling table
+  // db.run(`
+  //   CREATE TABLE IF NOT EXISTS staff_schedule (
+  //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //     staff_id INTEGER NOT NULL,
+  //     date TEXT NOT NULL,
+  //     shift TEXT NOT NULL, -- e.g., morning, afternoon, night
+  //     status TEXT NOT NULL, -- available, leave_requested, approved, etc.
+  //     FOREIGN KEY (staff_id) REFERENCES staff(id)
+  //   );
+  // `)
   db.run(`
-    CREATE TABLE IF NOT EXISTS staff_schedule (
+  CREATE TABLE IF NOT EXISTS staff_availability (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    staff_id INTEGER NOT NULL,
+    date TEXT NOT NULL,
+    shift_id TEXT NOT NULL, -- e.g., shift1, shift2, shift3
+    is_available BOOLEAN NOT NULL, -- true / false
+    FOREIGN KEY (staff_id) REFERENCES staff(id)
+  );
+  `)
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS staff_assignment (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       staff_id INTEGER NOT NULL,
       date TEXT NOT NULL,
-      shift TEXT NOT NULL, -- e.g., morning, afternoon, night
-      status TEXT NOT NULL, -- available, leave_requested, approved, etc.
+      shift_id TEXT NOT NULL,
       FOREIGN KEY (staff_id) REFERENCES staff(id)
-    );
-  `)
+    ); 
+      `)
 
   // Appointments table
   db.run(`
@@ -426,6 +446,50 @@ db.serialize(() => {
       ]
     )
   })
+
+  // Insert sample availability data (for 2025-05-05, shift2 & shift3)
+  const availabilityData = [
+    [1, '2025-05-05', 'shift2', 1],
+    [1, '2025-05-05', 'shift3', 1],
+    [2, '2025-05-05', 'shift2', 1],
+    [2, '2025-05-05', 'shift3', 1],
+    [3, '2025-05-05', 'shift2', 1],
+    [3, '2025-05-05', 'shift3', 1],
+    [4, '2025-05-05', 'shift2', 1],
+    [4, '2025-05-05', 'shift3', 1],
+    [5, '2025-05-05', 'shift2', 1],
+    [5, '2025-05-05', 'shift3', 1]
+  ]
+
+  const insertAvailability = db.prepare(`
+    INSERT INTO staff_availability (staff_id, date, shift_id, is_available)
+    VALUES (?, ?, ?, ?);
+  `)
+
+  availabilityData.forEach((record) => {
+    insertAvailability.run(record)
+  })
+
+  insertAvailability.finalize()
+
+  // Insert sample assignment data (2025-05-05, shift2)
+  const assignmentData = [
+    [1, '2025-05-05', 'shift2'],
+    [2, '2025-05-05', 'shift2']
+  ]
+
+  const insertAssignment = db.prepare(`
+    INSERT INTO staff_assignment (staff_id, date, shift_id)
+    VALUES (?, ?, ?);
+  `)
+
+  assignmentData.forEach((record) => {
+    insertAssignment.run(record)
+  })
+
+  insertAssignment.finalize()
+
+  console.log('Database initialized with sample data.')
 
   module.exports = db
 })

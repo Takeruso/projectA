@@ -68,8 +68,8 @@
           <h2>Staff Availability</h2>
           <div class="staff-list">
             <div
-              v-for="(staff, index) in staffList"
-              :key="index"
+              v-for="(staff, index) in staffList.slice(0, displayedStaffCount)"
+              :key="staff.id"
               class="staff-card"
             >
               <div class="staff-info">
@@ -99,9 +99,16 @@
                     >
                       <input
                         type="checkbox"
-                        v-model="staff.availability[day.date][shift.id]"
-                        @change="updateAvailability(staff, day.date, shift.id)"
+                        v-if="
+                          staff.availability &&
+                          staff.availability[day.date] &&
+                          staff.availability[day.date][shift.id]
+                        "
+                        v-model="
+                          staff.availability[day.date][shift.id].is_available
+                        "
                       />
+
                       <span class="checkmark"></span>
                     </label>
                   </div>
@@ -114,6 +121,9 @@
               </div>
             </div>
           </div>
+          <div v-if="displayedStaffCount < staffList.length" class="load-more">
+            <button @click="displayedStaffCount += 10">Show More</button>
+          </div>
         </div>
 
         <!-- Shift Assignment Tab -->
@@ -123,10 +133,11 @@
             <div class="calendar-header">
               <div class="time-column"></div>
               <div v-for="day in weekDays" :key="day.date" class="day-column">
-                <span class="day-name">{{ day.name }}</span>
-                <span class="day-date">{{ formatDate(day.date) }}</span>
+                <div class="day-name">{{ day.short }}</div>
+                <div class="day-date">{{ day.date }}</div>
               </div>
             </div>
+
             <div class="calendar-body">
               <div v-for="shift in shifts" :key="shift.id" class="shift-row">
                 <div class="time-slot">{{ shift.label }}</div>
@@ -285,63 +296,67 @@ export default {
   data() {
     return {
       activeTab: 'availability',
+      displayedStaffCount: 10,
       selectedWeek: this.getCurrentWeek(),
       weekDays: [],
+      staffList: [],
       shifts: [
         { id: 'shift1', label: '00:00 - 06:00' },
         { id: 'shift2', label: '06:00 - 12:00' },
         { id: 'shift3', label: '12:00 - 18:00' },
         { id: 'shift4', label: '18:00 - 24:00' }
       ],
-      staffList: [
-        {
-          id: 1,
-          name: 'Serena Tr',
-          role: 'Registered Nurse',
-          preferredHours: 32,
-          availability: {}
-        },
-        {
-          id: 2,
-          name: 'Michael Chen',
-          role: 'Care Assistant',
-          preferredHours: 40,
-          availability: {}
-        },
-        {
-          id: 3,
-          name: 'Sarah Williams',
-          role: 'Registered Nurse',
-          preferredHours: 24,
-          availability: {}
-        },
-        {
-          id: 4,
-          name: 'David Thompson',
-          role: 'Care Assistant',
-          preferredHours: 36,
-          availability: {}
-        },
-        {
-          id: 5,
-          name: 'Emily Rodriguez',
-          role: 'Care Assistant',
-          preferredHours: 20,
-          availability: {}
-        }
-      ],
+      // staffList: [
+      //   {
+      //     id: 1,
+      //     name: 'Serena Tr',
+      //     role: 'Registered Nurse',
+      //     preferredHours: 32,
+      //     availability: {}
+      //   },
+      //   {
+      //     id: 2,
+      //     name: 'Michael Chen',
+      //     role: 'Care Assistant',
+      //     preferredHours: 40,
+      //     availability: {}
+      //   },
+      //   {
+      //     id: 3,
+      //     name: 'Sarah Williams',
+      //     role: 'Registered Nurse',
+      //     preferredHours: 24,
+      //     availability: {}
+      //   },
+      //   {
+      //     id: 4,
+      //     name: 'David Thompson',
+      //     role: 'Care Assistant',
+      //     preferredHours: 36,
+      //     availability: {}
+      //   },
+      //   {
+      //     id: 5,
+      //     name: 'Emily Rodriguez',
+      //     role: 'Care Assistant',
+      //     preferredHours: 20,
+      //     availability: {}
+      //   }
+      // ],
       shiftAssignments: {},
       showAssignmentModal: false,
       currentAssignment: {
         date: '',
         shiftId: ''
-      }
+      },
+      assignments: {},
+      weekAvailability: {}
     }
   },
-  created() {
+  async created() {
+    await this.fetchStaffList()
     this.updateWeekDays()
-    this.initializeAvailability()
-    this.initializeAssignments()
+    await this.fetchAssignments()
   },
   methods: {
     getCurrentWeek() {
@@ -413,28 +428,32 @@ export default {
       return `${month}/${day}/${year}`
     },
     initializeAvailability() {
-      // Initialize availability for all staff for the current week
-      this.staffList.forEach((staff) => {
-        if (!staff.availability) {
-          staff.availability = {}
-        }
+      if (!Array.isArray(this.staffList)) {
+        console.warn(
+          'initializeAvailability skipped: staffList is not an array'
+        )
+        return
+      }
 
-        this.weekDays.forEach((day) => {
-          if (!staff.availability[day.date]) {
-            staff.availability[day.date] = {}
-
-            this.shifts.forEach((shift) => {
-              // By default, most staff are available during regular hours but not overnight
-              const isOvernightShift =
-                shift.id === 'shift1' || shift.id === 'shift4'
-              staff.availability[day.date][shift.id] = !isOvernightShift
-            })
-          }
+      this.weekAvailability = {}
+      this.weekDays.forEach((day) => {
+        this.weekAvailability[day.date] = {}
+        this.shifts.forEach((shift) => {
+          this.weekAvailability[day.date][shift.id] = {}
+          this.staffList.forEach((staff) => {
+            this.weekAvailability[day.date][shift.id][staff.id] = false
+          })
         })
       })
     },
     initializeAssignments() {
-      // Initialize empty assignments for the current week
+      if (!this.weekDays || this.weekDays.length === 0) {
+        console.warn(
+          'initializeAssignments skipped: weekDays is undefined or empty'
+        )
+        return
+      }
+
       this.weekDays.forEach((day) => {
         if (!this.shiftAssignments[day.date]) {
           this.shiftAssignments[day.date] = {}
@@ -446,14 +465,66 @@ export default {
       })
     },
     updateAvailability(staff, date, shiftId) {
-      // This function would typically save to backend
-      console.log(
-        `Updated availability for ${staff.name} on ${date} for shift ${shiftId}`
-      )
+      const cell = staff.availability[date][shiftId]
+      const id = cell.id
+
+      if (id) {
+        fetch(`/api/availability/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ is_available: cell.is_available })
+        })
+      } else {
+        fetch('/api/availability', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            staff_id: staff.id,
+            date,
+            shift_id: shiftId,
+            is_available: cell.is_available
+          })
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            cell.id = data.id
+          })
+      }
     },
-    saveStaffAvailability(staff) {
-      // This function would typically save to backend
-      alert(`Saved availability for ${staff.name}`)
+
+    async saveStaffAvailability(staff) {
+      for (const day of this.weekDays) {
+        for (const shift of this.shifts) {
+          const record = staff.availability[day.date][shift.id]
+          if (record !== undefined) {
+            try {
+              if (record.id) {
+                await fetch(`/api/availability/${record.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ is_available: record.is_available })
+                })
+              } else {
+                const res = await fetch('/api/availability', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    staff_id: staff.id,
+                    date: day.date,
+                    shift_id: shift.id,
+                    is_available: record.is_available
+                  })
+                })
+                const data = await res.json()
+                record.id = data.id
+              }
+            } catch (error) {
+              console.error('Error saving individual availability:', error)
+            }
+          }
+        }
+      }
+      alert('Availability saved successfully!')
     },
     getInitials(name) {
       if (!name) return ''
@@ -476,7 +547,11 @@ export default {
     getAvailableStaff(date, shiftId) {
       // Return staff who are available for the specified shift
       return this.staffList.filter(
-        (staff) => staff.availability[date] && staff.availability[date][shiftId]
+        (staff) =>
+          staff.availability &&
+          staff.availability[date] &&
+          staff.availability[date][shiftId] &&
+          staff.availability[date][shiftId].is_available
       )
     },
     isStaffAssigned(staffId, date, shiftId) {
@@ -507,9 +582,38 @@ export default {
         this.shiftAssignments[date][shiftId].splice(index, 1)
       }
     },
-    saveAssignments() {
-      // This function would typically save to backend
-      alert('Shift assignments saved successfully!')
+    async saveAssignments() {
+      try {
+        for (const date in this.shiftAssignments) {
+          for (const shiftId in this.shiftAssignments[date]) {
+            const staffIds = this.shiftAssignments[date][shiftId]
+
+            for (const staffId of staffIds) {
+              const response = await fetch('/api/assignment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  staff_id: staffId,
+                  date: date,
+                  shift_id: shiftId
+                })
+              })
+
+              if (!response.ok) {
+                throw new Error(
+                  `Failed to save assignment for staff ${staffId} on ${date} shift ${shiftId}`
+                )
+              }
+            }
+          }
+        }
+
+        alert('All assignments saved successfully!')
+      } catch (error) {
+        console.error('Error saving assignments:', error)
+        alert(`An error occurred: ${error.message}`)
+      }
+
       this.closeAssignmentModal()
     },
     getAssignedStaff(date, shiftId) {
@@ -567,6 +671,7 @@ export default {
           return ''
       }
     },
+
     getTotalAssignedShifts() {
       let total = 0
 
@@ -604,6 +709,84 @@ export default {
     publishSchedule() {
       // This function would typically publish the schedule to staff
       alert('Schedule published successfully! Staff have been notified.')
+    },
+
+    async fetchStaffList() {
+      try {
+        const response = await fetch('/api/staffFull/full')
+        const data = await response.json()
+
+        console.log('STAFF DATA:', data)
+
+        if (!Array.isArray(data)) {
+          console.error('FETCHED DATA IS NOT AN ARRAY!', data)
+          return
+        }
+        this.staffList = data.map((item) => ({
+          id: item.id,
+          name: `${item.first_name} ${item.last_name}`,
+          role: item.role,
+          preferredHours: item.preferred_hours || 40,
+          availability: item.availability || {}
+        }))
+
+        const fetchedAvailability = data
+        // this.staffList = data
+        this.updateWeekDays()
+
+        this.staffList.forEach((staff) => {
+          if (!staff.availability) {
+            staff.availability = {}
+          }
+
+          this.weekDays.forEach((day) => {
+            if (!staff.availability[day.date]) {
+              staff.availability[day.date] = {}
+            }
+
+            this.shifts.forEach((shift) => {
+              if (!staff.availability[day.date][shift.id]) {
+                staff.availability[day.date][shift.id] = {
+                  is_available: false,
+                  id: null
+                }
+              }
+            })
+          })
+        })
+      } catch (error) {
+        console.error('Failed to fetch staff list:', error)
+      }
+    },
+
+    async fetchAssignments() {
+      try {
+        const response = await fetch('/api/assignment')
+        const data = await response.json()
+        this.shiftAssignments = this.transformAssignments(data)
+      } catch (error) {
+        console.error('Failed to fetch assignments:', error)
+      }
+    },
+
+    transformAssignments(data) {
+      const result = {}
+      data.forEach((item) => {
+        const date = item.date
+        const shiftId = item.shift_id
+        const staffId = item.staff_id
+
+        if (!result[date]) {
+          result[date] = {}
+        }
+        if (!result[date][shiftId]) {
+          result[date][shiftId] = []
+        }
+        if (!result[date][shiftId].includes(staffId)) {
+          result[date][shiftId].push(staffId)
+        }
+      })
+      return result
     }
   }
 }
@@ -1268,5 +1451,18 @@ main {
   width: 20px;
   background-color: #eee;
   border-radius: 4px;
+}
+.load-more {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.load-more button {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
