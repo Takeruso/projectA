@@ -103,7 +103,6 @@
           </router-link>
         </div>
       </div>
-
       <!-- Calendar Section -->
       <div class="schedule-header">
         <h2>Next Schedules</h2>
