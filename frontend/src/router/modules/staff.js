@@ -22,5 +22,9 @@ export default [
   {
     path: '/staff/facilityCheckup',
     component: () => import('@/views/staff/facilityCheckup.vue')
+  },
+  {
+    path: '/staff/availability',
+    component: () => import('@/views/staff/staffSchedule.vue')
   }
 ]
