@@ -91,6 +91,17 @@
             >View Medication</router-link
           >
         </div>
+        <div class="card card-availability">
+          <div class="card-icon">📅</div>
+          <h2>Submit Availability</h2>
+          <p>
+            Submit your weekly availability so managers can schedule shifts
+            accordingly.
+          </p>
+          <router-link to="/staff/availability" class="cta">
+            Submit Now
+          </router-link>
+        </div>
       </div>
 
       <!-- Calendar Section -->
@@ -505,7 +516,9 @@ const checklist = ref([
 .card-medication .card-icon {
   background-color: var(--danger);
 }
-
+.card-availability .card-icon {
+  background-color: var(--primary-light);
+}
 .card h2 {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
