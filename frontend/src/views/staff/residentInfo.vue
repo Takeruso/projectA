@@ -46,6 +46,7 @@
         <label for="shift" class="font-medium">Select Shift:</label>
         <select v-model="nurseShift" id="shift" class="border p-2 rounded">
           <option value="Morning">Morning</option>
+          <option value="Afternoon">Afternoon</option>
           <option value="Evening">Evening</option>
           <option value="Night">Night</option>
         </select>
@@ -182,19 +183,27 @@
                 <p><strong>Morning Tasks:</strong></p>
                 <ul>
                   <li
-                    v-for="(task, i) in selectedResident.carePlan?.Morning ||
-                    []"
+                    v-for="(task, i) in selectedResident.carePlan.Morning"
                     :key="'Morning-' + i"
                   >
                     {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
                   </li>
                 </ul>
 
-                <p><strong>Evening Tasks:</strong></p>
+                <p><strong>Afternoon Tasks:</strong></p>
                 <ul>
                   <li
-                    v-for="(task, i) in selectedResident.carePlan?.Evening ||
-                    []"
+                    v-for="(task, i) in selectedResident.carePlan.Afternoon"
+                    :key="'Afternoon-' + i"
+                  >
+                    {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
+                  </li>
+                </ul>
+
+                <p><strong> Evening Tasks:</strong></p>
+                <ul>
+                  <li
+                    v-for="(task, i) in selectedResident.carePlan.Evening"
                     :key="'Evening-' + i"
                   >
                     {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
@@ -204,7 +213,7 @@
                 <p><strong>Night Tasks:</strong></p>
                 <ul>
                   <li
-                    v-for="(task, i) in selectedResident.carePlan?.Night || []"
+                    v-for="(task, i) in selectedResident.carePlan.Night"
                     :key="'Night-' + i"
                   >
                     {{ task.time ? task.time + ' - ' : '' }}{{ task.task }}
@@ -237,6 +246,28 @@
                   </span>
                 </li>
               </ul>
+              <div>
+                <strong>Doctor Notes:</strong>
+                <ul
+                  v-if="
+                    selectedResident.doctorNotes &&
+                    selectedResident.doctorNotes.length
+                  "
+                  class="styled-list"
+                >
+                  <li
+                    v-for="(note, index) in selectedResident.doctorNotes"
+                    :key="'doctor-note-' + index"
+                  >
+                    <span class="list-icon">📝</span>
+                    <span class="list-content">{{ note }}</span>
+                  </li>
+                </ul>
+                <p v-else class="text-gray-500 italic">
+                  No doctor notes available for this resident.
+                </p>
+              </div>
+
               <button @click="closeDetails" class="refresh-btn mt-4">
                 Close
               </button>
@@ -255,13 +286,15 @@ export default {
   data() {
     return {
       search: '',
+      // vars for resident details card
       showDetails: false,
       selectedResident: null,
+      // pagination
       currentPage: 1,
       residentsPerPage: 5,
       totalResidents: 0,
       nurseShift: 'Morning',
-      residents: []
+      residents
     }
   },
   computed: {
@@ -279,6 +312,7 @@ export default {
         day: 'numeric'
       })
     },
+    // pagination logic
     paginatedResidents() {
       const start = (this.currentPage - 1) * this.residentsPerPage
       const end = start + this.residentsPerPage
@@ -289,19 +323,8 @@ export default {
     }
   },
   methods: {
-    async fetchResidents() {
-      try {
-        const response = await fetch('/api/patients')
-        if (!response.ok) throw new Error('Failed to fetch data')
-        const data = await response.json()
-        this.residents = data
-        this.totalResidents = data.length
-      } catch (error) {
-        console.error('Error fetching residents:', error)
-      }
-    },
     refreshData() {
-      this.fetchResidents()
+      window.location.reload()
     },
     viewDetails(resident) {
       this.selectedResident = resident
@@ -312,9 +335,6 @@ export default {
       this.showDetails = false
     },
     getShiftTasks(carePlan) {
-      if (!carePlan || typeof carePlan !== 'object') {
-        return []
-      }
       return carePlan[this.nurseShift] || []
     }
   },
@@ -324,7 +344,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchResidents()
+    this.totalResidents = this.residents.length
   }
 }
 </script>
