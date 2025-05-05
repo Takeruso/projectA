@@ -35,6 +35,7 @@ router.post('/', (req, res) => {
     [staff_id, date, shift_id, is_available],
     function (err) {
       if (err) return res.status(500).json({ error: err.message })
+      console.error('DB INSERT ERROR:', err)
       res.json({ success: true, id: this.lastID })
     }
   )

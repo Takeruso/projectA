@@ -91,10 +91,12 @@
                     class="availability-cell"
                   >
                     <input
+                      v-if="currentUser.availability[day.date]"
                       type="checkbox"
                       v-model="currentUser.availability[day.date][shift.id]"
                       @change="updateAvailabilityStatus"
                     />
+
                     <span class="checkmark"></span>
                   </label>
                 </div>
@@ -180,11 +182,13 @@
 </template>
 
 <script>
+import api from '@/api'
+
 export default {
   data() {
     return {
       currentUser: {
-        id: 101,
+        id: 1,
         name: 'Serena Tr',
         role: 'Care Assistant',
         preferredHours: 32,
@@ -235,9 +239,27 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
+    try {
+      const response = await api.get('/staffFull/full')
+      const staffList = response.data
+
+      const myData = staffList.find((s) => s.id === 101)
+
+      if (myData) {
+        this.currentUser = {
+          id: myData.id,
+          name: myData.name,
+          role: myData.role,
+          preferredHours: 32, // placeholder value
+          availability: myData.availability || {}
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch staff data:', error)
+    }
+
     this.updateWeekDays()
-    this.initializeAvailability()
   },
   methods: {
     getCurrentWeek() {
@@ -295,6 +317,7 @@ export default {
       this.initializeAvailability()
       this.hasChanges = false
       this.lastSubmitted = null // Reset submission status when changing weeks
+      this.weekDays = this.weekDays.filter((day) => day && day.date)
     },
     formatDateYMD(date) {
       const year = date.getFullYear()
@@ -317,28 +340,78 @@ export default {
 
       return `${startDate} - ${endDate}`
     },
-    initializeAvailability() {
-      // Initialize availability for current user for the selected week
-      if (!this.currentUser.availability) {
-        this.currentUser.availability = {}
-      }
-
+    async initializeAvailability() {
+      // Ensure availability object exists
       this.weekDays.forEach((day) => {
         if (!this.currentUser.availability[day.date]) {
           this.currentUser.availability[day.date] = {}
+        }
+
+        this.shifts.forEach((shift) => {
+          if (this.currentUser.availability[day.date][shift.id] === undefined) {
+            this.currentUser.availability[day.date][shift.id] = false
+          }
+        })
+      })
+
+      try {
+        // Fetch existing availability from API
+        const availabilityRes = await api.get(
+          `/availability/${this.currentUser.id}`
+        )
+        const availabilityList = availabilityRes.data
+
+        // Convert fetched list to structured object: { date: { shiftId: true/false } }
+        const fetchedAvailability = {}
+        availabilityList.forEach((item) => {
+          if (!fetchedAvailability[item.date]) {
+            fetchedAvailability[item.date] = {}
+          }
+          fetchedAvailability[item.date][item.shift_id] = Boolean(
+            item.is_available
+          )
+        })
+
+        // Initialize availability per week and shift
+        this.weekDays.forEach((day) => {
+          if (!this.currentUser.availability[day.date]) {
+            this.currentUser.availability[day.date] = {}
+          }
 
           this.shifts.forEach((shift) => {
-            // By default, most staff are available during regular hours but not overnight
-            const isOvernightShift =
-              shift.id === 'shift1' || shift.id === 'shift4'
-            const isWeekend = day.name === 'Saturday' || day.name === 'Sunday'
+            const hasFetched =
+              fetchedAvailability[day.date] &&
+              fetchedAvailability[day.date][shift.id] !== undefined
 
-            // Set reasonable defaults - available weekdays during day shifts
-            this.currentUser.availability[day.date][shift.id] =
-              !isOvernightShift && !isWeekend
+            if (hasFetched) {
+              // Use fetched data
+              this.currentUser.availability[day.date][shift.id] =
+                fetchedAvailability[day.date][shift.id]
+            } else {
+              // Apply default: no overnight or weekend shifts
+              const isOvernight = shift.id === 'shift1' || shift.id === 'shift4'
+              const isWeekend = day.name === 'Saturday' || day.name === 'Sunday'
+              this.currentUser.availability[day.date][shift.id] =
+                !isOvernight && !isWeekend
+            }
           })
-        }
-      })
+        })
+      } catch (error) {
+        console.error('Failed to fetch availability data:', error)
+
+        // Fallback defaults: only daytime weekday shifts
+        this.weekDays.forEach((day) => {
+          if (!this.currentUser.availability[day.date]) {
+            this.currentUser.availability[day.date] = {}
+          }
+        })
+
+        this.shifts.forEach((shift) => {
+          if (this.currentUser.availability[day.date][shift.id] === undefined) {
+            this.currentUser.availability[day.date][shift.id] = false
+          }
+        })
+      }
     },
     updateAvailabilityStatus() {
       this.hasChanges = true
@@ -350,19 +423,47 @@ export default {
         .map((n) => n[0])
         .join('')
     },
-    submitAvailability() {
-      // This function would typically send data to backend
+    async submitAvailability() {
+      // Log submission data for debugging
       console.log('Submitting availability for week:', this.selectedWeek)
       console.log('Availability data:', this.currentUser.availability)
       console.log('Notes:', this.availabilityNotes)
 
-      // Update submission status
+      try {
+        const updates = []
+
+        // Prepare availability updates for each date and shift
+        for (const [date, shifts] of Object.entries(
+          this.currentUser.availability
+        )) {
+          for (const [shiftId, isAvailable] of Object.entries(shifts)) {
+            updates.push({
+              staff_id: this.currentUser.id,
+              date,
+              shift_id: shiftId,
+              is_available: isAvailable === true ? 1 : 0
+            })
+          }
+        }
+
+        // Send each availability record to the backend one by one
+        for (const update of updates) {
+          await api.post('/availability/', update)
+        }
+
+        console.log(`Submitted ${updates.length} availability records.`)
+      } catch (error) {
+        console.error('Failed to submit availability:', error)
+      }
+
+      // Update submission status and reset change flag
       this.lastSubmitted = new Date().toISOString().split('T')[0]
       this.hasChanges = false
 
       // Show confirmation modal
       this.showConfirmationModal = true
     },
+
     resetAvailability() {
       this.initializeAvailability()
       this.availabilityNotes = ''

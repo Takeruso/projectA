@@ -293,16 +293,16 @@ db.serialize(() => {
 
   const sampleStaff = [
     {
-      first_name: 'John',
-      last_name: 'Doe',
-      role: 'Nurse',
-      qualification: 'Bachelor of Nursing',
-      employment_type: 'Full Time',
-      annual_salary: 60000,
-      date_of_birth: '1985-06-15',
-      gender: 'Male',
-      phone: '123-456-7890',
-      email: 'john@example.com',
+      first_name: 'Serena',
+      last_name: 'Tr',
+      role: 'Care Assistant',
+      qualification: 'Certificate III in Individual Support',
+      employment_type: 'Part Time',
+      annual_salary: 45000,
+      date_of_birth: '1993-04-12',
+      gender: 'Female',
+      phone: '555-666-7777',
+      email: 'serena@example.com',
       shift: 'Morning'
     },
     {
