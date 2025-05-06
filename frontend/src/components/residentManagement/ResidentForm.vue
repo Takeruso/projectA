@@ -40,6 +40,46 @@
         />
       </div>
 
+      <!-- Gender -->
+      <div class="col-md-2">
+        <select v-model="local.gender" class="form-select">
+          <option value="">Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="col-md-3">
+        <input
+          v-model="local.dob"
+          type="date"
+          class="form-control"
+          placeholder="Date of Birth"
+        />
+      </div>
+
+      <!-- Nationality -->
+      <div class="col-md-3">
+        <input
+          v-model="local.nationality"
+          type="text"
+          class="form-control"
+          placeholder="Nationality"
+        />
+      </div>
+
+      <!-- Resident Type -->
+      <div class="col-md-4">
+        <select v-model="local.resident_type" class="form-select">
+          <option value="">Resident Type</option>
+          <option value="Short Term">Short Term</option>
+          <option value="Long Term">Long Term</option>
+          <option value="Palliative Care">Palliative Care</option>
+        </select>
+      </div>
+
       <!-- Medical Notes -->
       <div class="col-md-12">
         <textarea
@@ -90,6 +130,16 @@
         />
       </div>
 
+      <!-- Previous Medical History -->
+      <div class="col-md-12">
+        <textarea
+          v-model="local.previous_medical_history"
+          class="form-control"
+          placeholder="Previous Medical History"
+          rows="2"
+        ></textarea>
+      </div>
+
       <!-- Emergency Contact -->
       <div class="col-md-6">
         <input
@@ -97,6 +147,26 @@
           type="text"
           class="form-control"
           placeholder="Emergency Contact"
+        />
+      </div>
+
+      <!-- Notes for Caregivers -->
+      <div class="col-md-12">
+        <textarea
+          v-model="local.caregiver_notes"
+          class="form-control"
+          placeholder="Notes for Caregivers"
+          rows="2"
+        ></textarea>
+      </div>
+
+      <!-- Photo Upload (frontend only) -->
+      <div class="col-md-6">
+        <input
+          type="file"
+          class="form-control"
+          @change="handlePhotoUpload"
+          accept="image/*"
         />
       </div>
 
@@ -136,7 +206,13 @@ const local = reactive({
   allergiesInput: '',
   medicationsInput: '',
   carePlanMorning: '',
-  carePlanEvening: ''
+  carePlanEvening: '',
+  gender: '',
+  dob: '',
+  nationality: '',
+  resident_type: '',
+  caregiver_notes: '',
+  photo: null
 })
 
 watch(
@@ -162,6 +238,13 @@ const handleSubmit = () => {
 
   emit('add', formattedResident)
 }
+
+const handlePhotoUpload = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    local.photo = file
+  }
+}
 </script>
 
 <style scoped>
@@ -175,7 +258,8 @@ select {
   font-size: 0.95rem;
 }
 
-.form-control {
+.form-control,
+.form-select {
   border-radius: 4px;
   border: 1px solid #ccc;
   padding: 0.5rem;
