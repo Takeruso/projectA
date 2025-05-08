@@ -61,6 +61,13 @@
           >
             Weekly Overview
           </button>
+          <button
+            class="tab-btn"
+            :class="{ active: activeTab === 'residents' }"
+            @click="activeTab = 'residents'"
+          >
+            Resident Assignments
+          </button>
         </div>
 
         <!-- Staff Availability Tab -->
@@ -220,6 +227,141 @@
             </table>
           </div>
         </div>
+
+        <!-- Resident Assignments Tab -->
+        <div v-if="activeTab === 'residents'" class="tab-content">
+          <h2>Resident Care Assignments</h2>
+          <p>
+            Assign residents to scheduled staff members to ensure proper care
+            coverage.
+          </p>
+
+          <div class="controls-bar">
+            <div class="date-selector">
+              <label for="resident-date-selector">Select Date:</label>
+              <input
+                type="date"
+                id="resident-date-selector"
+                v-model="selectedResidentDate"
+                @change="fetchAssignedStaffForDate"
+              />
+            </div>
+          </div>
+
+          <div v-if="!selectedResidentDate" class="empty-state">
+            <div class="empty-state-icon">📅</div>
+            <p>Please select a date to view and manage resident assignments</p>
+          </div>
+
+          <div
+            v-else-if="assignedStaffForDate.length === 0"
+            class="empty-state"
+          >
+            <div class="empty-state-icon">👥</div>
+            <p>
+              No staff scheduled for this date. Please assign staff to shifts
+              before making resident assignments.
+            </p>
+          </div>
+
+          <div v-else class="resident-assignment-container">
+            <div class="resident-assignment-grid">
+              <div class="staff-column">
+                <h3>Staff Members</h3>
+                <div class="staff-list-sidebar">
+                  <div
+                    v-for="staff in assignedStaffForDate"
+                    :key="staff.id"
+                    class="staff-item"
+                    :class="{ active: selectedStaffId === staff.id }"
+                    @click="selectStaff(staff.id)"
+                  >
+                    <div class="staff-avatar">
+                      {{ getInitials(staff.name) }}
+                    </div>
+                    <div class="staff-item-details">
+                      <h4>{{ staff.name }}</h4>
+                      <p>{{ staff.role }}</p>
+                      <p class="shift-info">{{ staff.shiftLabel }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="resident-column">
+                <div v-if="!selectedStaffId" class="empty-state small">
+                  <p>Select a staff member to assign residents</p>
+                </div>
+                <template v-else>
+                  <h3>
+                    Assign Residents
+                    <span class="assignment-count">
+                      {{ getAssignedResidentCount(selectedStaffId) }}/{{
+                        getMaxResidentCapacity(selectedStaffId)
+                      }}
+                    </span>
+                  </h3>
+
+                  <div class="resident-search">
+                    <input
+                      type="text"
+                      v-model="residentSearch"
+                      placeholder="Search residents..."
+                      class="search-input"
+                    />
+                  </div>
+
+                  <div class="resident-list">
+                    <div
+                      v-for="resident in filteredResidents"
+                      :key="resident.id"
+                      class="resident-item"
+                      :class="{
+                        assigned: isResidentAssigned(
+                          resident.id,
+                          selectedStaffId
+                        ),
+                        'over-capacity':
+                          isOverCapacity(selectedStaffId) &&
+                          !isResidentAssigned(resident.id, selectedStaffId)
+                      }"
+                      @click="
+                        toggleResidentAssignment(resident.id, selectedStaffId)
+                      "
+                    >
+                      <div class="resident-item-info">
+                        <div class="resident-name">{{ resident.name }}</div>
+                        <div class="resident-details">
+                          <span class="room-number"
+                            >Room {{ resident.room }}</span
+                          >
+                          <span class="care-level"
+                            >{{ resident.careLevel }} Care</span
+                          >
+                        </div>
+                      </div>
+                      <div class="resident-assignment-status">
+                        <span
+                          v-if="
+                            isResidentAssigned(resident.id, selectedStaffId)
+                          "
+                          >✓</span
+                        >
+                        <span v-else>+</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="assignment-actions">
+                    <button class="cta" @click="saveResidentAssignments">
+                      Save Assignments
+                    </button>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 
@@ -289,6 +431,25 @@
         </div>
       </div>
     </div>
+
+    <!-- Resident Assignment Success Modal -->
+    <div
+      id="assignmentSuccessModal"
+      class="modal"
+      v-if="showAssignmentSuccessModal"
+    >
+      <div class="modal-content small">
+        <span class="close" @click="closeAssignmentSuccessModal">&times;</span>
+        <div class="success-icon">✓</div>
+        <h2>Assignments Saved!</h2>
+        <p>Resident care assignments have been successfully saved.</p>
+        <div class="modal-actions">
+          <button class="cta" @click="closeAssignmentSuccessModal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -300,6 +461,14 @@ export default {
       selectedWeek: this.getCurrentWeek(),
       weekDays: [],
       staffList: [],
+      selectedResidentDate: '',
+      assignedStaffForDate: [],
+      selectedStaffId: null,
+      residentSearch: '',
+      residentList: [],
+      residentAssignments: {},
+      showAssignmentSuccessModal: false,
+
       shifts: [
         { id: 'shift1', label: '00:00 - 06:00' },
         { id: 'shift2', label: '06:00 - 12:00' },
@@ -357,6 +526,7 @@ export default {
     await this.fetchStaffList()
     this.updateWeekDays()
     await this.fetchAssignments()
+    await this.fetchResidentList()
   },
   methods: {
     getCurrentWeek() {
@@ -373,6 +543,97 @@ export default {
       const pastDaysOfYear = (date - firstDayOfYear) / 86400000
       return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7)
     },
+    async fetchResidentList() {
+      try {
+        const response = await fetch('/api/residents')
+        const data = await response.json()
+        this.residentList = data
+      } catch (error) {
+        console.error('Failed to fetch residents:', error)
+      }
+    },
+    async fetchAssignedStaffForDate() {
+      if (!this.selectedResidentDate) return
+
+      const staffForDate = []
+
+      const assignments = this.shiftAssignments[this.selectedResidentDate]
+      if (!assignments) {
+        this.assignedStaffForDate = []
+        return
+      }
+
+      for (const shiftId in assignments) {
+        const staffIds = assignments[shiftId]
+        for (const staffId of staffIds) {
+          const staff = this.staffList.find((s) => s.id === staffId)
+          if (staff) {
+            staffForDate.push({
+              ...staff,
+              shiftId,
+              shiftLabel: this.getShiftLabel(shiftId)
+            })
+          }
+        }
+      }
+
+      this.assignedStaffForDate = staffForDate
+    },
+
+    selectStaff(staffId) {
+      this.selectedStaffId = staffId
+    },
+
+    filteredResidents() {
+      const search = this.residentSearch.toLowerCase()
+      return this.residentList.filter((r) =>
+        r.name.toLowerCase().includes(search)
+      )
+    },
+
+    isResidentAssigned(residentId, staffId) {
+      return this.residentAssignments[this.selectedResidentDate]?.[
+        staffId
+      ]?.includes(residentId)
+    },
+
+    toggleResidentAssignment(residentId, staffId) {
+      if (!this.residentAssignments[this.selectedResidentDate]) {
+        this.residentAssignments[this.selectedResidentDate] = {}
+      }
+
+      if (!this.residentAssignments[this.selectedResidentDate][staffId]) {
+        this.residentAssignments[this.selectedResidentDate][staffId] = []
+      }
+
+      const list = this.residentAssignments[this.selectedResidentDate][staffId]
+      const index = list.indexOf(residentId)
+
+      if (index === -1 && !this.isOverCapacity(staffId)) {
+        list.push(residentId)
+      } else if (index !== -1) {
+        list.splice(index, 1)
+      }
+    },
+
+    getAssignedResidentCount(staffId) {
+      return (
+        this.residentAssignments[this.selectedResidentDate]?.[staffId]
+          ?.length || 0
+      )
+    },
+
+    getMaxResidentCapacity(staffId) {
+      return 4 // or fetch dynamically per staff role
+    },
+
+    isOverCapacity(staffId) {
+      return (
+        this.getAssignedResidentCount(staffId) >=
+        this.getMaxResidentCapacity(staffId)
+      )
+    },
+
     updateWeekDays() {
       this.weekDays = []
 
@@ -1318,6 +1579,242 @@ main {
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s ease;
+}
+/* Resident Assignment Styles */
+.resident-assignment-container {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.resident-assignment-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 600px;
+}
+
+.staff-column {
+  border-right: 1px solid var(--gray);
+  background-color: var(--light);
+}
+
+.staff-column h3,
+.resident-column h3 {
+  padding: 1rem;
+  margin: 0;
+  background-color: var(--dark);
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assignment-count {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.staff-list-sidebar {
+  overflow-y: auto;
+  max-height: 550px;
+}
+
+.staff-item {
+  display: flex;
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-items: center;
+  gap: 1rem;
+}
+
+.staff-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.staff-item.active {
+  background-color: rgba(255, 36, 116, 0.1);
+  border-left: 3px solid var(--primary);
+}
+
+.staff-item-details h4 {
+  margin: 0 0 0.3rem 0;
+  color: var(--dark);
+}
+
+.staff-item-details p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.shift-info {
+  font-size: 0.8rem !important;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 0.3rem !important;
+}
+
+.resident-column {
+  background-color: white;
+}
+
+.resident-search {
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray);
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--gray);
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.resident-list {
+  overflow-y: auto;
+  max-height: 430px;
+  padding: 0.5rem;
+}
+
+.resident-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+  background-color: white;
+  border: 1px solid var(--gray);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resident-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.resident-item.assigned {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-color: var(--success);
+}
+
+.resident-item.over-capacity {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.resident-name {
+  font-weight: bold;
+  color: var(--dark);
+  margin-bottom: 0.3rem;
+}
+
+.resident-details {
+  font-size: 0.8rem;
+  color: #666;
+  display: flex;
+  gap: 1rem;
+}
+
+.room-number {
+  background-color: var(--gray);
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+}
+
+.care-level {
+  background-color: var(--dark);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+}
+
+.care-level:contains('High') {
+  background-color: var(--danger);
+}
+
+.care-level:contains('Medium') {
+  background-color: var(--warning);
+}
+
+.care-level:contains('Low') {
+  background-color: var(--success);
+}
+
+.resident-assignment-status {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--gray);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+}
+
+.assigned .resident-assignment-status {
+  background-color: var(--success);
+  color: white;
+}
+
+.assignment-actions {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--gray);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  color: #666;
+  text-align: center;
+  padding: 2rem;
+}
+
+.empty-state.small {
+  height: 200px;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  max-width: 300px;
+}
+
+.modal-content.small {
+  max-width: 400px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background-color: var(--success);
+  border-radius: 50%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: white;
 }
 
 .publish-btn:hover {

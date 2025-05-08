@@ -60,7 +60,6 @@
                 class="appointment"
                 :style="{ backgroundColor: shiftColors[item.shift_id] }"
               >
-                <div class="appointment-title">{{ item.title }}</div>
                 <div class="appointment-location">{{ item.location }}</div>
                 <div class="appointment-time">
                   {{ shiftMap[item.shift_id] }}
