@@ -156,7 +156,7 @@ export default {
         this.facilityData = response.data.map((room) => ({
           roomNo: room.id,
           type: this.mapType(room.type),
-          occupant: '', // DBにないので空欄
+          occupant: '',
           status: this.mapStatus(room.status),
           lastChecked: this.generateDummyTime()
         }))

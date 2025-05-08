@@ -582,6 +582,40 @@ export default {
         this.shiftAssignments[date][shiftId].splice(index, 1)
       }
     },
+    // async saveAssignments() {
+    //   try {
+    //     for (const date in this.shiftAssignments) {
+    //       for (const shiftId in this.shiftAssignments[date]) {
+    //         const staffIds = this.shiftAssignments[date][shiftId]
+
+    //         for (const staffId of staffIds) {
+    //           const response = await fetch('/api/assignment', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({
+    //               staff_id: staffId,
+    //               date: date,
+    //               shift_id: shiftId
+    //             })
+    //           })
+
+    //           if (!response.ok) {
+    //             throw new Error(
+    //               `Failed to save assignment for staff ${staffId} on ${date} shift ${shiftId}`
+    //             )
+    //           }
+    //         }
+    //       }
+    //     }
+
+    //     alert('All assignments saved successfully!')
+    //   } catch (error) {
+    //     console.error('Error saving assignments:', error)
+    //     alert(`An error occurred: ${error.message}`)
+    //   }
+
+    //   this.closeAssignmentModal()
+    // },
     async saveAssignments() {
       try {
         for (const date in this.shiftAssignments) {
@@ -600,9 +634,11 @@ export default {
               })
 
               if (!response.ok) {
-                throw new Error(
-                  `Failed to save assignment for staff ${staffId} on ${date} shift ${shiftId}`
+                const errorText = await response.text()
+                console.warn(
+                  `Skipping duplicate assignment for staff ${staffId} on ${date} shift ${shiftId}: ${errorText}`
                 )
+                continue
               }
             }
           }

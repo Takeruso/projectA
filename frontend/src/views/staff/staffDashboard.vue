@@ -104,8 +104,11 @@
         </div>
       </div>
 
-      <!-- Calendar Section -->
-      <div class="schedule-header">
+      <div class="calendar-wrapper">
+        <CalendarSection />
+      </div>
+
+      <!-- <div class="schedule-header">
         <h2>Next Schedules</h2>
         <span class="small-date"> April 2025 </span>
         <div class="calendar">
@@ -162,7 +165,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Staff Checklist Table Section -->
       <section class="mt-10 bg-white p-6 rounded shadow">
@@ -238,6 +241,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import CalendarSection from '@/components/CalendarSection.vue'
 
 const currentDate = ref(new Date())
 
@@ -556,12 +560,12 @@ const checklist = ref([
 .cta:hover {
   background-color: var(--primary-light);
 }
-
+/* 
 .calendar-section {
   margin-top: 2rem;
-}
+} */
 
-.calendar-header {
+/* .calendar-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
@@ -580,6 +584,10 @@ const checklist = ref([
   padding: 1rem;
   background-color: #f5f5f5;
   border-radius: 10px;
+} */
+
+.calendar-wrapper {
+  margin: 2rem;
 }
 
 .date {
