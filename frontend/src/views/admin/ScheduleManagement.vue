@@ -453,6 +453,7 @@
   </div>
 </template>
 <script>
+import { computed } from 'vue'
 export default {
   data() {
     return {
@@ -545,7 +546,7 @@ export default {
     },
     async fetchResidentList() {
       try {
-        const response = await fetch('/api/residents')
+        const response = await fetch('/api/patients')
         const data = await response.json()
         this.residentList = data
       } catch (error) {
@@ -582,13 +583,6 @@ export default {
 
     selectStaff(staffId) {
       this.selectedStaffId = staffId
-    },
-
-    filteredResidents() {
-      const search = this.residentSearch.toLowerCase()
-      return this.residentList.filter((r) =>
-        r.name.toLowerCase().includes(search)
-      )
     },
 
     isResidentAssigned(residentId, staffId) {
@@ -1084,6 +1078,14 @@ export default {
         }
       })
       return result
+    }
+  },
+  computed: {
+    filteredResidents() {
+      const search = this.residentSearch.toLowerCase()
+      return this.residentList.filter((r) =>
+        r.name.toLowerCase().includes(search)
+      )
     }
   }
 }
