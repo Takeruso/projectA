@@ -1,0 +1,290 @@
+[
+  {
+    "url": "http://localhost:4173/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_-2025_05_10_02_23_07.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_-2025_05_10_02_23_07.report.json",
+    "summary": {
+      "performance": 0.58,
+      "accessibility": 0.95,
+      "best-practices": 1,
+      "seo": 0.83
+    }
+  },
+  {
+    "url": "http://localhost:4173/dashboard",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_dashboard-2025_05_10_02_23_27.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_dashboard-2025_05_10_02_23_27.report.json",
+    "summary": {
+      "performance": 0.99,
+      "accessibility": 0.91,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/login",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_login-2025_05_10_02_23_38.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_login-2025_05_10_02_23_38.report.json",
+    "summary": {
+      "performance": 0.55,
+      "accessibility": 0.92,
+      "best-practices": 1,
+      "seo": 0.83
+    }
+  },
+  {
+    "url": "http://localhost:4173/privacy",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_privacy-2025_05_10_02_23_51.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_privacy-2025_05_10_02_23_51.report.json",
+    "summary": {
+      "performance": 0.69,
+      "accessibility": 0.94,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/terms",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_terms-2025_05_10_02_24_01.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_terms-2025_05_10_02_24_01.report.json",
+    "summary": {
+      "performance": 0.69,
+      "accessibility": 0.94,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/admin",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin-2025_05_10_02_24_12.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin-2025_05_10_02_24_12.report.json",
+    "summary": {
+      "performance": 0.61,
+      "accessibility": 0.91,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/admin/staff",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_staff-2025_05_10_02_24_23.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_staff-2025_05_10_02_24_23.report.json",
+    "summary": {
+      "performance": 0.61,
+      "accessibility": 0.91,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/admin/staff-records",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_staff_records-2025_05_10_02_24_35.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_staff_records-2025_05_10_02_24_35.report.json",
+    "summary": {
+      "performance": 0.67,
+      "accessibility": 0.86,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/admin/facility-management",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_facility_management-2025_05_10_02_24_46.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_facility_management-2025_05_10_02_24_46.report.json",
+    "summary": {
+      "performance": 0.75,
+      "accessibility": 0.82,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/admin/resident-management",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_resident_management-2025_05_10_02_24_57.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_resident_management-2025_05_10_02_24_57.report.json",
+    "summary": {
+      "performance": 0.75,
+      "accessibility": 0.75,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/admin/schedule",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_schedule-2025_05_10_02_25_08.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_schedule-2025_05_10_02_25_08.report.json",
+    "summary": {
+      "performance": 0.69,
+      "accessibility": 0.91,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/admin/inventory",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_inventory-2025_05_10_02_25_19.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_admin_inventory-2025_05_10_02_25_19.report.json",
+    "summary": {
+      "performance": 0.8,
+      "accessibility": 0.84,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/staff",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff-2025_05_10_02_25_31.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff-2025_05_10_02_25_31.report.json",
+    "summary": {
+      "performance": 0.81,
+      "accessibility": 0.9,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/staff/appointment",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_appointment-2025_05_10_02_25_42.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_appointment-2025_05_10_02_25_42.report.json",
+    "summary": {
+      "performance": 0.69,
+      "accessibility": 0.92,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/staff/residentInfo",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_residentInfo-2025_05_10_02_25_53.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_residentInfo-2025_05_10_02_25_53.report.json",
+    "summary": {
+      "performance": 0.69,
+      "accessibility": 0.94,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/staff/reports",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_reports-2025_05_10_02_26_08.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_reports-2025_05_10_02_26_08.report.json",
+    "summary": {
+      "performance": 0.63,
+      "accessibility": 0.91,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/staff/medication",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_medication-2025_05_10_02_26_21.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_medication-2025_05_10_02_26_21.report.json",
+    "summary": {
+      "performance": 0.74,
+      "accessibility": 0.85,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/staff/facilityCheckup",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_facilityCheckup-2025_05_10_02_26_33.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_facilityCheckup-2025_05_10_02_26_33.report.json",
+    "summary": {
+      "performance": 0.7,
+      "accessibility": 0.84,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/staff/availability",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_availability-2025_05_10_02_26_44.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_staff_availability-2025_05_10_02_26_44.report.json",
+    "summary": {
+      "performance": 0.66,
+      "accessibility": 0.79,
+      "best-practices": 0.96,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/resident",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident-2025_05_10_02_26_55.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident-2025_05_10_02_26_55.report.json",
+    "summary": {
+      "performance": 0.71,
+      "accessibility": 0.92,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/resident/bill",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_bill-2025_05_10_02_27_07.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_bill-2025_05_10_02_27_07.report.json",
+    "summary": {
+      "performance": 0.68,
+      "accessibility": 0.91,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/resident/appointments",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_appointments-2025_05_10_02_27_19.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_appointments-2025_05_10_02_27_19.report.json",
+    "summary": {
+      "performance": 0.69,
+      "accessibility": 0.91,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/resident/medications",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_medications-2025_05_10_02_27_30.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_medications-2025_05_10_02_27_30.report.json",
+    "summary": {
+      "performance": 0.91,
+      "accessibility": 0.91,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  },
+  {
+    "url": "http://localhost:4173/resident/recreation",
+    "isRepresentativeRun": true,
+    "htmlPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_recreation-2025_05_10_02_27_41.report.html",
+    "jsonPath": "/home/takeru/github/projectA/lhci-report/localhost-_resident_recreation-2025_05_10_02_27_41.report.json",
+    "summary": {
+      "performance": 0.84,
+      "accessibility": 0.81,
+      "best-practices": 1,
+      "seo": 0.82
+    }
+  }
+]

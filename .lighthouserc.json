@@ -1,0 +1,40 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:4173/",
+        "http://localhost:4173/dashboard",
+        "http://localhost:4173/login",
+        "http://localhost:4173/privacy",
+        "http://localhost:4173/terms",
+        "http://localhost:4173/admin",
+        "http://localhost:4173/admin/staff",
+        "http://localhost:4173/admin/staff-records",
+        "http://localhost:4173/admin/facility-management",
+        "http://localhost:4173/admin/resident-management",
+        "http://localhost:4173/admin/schedule",
+        "http://localhost:4173/admin/inventory",
+        "http://localhost:4173/staff",
+        "http://localhost:4173/staff/appointment",
+        "http://localhost:4173/staff/residentInfo",
+        "http://localhost:4173/staff/reports",
+        "http://localhost:4173/staff/medication",
+        "http://localhost:4173/staff/facilityCheckup",
+        "http://localhost:4173/staff/availability",
+        "http://localhost:4173/resident",
+        "http://localhost:4173/resident/bill",
+        "http://localhost:4173/resident/appointments",
+        "http://localhost:4173/resident/medications",
+        "http://localhost:4173/resident/recreation"
+      ],
+      "numberOfRuns": 1
+    },
+    "assert": {
+      "preset": "lighthouse:recommended"
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": "./lhci-report"
+    }
+  }
+}
