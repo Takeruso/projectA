@@ -62,7 +62,7 @@
               >
                 <div class="appointment-location">{{ item.location }}</div>
                 <div class="appointment-time">
-                  {{ shiftMap[item.shift_id] }}
+                  {{ item.shiftLabel }}
                 </div>
               </div>
             </div>
@@ -78,22 +78,39 @@ import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 
 const currentDate = ref(new Date())
-const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 const currentMonth = computed(() => {
-  return currentDate.value.toLocaleString('default', {
+  const startOfWeek = getStartOfWeek(new Date())
+  return startOfWeek.toLocaleString('default', {
     month: 'long',
     year: 'numeric'
   })
 })
 
+function getStartOfWeek(baseDate = new Date()) {
+  const day = baseDate.getDay()
+  const startOfWeek = new Date(baseDate)
+  startOfWeek.setDate(baseDate.getDate() - day + 1)
+
+  return startOfWeek
+}
+
+// function getStartOfWeek() {
+//   const today = new Date(currentDate.value)
+//   const day = today.getDay()
+//   const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+//   const startOfWeek = new Date(today)
+//   startOfWeek.setDate(diff)
+//   return startOfWeek
+// }
+
 const getWeekDates = () => {
   const weekDates = []
-  const startOfWeek = new Date(currentDate.value)
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
-
+  const today = new Date()
+  const startOfWeek = getStartOfWeek(today)
   for (let i = 0; i < 7; i++) {
-    const date = new Date(startOfWeek)
+    const date = new Date(startOfWeek.getTime())
     date.setDate(startOfWeek.getDate() + i)
     weekDates.push(date)
   }
@@ -105,11 +122,30 @@ const weekDates = computed(() => getWeekDates())
 const assignments = ref([])
 
 async function fetchAssignments() {
+  const today = new Date() // ← ここで今日を強制指定
+  console.log('today (inside fetchAssignments):', today)
+
+  const startOfWeek = getStartOfWeek(today)
+  const endOfWeek = new Date(startOfWeek)
+  endOfWeek.setDate(startOfWeek.getDate() + 6)
+
+  const startStr = startOfWeek.toISOString().split('T')[0]
+  const endStr = endOfWeek.toISOString().split('T')[0]
+
+  console.log('startStr:', startStr)
+  console.log('endStr:', endStr)
+  console.log(
+    'API Query:',
+    `/api/assignment/1/week?start=${startStr}&end=${endStr}`
+  )
+
   try {
-    const res = await axios.get('/api/assignment/1')
+    const res = await axios.get(
+      `/api/assignment/1/week?start=${startStr}&end=${endStr}`
+    )
     assignments.value = res.data
   } catch (error) {
-    console.error('Error fetching assignments:', error)
+    console.error('Error fetching weekly assignments:', error)
   }
 }
 
@@ -117,36 +153,53 @@ onMounted(() => {
   fetchAssignments()
 })
 
-const assignmentsByDate = computed(() => {
-  const map = {}
-  assignments.value.forEach((a) => {
-    if (!map[a.date]) {
-      map[a.date] = []
-    }
-    map[a.date].push(a)
-  })
-  return map
-})
+const weekDateStrings = computed(() =>
+  weekDates.value.map(
+    (date) =>
+      `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+  )
+)
 
 const enrichedAssignmentsByDate = computed(() => {
   const map = {}
   let dummyIndex = 0
+  const todayStr = new Date().toISOString().split('T')[0]
+
+  weekDateStrings.value.forEach((dateStr) => {
+    map[dateStr] = []
+  })
 
   assignments.value.forEach((a) => {
-    if (!map[a.date]) {
-      map[a.date] = []
-    }
+    if (!weekDateStrings.value.includes(a.date)) return
+
+    const shiftLabel =
+      a.date === todayStr
+        ? getCurrentShiftLabel(a.shift_id)
+        : shiftMap[a.shift_id]
+
     const dummy = dummyDetails[dummyIndex % dummyDetails.length]
+    dummyIndex++
+
     map[a.date].push({
       ...a,
       title: dummy.title,
-      location: dummy.location
+      location: dummy.location,
+      shiftLabel
     })
-    dummyIndex++
   })
 
   return map
 })
+
+function getCurrentShiftLabel() {
+  const hours = new Date().getHours()
+  if (hours >= 0 && hours < 6) return '00:00 - 06:00'
+  if (hours >= 6 && hours < 12) return '06:00 - 12:00'
+  if (hours >= 12 && hours < 18) return '12:00 - 18:00'
+  return '18:00 - 24:00'
+}
 
 const shiftMap = {
   shift1: '00:00 - 06:00',
@@ -154,6 +207,24 @@ const shiftMap = {
   shift3: '12:00 - 18:00',
   shift4: '18:00 - 24:00'
 }
+
+const currentShiftMap = computed(() => {
+  const now = new Date()
+  const hours = now.getHours()
+  let shiftLabel = ''
+
+  if (hours >= 0 && hours < 6) shiftLabel = '00:00 - 06:00'
+  else if (hours >= 6 && hours < 12) shiftLabel = '06:00 - 12:00'
+  else if (hours >= 12 && hours < 18) shiftLabel = '12:00 - 18:00'
+  else shiftLabel = '18:00 - 24:00'
+
+  return {
+    shift1: shiftLabel,
+    shift2: shiftLabel,
+    shift3: shiftLabel,
+    shift4: shiftLabel
+  }
+})
 
 const dummyDetails = [
   { title: 'Morning Medication Rounds', location: 'All Resident Rooms' },
@@ -177,11 +248,12 @@ const dummyDetails = [
   { title: 'Maintenance Check', location: 'Facility Grounds' },
   { title: 'Volunteer Coordination', location: 'Reception Desk' }
 ]
+
 const shiftColors = {
-  shift1: '#FF4C61', // 濃いピンク（Appointments と統一）
-  shift2: '#56CCF2', // 明るめのブルー（Medical Reports と統一）
-  shift3: '#6FCF97', // グリーン（Facility Checkup と統一）
-  shift4: '#BB6BD9' // ラベンダー（Submit Availability と統一）
+  shift1: '#FF4C61',
+  shift2: '#56CCF2',
+  shift3: '#6FCF97',
+  shift4: '#BB6BD9'
 }
 </script>
 

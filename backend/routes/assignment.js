@@ -2,6 +2,25 @@ const express = require('express')
 const router = express.Router()
 const db = require('../db')
 
+// GET assignments by staff ID for current week
+router.get('/:staffId/week', (req, res) => {
+  const { staffId } = req.params
+  const { start, end } = req.query
+
+  if (!start || !end) {
+    return res.status(400).json({ error: 'start and end dates are required' })
+  }
+
+  const sql = `
+    SELECT * FROM staff_assignment
+    WHERE staff_id = ? AND date BETWEEN ? AND ?
+  `
+  db.all(sql, [staffId, start, end], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message })
+    res.json(rows)
+  })
+})
+
 // const dummyDetails = [
 //   {
 //     title: 'Morning Medication Rounds',

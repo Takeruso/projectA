@@ -930,7 +930,10 @@ export default {
       for (const date in this.shiftAssignments) {
         for (const shiftId in this.shiftAssignments[date]) {
           if (this.shiftAssignments[date][shiftId].includes(staffId)) {
-            totalHours += hoursPerShift
+            console.warn(
+              `Skipping duplicate assignment: ${staffId} on ${date} ${shiftId}`
+            )
+            continue
           }
         }
       }
