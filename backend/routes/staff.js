@@ -55,16 +55,20 @@ router.post('/', (req, res) => {
 // Update staff
 router.put('/:id', (req, res) => {
   const { id } = req.params
-  const { name, role, phone, email, shift } = req.body
+  const { first_name, last_name, role, phone, email, shift } = req.body
+
   const sql = `
     UPDATE staff
-    SET name = ?, role = ?, phone = ?, email = ?, shift = ?
+    SET first_name = ?, last_name = ?, role = ?, phone = ?, email = ?, shift = ?
     WHERE id = ?
   `
-  const params = [name, role, phone, email, shift, id]
+  const params = [first_name, last_name, role, phone, email, shift, id]
 
   db.run(sql, params, function (err) {
     if (err) return res.status(500).json({ error: err.message })
+    if (this.changes === 0) {
+      return res.status(404).json({ message: 'Staff not found or no change.' })
+    }
     res.json({ message: 'Staff updated successfully' })
   })
 })
