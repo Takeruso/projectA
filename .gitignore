@@ -14,9 +14,9 @@ backend/node_modules
 package-lock.json
 frontend/package-lock.json
 backend/package-lock.json
-# /dist/
-# /dist-ssr/
-# /*.local
+/dist/
+/dist-ssr/
+/*.local
 /backend/database.sqlite
 
 # Editor directories and files
